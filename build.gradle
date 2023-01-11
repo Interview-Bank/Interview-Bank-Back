@@ -33,6 +33,7 @@ dependencies {
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 
 	compileOnly 'org.projectlombok:lombok'
 
@@ -46,6 +47,7 @@ dependencies {
 
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 }
 
 tasks.named('test') {
