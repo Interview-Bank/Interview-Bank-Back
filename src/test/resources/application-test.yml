@@ -1,0 +1,20 @@
+spring:
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    database: h2
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+
+    properties:
+      format_sql: true
+      show_sql: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testes;MODE=MySQL;
+    username: interview_bank
+    initialization-mode: always
