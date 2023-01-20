@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -26,8 +27,9 @@ public class SoftDeletedBaseEntity {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 
-	@Column(columnDefinition = "bit(1) default 0", length = 1)
-	private Boolean deletedFlag;
+	@ColumnDefault("0")
+	@Column(nullable = false)
+	private Boolean deletedFlag = false;
 
 	@Column
 	private LocalDateTime deletedAt;
