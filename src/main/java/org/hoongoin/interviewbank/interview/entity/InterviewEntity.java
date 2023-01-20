@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "interview")
 public class InterviewEntity extends SoftDeletedBaseEntity {
 
 	public InterviewEntity(long id, String title, AccountEntity accountEntity) {
@@ -39,6 +41,10 @@ public class InterviewEntity extends SoftDeletedBaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "account_id")
 	private AccountEntity accountEntity;
+
+	public void modifyEntity(String title) {
+		this.title = title;
+	}
 
 	@Override
 	public String toString() {

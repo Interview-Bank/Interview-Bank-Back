@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.common.entity.BaseEntity;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "scrap")
 public class ScrapEntity extends BaseEntity {
 
 	public ScrapEntity(long id, AccountEntity accountEntity, long interviewId, String title) {

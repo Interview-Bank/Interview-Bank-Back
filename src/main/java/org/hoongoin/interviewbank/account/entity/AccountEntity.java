@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
 
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "account")
 public class AccountEntity extends SoftDeletedBaseEntity {
 
 	public AccountEntity(long id, String nickname, String email, String password) {

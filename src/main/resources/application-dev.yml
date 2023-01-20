@@ -6,15 +6,15 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3304/interview_bank
+    url: "jdbc:mysql://localhost:3304/interview_bank"
     username: root
     password: 1234
 
   jpa:
     database: mysql
-    database-platform: org.hibernate.dialect.MySQL8InnoDBDialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
