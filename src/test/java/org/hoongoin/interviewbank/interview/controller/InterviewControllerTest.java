@@ -42,9 +42,12 @@ class InterviewControllerTest {
 			.password(testPassword)
 			.email(testEmail)
 			.build());
+
 		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(testTitle, savedAccount.getId());
+
 		//when
 		ResponseEntity<Long> createdInterviewId = interviewController.createInterview(createInterviewRequest);
+
 		//then
 		assertThat(createdInterviewId.getBody()).isEqualTo(interviewRepository.findById(createdInterviewId.getBody()).get().getId());
 	}
@@ -61,9 +64,11 @@ class InterviewControllerTest {
 		ResponseEntity<Long> createdInterviewId = interviewController.createInterview(createInterviewRequest);
 		String updatedTitle = "updateTitle";
 		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedTitle);
+
 		//when
 		ResponseEntity<UpdateInterviewResponse> updateInterviewResponseResponse = interviewController.updateInterview(
 			updateInterviewRequest, createdInterviewId.getBody());
+
 		//then
 		assertThat(updateInterviewResponseResponse.getBody().getTitle()).isEqualTo(updatedTitle);
 	}
@@ -78,8 +83,10 @@ class InterviewControllerTest {
 			.build());
 		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(testTitle, savedAccount.getId());
 		ResponseEntity<Long> createdInterviewId = interviewController.createInterview(createInterviewRequest);
+
 		//when
 		ResponseEntity<Long> deletedInterviewId = interviewController.deleteInterview(createdInterviewId.getBody());
+
 		//then
 		assertThat(interviewRepository.findById(deletedInterviewId.getBody())).isEmpty();
 	}
@@ -94,9 +101,11 @@ class InterviewControllerTest {
 			.build());
 		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(testTitle, savedAccount.getId());
 		ResponseEntity<Long> createdInterviewId = interviewController.createInterview(createInterviewRequest);
+
 		//when
 		ResponseEntity<FindInterviewResponse> findInterviewResponseResponse = interviewController.findInterview(
 			createdInterviewId.getBody());
+
 		//then
 		assertThat(findInterviewResponseResponse.getBody().getInterviewId()).isEqualTo(createdInterviewId.getBody());
 		assertThat(findInterviewResponseResponse.getBody().getTitle()).isEqualTo(createInterviewRequest.getTitle());

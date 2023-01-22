@@ -37,9 +37,7 @@ class InterviewEntityCommandServiceTest {
 	@Test
 	void insertInterview_Success() {
 		//given
-		AccountEntity testAccountEntity = createTestAccountEntity();
-
-		accountRepository.save(testAccountEntity);
+		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
 
 		String title = "title";
 
@@ -48,18 +46,17 @@ class InterviewEntityCommandServiceTest {
 		//when
 		long createdInterviewId = interviewCommandService.insertInterview(createInterviewRequest);
 		Optional<InterviewEntity> interview = interviewRepository.findById(createdInterviewId);
+
 		//then
 		assertThat(interview).isPresent();
 		assertThat(interview.get().getTitle()).isEqualTo(title);
-		assertThat(interview.get().getAccountEntity().getId()).isEqualTo(testAccountId);
+		assertThat(interview.get().getAccountEntity().getId()).isEqualTo(testAccountEntity.getId());
 	}
 
 	@Test
 	void updateInterview_Success() {
 		//given
-		AccountEntity testAccountEntity = createTestAccountEntity();
-
-		accountRepository.save(testAccountEntity);
+		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
 
 		String title = "title";
 		String newTitle = "newTitle";
