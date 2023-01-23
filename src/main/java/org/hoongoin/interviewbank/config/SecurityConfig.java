@@ -14,13 +14,14 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-	private final AuthenticationEntryPointImplementation authenticationEntryPoint;
+
+	private final IbAuthenticationEntryPoint authenticationEntryPoint;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-			.antMatchers("/account/login").permitAll()
-			.antMatchers("/account/register").permitAll()
+			.antMatchers("/account/logout").authenticated()
+			.antMatchers("/account/**").permitAll()
 			.antMatchers("/**").permitAll()
 			.and().formLogin().disable().csrf().disable()
 			.exceptionHandling()
