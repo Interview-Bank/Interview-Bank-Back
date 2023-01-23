@@ -55,6 +55,7 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'it.ozimov:embedded-redis:0.7.2'
 
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
