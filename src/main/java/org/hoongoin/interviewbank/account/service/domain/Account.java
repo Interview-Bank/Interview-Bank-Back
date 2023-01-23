@@ -14,15 +14,14 @@ public class Account {
 
 	public Account(long accountId, String nickname, String email, String password, LocalDateTime createdAt,
 		LocalDateTime updatedAt, LocalDateTime deletedAt, boolean deletedFlag) {
-		this.accountId = accountId;
-		this.nickname = nickname;
+		this.setAccountId(accountId);
 		this.setNickname(nickname);
 		this.setEmail(email);
 		this.setPassword(password);
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-		this.deletedAt = deletedAt;
-		this.deletedFlag = deletedFlag;
+		this.setCreatedAt(createdAt);
+		this.setUpdatedAt(updatedAt);
+		this.setDeletedAt(deletedAt);
+		this.setDeletedFlag(deletedFlag);
 	}
 
 	private long accountId;
