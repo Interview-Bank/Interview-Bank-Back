@@ -30,7 +30,7 @@ public class AccountService {
 	public Account loginByLoginRequest(LoginRequest loginRequest) {
 		Account account = accountQueryService.findEntityByEmail(loginRequest.getEmail());
 		if (!passwordEncoder.matches(loginRequest.getPassword(), account.getPassword())) {
-			throw new IbPasswordNotMatchException();
+			throw new IbPasswordNotMatchException(account.getEmail());
 		}
 		return account;
 	}
