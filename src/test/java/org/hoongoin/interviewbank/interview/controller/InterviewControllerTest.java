@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
+import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
@@ -11,11 +12,10 @@ import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewR
 import org.hoongoin.interviewbank.interview.repository.InterviewRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+@IbSpringBootTest
 @Transactional
 class InterviewControllerTest {
 

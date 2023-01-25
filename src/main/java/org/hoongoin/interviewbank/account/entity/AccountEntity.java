@@ -38,7 +38,7 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 	@Column(nullable = false, length = 120)
 	private String email;
 
-	@Column(nullable = false, length = 25)
+	@Column(nullable = false, length = 61)
 	private String password;
 
 	@Override
