@@ -11,11 +11,23 @@ import lombok.Setter;
 @Setter
 public class FindInterviewResponse {
 
-	private long interviewId;
+	public FindInterviewResponse(Long interviewId, String title,
+		Long accountId, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,
+		Boolean deletedFlag) {
+		this.interviewId = interviewId;
+		this.title = title;
+		this.accountId = accountId;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+		this.deletedAt = deletedAt;
+		this.deletedFlag = deletedFlag;
+	}
+
+	private Long interviewId;
 	private String title;
-	private Account account;
+	private Long accountId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;
-	private boolean deletedFlag;
+	private Boolean deletedFlag;
 }

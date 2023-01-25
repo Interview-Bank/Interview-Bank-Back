@@ -1,5 +1,7 @@
 package org.hoongoin.interviewbank.interview.controller;
 
+import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
+import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
@@ -46,5 +48,13 @@ public class InterviewController {
 	@GetMapping("/{id}")
 	public ResponseEntity<FindInterviewResponse> findInterview(@PathVariable("id") long interviewId) {
 		return ResponseEntity.ok(interviewService.findInterviewById(interviewId));
+	}
+
+	@PostMapping("/questions")
+	public ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestions(
+		@RequestBody CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest) {
+		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
+			createInterviewAndQuestionsRequest);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createInterviewAndQuestionsResponse);
 	}
 }

@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.Optional;
 
+import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
-import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.repository.InterviewRepository;
@@ -29,6 +29,9 @@ class InterviewEntityCommandServiceTest {
 	@Autowired
 	private InterviewCommandService interviewCommandService;
 
+	@Autowired
+	private AccountMapper accountMapper;
+
 	private static final long testAccountId = 1L;
 	private static final String testNickname = "hunki";
 	private static final String testEmail = "gnsrl76@naver.com";
@@ -41,10 +44,10 @@ class InterviewEntityCommandServiceTest {
 
 		String title = "title";
 
-		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(title, testAccountEntity.getId());
+		Interview testInterview = new Interview(title, testAccountEntity.getId());
 
 		//when
-		long createdInterviewId = interviewCommandService.insertInterview(createInterviewRequest);
+		Long createdInterviewId = interviewCommandService.insertInterview(testInterview);
 		Optional<InterviewEntity> interview = interviewRepository.findById(createdInterviewId);
 
 		//then
@@ -61,19 +64,24 @@ class InterviewEntityCommandServiceTest {
 		String title = "title";
 		String newTitle = "newTitle";
 
-		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(title, testAccountEntity.getId());
-
-		long createdInterviewId = interviewCommandService.insertInterview(createInterviewRequest);
+		long createdInterviewId = interviewCommandService.insertInterview(
+			new Interview(title, testAccountEntity.getId()));
 		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(newTitle);
 
 		//when
-		Interview updatedInterview = interviewCommandService.updateInterview(updateInterviewRequest, createdInterviewId);
+		Interview updatedInterview = interviewCommandService.updateInterview(updateInterviewRequest,
+			createdInterviewId);
 
 		//then
 		assertThat(updatedInterview.getTitle()).isEqualTo(newTitle);
 	}
 
 	private AccountEntity createTestAccountEntity() {
-		return AccountEntity.builder().id(testAccountId).password(testPassword).email(testEmail).nickname(testNickname).build();
+		return AccountEntity.builder()
+			.id(testAccountId)
+			.password(testPassword)
+			.email(testEmail)
+			.nickname(testNickname)
+			.build();
 	}
 }

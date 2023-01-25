@@ -11,5 +11,5 @@ public class UpdateInterviewResponse {
 		this.title = title;
 	}
 
-	String title;
+	private String title;
 }

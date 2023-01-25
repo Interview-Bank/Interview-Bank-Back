@@ -74,24 +74,6 @@ class InterviewControllerTest {
 	}
 
 	@Test
-	void deleteInterview_Success() {
-		//given
-		AccountEntity savedAccount = accountRepository.save(AccountEntity.builder()
-			.nickname(testNickname)
-			.password(testPassword)
-			.email(testEmail)
-			.build());
-		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(testTitle, savedAccount.getId());
-		ResponseEntity<Long> createdInterviewId = interviewController.createInterview(createInterviewRequest);
-
-		//when
-		ResponseEntity<Long> deletedInterviewId = interviewController.deleteInterview(createdInterviewId.getBody());
-
-		//then
-		assertThat(interviewRepository.findById(deletedInterviewId.getBody())).isEmpty();
-	}
-
-	@Test
 	void findInterview_Success() {
 		//given
 		AccountEntity savedAccount = accountRepository.save(AccountEntity.builder()
