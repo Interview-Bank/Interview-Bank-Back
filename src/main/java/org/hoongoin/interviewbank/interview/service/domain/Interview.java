@@ -3,12 +3,10 @@ package org.hoongoin.interviewbank.interview.service.domain;
 import java.time.LocalDateTime;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class Interview {
 
 	public Interview(String title, Long accountId) {
