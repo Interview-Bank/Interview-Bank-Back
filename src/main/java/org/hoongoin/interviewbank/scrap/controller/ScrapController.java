@@ -21,7 +21,7 @@ public class ScrapController {
 
 	private final ScrapService scrapService;
 
-	@PostMapping("")
+	@PostMapping
 	public ResponseEntity<CreateScrapResponse> createScrap(@RequestBody CreateScrapRequest createScrapRequest){
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		String requestingAccountOfEmail = (String) securityContext.getAuthentication().getPrincipal();
