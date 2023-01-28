@@ -35,9 +35,7 @@ public class QuestionCommandService {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
 
-		List<QuestionEntity> questionEntities = new ArrayList<>();
-
-		return saveAllQuestions(questions, interviewEntity, questionEntities);
+		return saveAllQuestions(questions, interviewEntity);
 	}
 
 	public List<Question> updateQuestions(List<Question> newQuestions) {
@@ -72,8 +70,9 @@ public class QuestionCommandService {
 		return deletedQuestions;
 	}
 
-	private List<Question> saveAllQuestions(List<Question> questions, InterviewEntity interviewEntity,
-		List<QuestionEntity> questionEntities) {
+	private List<Question> saveAllQuestions(List<Question> questions, InterviewEntity interviewEntity) {
+		List<QuestionEntity> questionEntities = new ArrayList<>();
+
 		for (Question question : questions) {
 			questionEntities.add(QuestionEntity.builder()
 				.content(question.getContent())
@@ -81,9 +80,9 @@ public class QuestionCommandService {
 				.build());
 		}
 
-		List<Question> returnQuestions = new ArrayList<>();
-
 		List<QuestionEntity> savedQuestionEntities = saveAllQuestionWithBatch(questionEntities);
+
+		List<Question> returnQuestions = new ArrayList<>();
 
 		savedQuestionEntities.forEach(
 			questionEntity -> returnQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity)));
