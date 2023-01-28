@@ -3,11 +3,12 @@ package org.hoongoin.interviewbank.interview.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hoongoin.interviewbank.account.service.AccountQueryService;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsResponse;
-import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
+import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
 import org.hoongoin.interviewbank.interview.service.domain.Interview;
@@ -25,18 +26,23 @@ public class InterviewService {
 	private final InterviewQueryService interviewQueryService;
 	private final InterviewMapper interviewMapper;
 	private final QuestionCommandService questionCommandService;
+	private final QuestionQueryService questionQueryService;
+	private final AccountQueryService accountQueryService;
 
 	@Transactional
-	public long createInterviewByCreateInterviewRequest(CreateInterviewRequest createInterviewRequest) {
-		return interviewCommandService.insertInterview(
-			new Interview(createInterviewRequest.getTitle(), createInterviewRequest.getAccountId()));
-	}
-
-	@Transactional
-	public UpdateInterviewResponse updateInterviewResponseByUpdateInterviewRequest(
+	public UpdateInterviewResponse updateInterviewResponseByRequestAndInterviewId(
 		UpdateInterviewRequest updateInterviewRequest, long interviewId) {
-		return interviewMapper.interviewToUpdateInterviewResponse(
-			interviewCommandService.updateInterview(updateInterviewRequest, interviewId));
+		Interview interview = interviewCommandService.updateInterview(updateInterviewRequest, interviewId);
+
+		List<Question> questions = questionCommandService.updateQuestions(updateInterviewRequest);
+
+		List<UpdateInterviewResponse.Question> updatedQuestions = new ArrayList<>();
+
+		questions.forEach(question -> updatedQuestions.add(
+			new UpdateInterviewResponse.Question(question.getQuestionId(), question.getInterviewId(),
+				question.getContent(), question.getUpdatedAt())));
+
+		return new UpdateInterviewResponse(interview.getTitle(), updatedQuestions);
 	}
 
 	@Transactional
@@ -73,7 +79,18 @@ public class InterviewService {
 	@Transactional(readOnly = true)
 	public FindInterviewResponse findInterviewById(long interviewId) {
 		Interview interview = interviewQueryService.findEntityById(interviewId);
-		return new FindInterviewResponse(interview.getInterviewId(), interview.getTitle(), interview.getAccountId(),
-			interview.getCreatedAt(), interview.getUpdatedAt(), interview.getDeletedAt(), interview.getDeletedFlag());
+		List<Question> questions = questionQueryService.findQuestionsByInterviewId(
+			interview.getInterviewId());
+
+		return interviewMapper.questionListAndInterviewToFindInterviewResponse(questions, interview);
+	}
+
+	@Transactional(readOnly = true)
+	public FindInterviewPageResponse findInterviewPageByPageAndSize(int page, int size) {
+		List<Interview> interviews = interviewQueryService.findEntitiesPageByPageAndSize(page, size);
+		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
+		interviews.forEach(interview -> findInterviewPageResponseInterview.add(
+			interviewMapper.interviewAndNicknameToFindInterviewPageResponseInterview(interview)));
+		return new FindInterviewPageResponse(findInterviewPageResponseInterview);
 	}
 }

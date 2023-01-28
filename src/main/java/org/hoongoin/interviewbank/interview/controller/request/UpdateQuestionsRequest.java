@@ -1,17 +1,16 @@
 package org.hoongoin.interviewbank.interview.controller.request;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class UpdateQuestionsRequest {
-
-	public UpdateQuestionsRequest(List<Question> questions) {
-		this.questions = questions;
-	}
 
 	private List<Question> questions;
 
@@ -19,13 +18,16 @@ public class UpdateQuestionsRequest {
 	@Setter
 	public static class Question {
 
-		public Question(String content, Long questionId) {
-			this.content = content;
+		public Question(long questionId, long interviewId, String content, LocalDateTime updatedAt) {
 			this.questionId = questionId;
+			this.interviewId = interviewId;
+			this.content = content;
+			this.updatedAt = updatedAt;
 		}
 
+		private long questionId;
+		private long interviewId;
 		private String content;
-		private Long questionId;
+		private LocalDateTime updatedAt;
 	}
 }
-

@@ -11,7 +11,7 @@ import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.controller.request.CreateQuestionRequest;
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.UpdateQuestionsRequest;
+import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.repository.InterviewRepository;
@@ -62,13 +62,10 @@ public class QuestionCommandService {
 		return saveAllQuestions(questions, interviewEntity, questionEntities);
 	}
 
-	public List<Question> updateQuestions(UpdateQuestionsRequest updateQuestionsRequest, long interviewId) {
-		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
-
+	public List<Question> updateQuestions(UpdateInterviewRequest updateInterviewRequest) {
 		List<Question> questions = new ArrayList<>();
 
-		updateQuestionsRequest.getQuestions()
+		updateInterviewRequest.getQuestions()
 			.forEach(question -> {
 				QuestionEntity questionEntity = questionRepository.findById(question.getQuestionId())
 					.orElseThrow(() -> new IbEntityNotFoundException("question"));

@@ -4,17 +4,14 @@ import java.util.List;
 
 import org.hoongoin.interviewbank.interview.service.domain.Question;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class FindQuestionsByInterviewIdResponse {
-
-	public FindQuestionsByInterviewIdResponse(
-		List<Question> questions) {
-		this.questions = questions;
-	}
 
 	private List<Question> questions;
 }

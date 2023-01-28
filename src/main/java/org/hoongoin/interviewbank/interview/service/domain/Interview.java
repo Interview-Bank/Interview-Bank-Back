@@ -20,6 +20,11 @@ public class Interview {
 	public Interview(Long interviewId, String title,
 		Long accountId, LocalDateTime createdAt, LocalDateTime updatedAt,
 		LocalDateTime deletedAt, Boolean deletedFlag) {
+		this(interviewId, title, accountId, createdAt, updatedAt, deletedAt, deletedFlag, "");
+	}
+
+	public Interview(Long interviewId, String title, Long accountId, LocalDateTime createdAt,
+		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag, String nickname) {
 		this.interviewId = interviewId;
 		this.title = title;
 		this.accountId = accountId;
@@ -27,6 +32,7 @@ public class Interview {
 		this.updatedAt = updatedAt;
 		this.deletedAt = deletedAt;
 		this.deletedFlag = deletedFlag;
+		this.nickname = nickname;
 	}
 
 	private Long interviewId;
@@ -36,4 +42,5 @@ public class Interview {
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;
 	private Boolean deletedFlag;
+	private String nickname;
 }

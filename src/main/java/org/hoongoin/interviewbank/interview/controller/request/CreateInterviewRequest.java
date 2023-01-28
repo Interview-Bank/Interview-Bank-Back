@@ -1,16 +1,13 @@
 package org.hoongoin.interviewbank.interview.controller.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class CreateInterviewRequest {
-
-	public CreateInterviewRequest(String title, long accountId) {
-		this.title = title;
-		this.accountId = accountId;
-	}
 
 	private String title;
 	private long accountId;

@@ -3,16 +3,14 @@ package org.hoongoin.interviewbank.interview.controller.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class UpdateQuestionsResponse {
-
-	public UpdateQuestionsResponse(List<Question> questions) {
-		this.questions = questions;
-	}
 
 	private List<Question> questions;
 

@@ -12,6 +12,7 @@ import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.controller.request.CreateQuestionRequest;
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
+import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateQuestionsRequest;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.entity.QuestionEntity;
@@ -132,22 +133,21 @@ class QuestionCommandServiceTest {
 
 		List<QuestionEntity> questionEntities = questionRepository.saveAllAndFlush(questions);
 
-		List<UpdateQuestionsRequest.Question> updatingQuestions = new ArrayList<>();
+		List<UpdateInterviewRequest.Question> updatingQuestions = new ArrayList<>();
 
 		String updatedContent1 = "content11";
 		String updatedContent2 = "content22";
 
 		questionEntities.forEach(
-			questionEntity -> updatingQuestions.add(new UpdateQuestionsRequest.Question(questionEntity.getContent(), questionEntity.getId())));
+			questionEntity -> updatingQuestions.add(
+				new UpdateInterviewRequest.Question(questionEntity.getContent(), questionEntity.getId())));
 
 		updatingQuestions.get(0).setContent(updatedContent1);
 		updatingQuestions.get(1).setContent(updatedContent2);
 
-		System.out.println(updatingQuestions.toString());
-
 		//when
-		List<Question> updatedQuestions = questionCommandService.updateQuestions(new UpdateQuestionsRequest(updatingQuestions),
-			savedInterviewEntity.getId());
+		List<Question> updatedQuestions = questionCommandService.updateQuestions(
+			new UpdateInterviewRequest(updatingQuestions, savedInterviewEntity.getTitle()));
 
 		//then
 		assertThat(updatedQuestions.get(0).getContent()).isEqualTo(updatedContent1);
@@ -183,7 +183,8 @@ class QuestionCommandServiceTest {
 		questionRepository.saveAllAndFlush(questions);
 
 		//when
-		List<Question> deletedQuestions = questionCommandService.deleteQuestionsByInterviewId(savedInterviewEntity.getId());
+		List<Question> deletedQuestions = questionCommandService.deleteQuestionsByInterviewId(
+			savedInterviewEntity.getId());
 
 		//then
 		deletedQuestions.forEach(deletedQuestion -> {

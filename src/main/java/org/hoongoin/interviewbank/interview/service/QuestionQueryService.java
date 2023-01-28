@@ -31,12 +31,11 @@ public class QuestionQueryService {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
 
-		List<QuestionEntity> questionEntitiesByInterviewEntity = questionRepository.findQuestionEntitiesByInterviewEntity(
-			interviewEntity);
+		List<QuestionEntity> questionEntities = questionRepository.findQuestionEntitiesByInterviewEntity(interviewEntity);
 
 		List<Question> questions = new ArrayList<>();
 
-		questionEntitiesByInterviewEntity.forEach(
+		questionEntities.forEach(
 			questionEntity -> questions.add(interviewMapper.questionEntityToQuestion(questionEntity)));
 
 		return questions;

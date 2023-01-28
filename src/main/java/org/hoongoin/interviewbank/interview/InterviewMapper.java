@@ -1,8 +1,13 @@
 package org.hoongoin.interviewbank.interview;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.service.domain.Account;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
+import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
+import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.entity.QuestionEntity;
@@ -18,20 +23,28 @@ public interface InterviewMapper {
 	InterviewEntity interviewToInterviewEntity(Interview interview, AccountEntity accountEntity);
 
 	default Interview interviewEntityToInterview(InterviewEntity interviewEntity, Account account) {
-		return new Interview(interviewEntity.getId(), interviewEntity.getTitle(), account.getAccountId(), interviewEntity.getCreatedAt(),
-			interviewEntity.getUpdatedAt(), interviewEntity.getDeletedAt(), interviewEntity.getDeletedFlag());
+		return new Interview(interviewEntity.getId(), interviewEntity.getTitle(), account.getAccountId(),
+			interviewEntity.getCreatedAt(),
+			interviewEntity.getUpdatedAt(), interviewEntity.getDeletedAt(), interviewEntity.getDeletedFlag(), account.getNickname());
 	}
-
-	@Mapping(target = "createInterviewRequest.accountId", ignore = true)
-	@Mapping(target = "accountEntity", source = "accountEntity")
-	InterviewEntity createInterviewRequestToInterviewEntity(CreateInterviewRequest createInterviewRequest,
-		AccountEntity accountEntity);
-
-	UpdateInterviewResponse interviewToUpdateInterviewResponse(Interview interview);
 
 	default Question questionEntityToQuestion(QuestionEntity questionEntity) {
 		return new Question(questionEntity.getId(), questionEntity.getInterviewEntity().getId(),
 			questionEntity.getContent());
 	}
-}
 
+	default FindInterviewResponse questionListAndInterviewToFindInterviewResponse(List<Question> questions,
+		Interview interview) {
+		List<FindInterviewResponse.Question> findInterviewResponseQuestions = new ArrayList<>();
+		questions.forEach(question -> findInterviewResponseQuestions.add(
+			new FindInterviewResponse.Question(question.getQuestionId(), question.getContent(), question.getCreatedAt(),
+				question.getUpdatedAt(), question.getDeletedAt(), question.getDeletedFlag())));
+		return new FindInterviewResponse(interview.getInterviewId(), interview.getTitle(), interview.getAccountId(),
+			interview.getCreatedAt(), interview.getUpdatedAt(), interview.getDeletedAt(), interview.getDeletedFlag(),
+			findInterviewResponseQuestions);
+	}
+
+	default FindInterviewPageResponse.Interview interviewAndNicknameToFindInterviewPageResponseInterview(Interview interview) {
+		return new FindInterviewPageResponse.Interview(interview.getInterviewId(), interview.getNickname(), interview.getCreatedAt(), interview.getTitle());
+	}
+}

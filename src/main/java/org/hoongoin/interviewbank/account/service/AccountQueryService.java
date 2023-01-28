@@ -21,4 +21,9 @@ public class AccountQueryService {
 			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
+
+	public Account findEntityByInterviewId(Long interviewId) {
+		return accountMapper.accountEntityToAccount(
+			accountRepository.findById(interviewId).orElseThrow(() -> new IbEntityNotFoundException("Account")));
+	}
 }

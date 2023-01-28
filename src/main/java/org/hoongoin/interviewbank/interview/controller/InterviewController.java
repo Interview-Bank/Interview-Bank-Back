@@ -2,8 +2,8 @@ package org.hoongoin.interviewbank.interview.controller;
 
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsResponse;
-import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
+import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
 import org.hoongoin.interviewbank.interview.service.InterviewService;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -27,34 +28,35 @@ public class InterviewController {
 
 	private final InterviewService interviewService;
 
-	@PostMapping
-	public ResponseEntity<Long> createInterview(@RequestBody CreateInterviewRequest createInterviewRequest) {
-		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(interviewService.createInterviewByCreateInterviewRequest(createInterviewRequest));
-	}
-
-	@PutMapping("/{id}")
+	@PutMapping("/{interview-id}")
 	public ResponseEntity<UpdateInterviewResponse> updateInterview(
-		@RequestBody UpdateInterviewRequest updateInterviewRequest, @PathVariable("id") long interviewId) {
+		@RequestBody UpdateInterviewRequest updateInterviewRequest, @PathVariable("interview-id") long interviewId) {
 		return ResponseEntity.ok(
-			interviewService.updateInterviewResponseByUpdateInterviewRequest(updateInterviewRequest, interviewId));
+			interviewService.updateInterviewResponseByRequestAndInterviewId(updateInterviewRequest, interviewId));
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Long> deleteInterview(@PathVariable("id") long interviewId) {
+	@DeleteMapping("/{interview-id}")
+	public ResponseEntity<Long> deleteInterview(@PathVariable("interview-id") long interviewId) {
 		return ResponseEntity.ok(interviewService.deleteInterviewById(interviewId));
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<FindInterviewResponse> findInterview(@PathVariable("id") long interviewId) {
+	@GetMapping("/{interview-id}")
+	public ResponseEntity<FindInterviewResponse> findInterview(@PathVariable("interview-id") long interviewId) {
 		return ResponseEntity.ok(interviewService.findInterviewById(interviewId));
 	}
 
-	@PostMapping("/questions")
+	@PostMapping
 	public ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestions(
 		@RequestBody CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest) {
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createInterviewAndQuestionsResponse);
+	}
+
+	@GetMapping
+	public ResponseEntity<FindInterviewPageResponse> findInterviewPage(
+		@RequestParam(name = "page", defaultValue = "0") int page,
+		@RequestParam(name = "size", defaultValue = "10") int size) {
+		return ResponseEntity.ok(interviewService.findInterviewPageByPageAndSize(page, size));
 	}
 }

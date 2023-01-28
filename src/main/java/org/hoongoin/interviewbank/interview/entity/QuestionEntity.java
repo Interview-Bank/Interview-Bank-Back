@@ -1,7 +1,5 @@
 package org.hoongoin.interviewbank.interview.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -52,6 +50,7 @@ public class QuestionEntity extends SoftDeletedBaseEntity {
 		return "QuestionEntity{" +
 			"id=" + id +
 			", content='" + content + '\'' +
+			", interviewEntity=" + interviewEntity +
 			'}';
 	}
 }
