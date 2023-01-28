@@ -52,10 +52,12 @@ public interface InterviewMapper {
 			interview.getCreatedAt(), interview.getTitle());
 	}
 
-	default List<Question> updateInterviewRequestToQuestions(UpdateInterviewRequest updateInterviewRequest, long interviewId) {
+	default List<Question> updateInterviewRequestToQuestions(UpdateInterviewRequest updateInterviewRequest,
+		long interviewId) {
 		List<Question> questions = new ArrayList<>();
 		updateInterviewRequest.getQuestions()
-			.forEach(question -> questions.add(new Question(question.getQuestionId(), interviewId, question.getContent())));
+			.forEach(
+				question -> questions.add(new Question(question.getQuestionId(), interviewId, question.getContent())));
 		return questions;
 	}
 
@@ -63,8 +65,8 @@ public interface InterviewMapper {
 		List<UpdateInterviewResponse.Question> updateInterviewResponseQuestions = new ArrayList<>();
 
 		questions.forEach(question -> updateInterviewResponseQuestions.add(
-			new UpdateInterviewResponse.Question(question.getQuestionId(), question.getInterviewId(),
-				question.getContent(), question.getUpdatedAt())));
+			new UpdateInterviewResponse.Question(question.getQuestionId(), question.getContent(),
+				question.getUpdatedAt())));
 
 		return new UpdateInterviewResponse(title, updateInterviewResponseQuestions);
 	}

@@ -18,15 +18,13 @@ public class UpdateInterviewResponse {
 	@Getter
 	public static class Question {
 
-		public Question(long questionId, long interviewId, String content, LocalDateTime updatedAt) {
+		public Question(long questionId, String content, LocalDateTime updatedAt) {
 			this.questionId = questionId;
-			this.interviewId = interviewId;
 			this.content = content;
 			this.updatedAt = updatedAt;
 		}
 
 		private long questionId;
-		private long interviewId;
 		private String content;
 		private LocalDateTime updatedAt;
 	}
