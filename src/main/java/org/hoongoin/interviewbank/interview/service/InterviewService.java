@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsResponse;
+import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
@@ -34,7 +34,8 @@ public class InterviewService {
 		Interview interview = interviewCommandService.updateInterview(new Interview(updateInterviewRequest.getTitle()),
 			interviewId);
 
-		List<Question> newQuestions = interviewMapper.updateInterviewRequestToQuestions(updateInterviewRequest, interviewId);
+		List<Question> newQuestions = interviewMapper.updateInterviewRequestToQuestions(updateInterviewRequest,
+			interviewId);
 
 		List<Question> updatedQuestions = questionCommandService.updateQuestions(newQuestions);
 
@@ -61,16 +62,13 @@ public class InterviewService {
 			interviewMapper.createInterviewAndQuestionsRequestToQuestions(createInterviewAndQuestionsRequest,
 				createdInterviewId), createdInterviewId);
 
-		List<String> questionContents = new ArrayList<>();
-		List<Long> questionIds = new ArrayList<>();
+		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
 
-		questions.forEach(question -> {
-			questionContents.add(question.getContent());
-			questionIds.add(question.getQuestionId());
-		});
+		questions.forEach(question -> createInterviewAndQuestionsResponseQuiestions.add(
+			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getInterviewId())));
 
-		return new CreateInterviewAndQuestionsResponse(createInterviewAndQuestionsRequest.getTitle(),
-			createdInterviewId, questionContents, questionIds, createdInterview.getCreatedAt());
+		return new CreateInterviewAndQuestionsResponse(createdInterview.getTitle(),
+			createdInterviewId, createInterviewAndQuestionsResponseQuiestions, createdInterview.getCreatedAt());
 	}
 
 	@Transactional(readOnly = true)

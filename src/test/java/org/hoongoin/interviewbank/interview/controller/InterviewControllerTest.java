@@ -9,7 +9,7 @@ import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsResponse;
+import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
@@ -75,7 +75,7 @@ class InterviewControllerTest {
 
 		//then
 		assertThat(createInterviewAndQuestionsResponse.getBody().getTitle()).isEqualTo(testTitle);
-		assertThat(createInterviewAndQuestionsResponse.getBody().getQuestionContents()).hasSize(2);
+		assertThat(createInterviewAndQuestionsResponse.getBody().getQuestions()).hasSize(2);
 	}
 
 	@Test

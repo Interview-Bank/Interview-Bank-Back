@@ -1,7 +1,7 @@
 package org.hoongoin.interviewbank.interview.controller;
 
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsResponse;
+import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;

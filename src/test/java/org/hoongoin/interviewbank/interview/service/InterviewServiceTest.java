@@ -10,7 +10,7 @@ import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsResponse;
+import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.repository.InterviewRepository;
 import org.junit.jupiter.api.Test;
@@ -63,10 +63,10 @@ class InterviewServiceTest {
 			createInterviewAndQuestionsRequest);
 
 		//then
-		assertThat(createInterviewAndQuestionsResponse.getQuestionContents()).containsExactlyInAnyOrder("content1",
+		assertThat(createInterviewAndQuestionsResponse.getQuestions()).extracting("content").containsExactlyInAnyOrder("content1",
 			"content2");
 		assertThat(createInterviewAndQuestionsResponse.getTitle()).isEqualTo(title);
-		assertThat(createInterviewAndQuestionsResponse.getQuestionIds()).hasSize(questionsRequest.getQuestions().size());
+		assertThat(createInterviewAndQuestionsResponse.getQuestions()).hasSize(questionsRequest.getQuestions().size());
 		assertThat(createInterviewAndQuestionsResponse.getInterviewId()).isNotNull();
 
 	}

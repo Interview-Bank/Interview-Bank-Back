@@ -1,4 +1,4 @@
-package org.hoongoin.interviewbank.interview.controller.request;
+package org.hoongoin.interviewbank.interview.controller.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +14,15 @@ public class CreateInterviewAndQuestionsResponse {
 
 	private String title;
 	private Long interviewId;
-	private List<String> questionContents;
-	private List<Long> questionIds;
+	private List<Question> questions;
 	private LocalDateTime interviewCreatedAt;
+
+	@Getter
+	@Setter
+	@AllArgsConstructor
+	public static class Question {
+
+		private String content;
+		private long questionId;
+	}
 }
