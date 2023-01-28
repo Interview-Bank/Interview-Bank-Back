@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import org.hoongoin.interviewbank.common.entity.BaseEntity;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,15 +21,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "scrap_question")
 public class ScrapQuestionEntity extends BaseEntity {
-
-	public ScrapQuestionEntity(long id, ScrapEntity scrapEntity, String content) {
-		this.id = id;
-		this.scrapEntity = scrapEntity;
-		this.content = content;
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

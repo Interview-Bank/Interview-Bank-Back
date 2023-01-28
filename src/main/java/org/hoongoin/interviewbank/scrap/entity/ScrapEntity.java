@@ -12,8 +12,10 @@ import javax.persistence.Table;
 
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.common.entity.BaseEntity;
+import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,16 +23,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "scrap")
 public class ScrapEntity extends BaseEntity {
-
-	public ScrapEntity(long id, AccountEntity accountEntity, long interviewId, String title) {
-		this.id = id;
-		this.accountEntity = accountEntity;
-		this.interviewId = interviewId;
-		this.title = title;
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,8 +36,9 @@ public class ScrapEntity extends BaseEntity {
 	@JoinColumn(nullable = false, name = "account_id")
 	private AccountEntity accountEntity;
 
-	@Column(nullable = false)
-	private long interviewId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "interview_id")
+	private InterviewEntity interviewEntity;
 
 	@Column(nullable = false, length = 50)
 	private String title;
@@ -51,7 +48,7 @@ public class ScrapEntity extends BaseEntity {
 		return "ScrapEntity{" +
 			"id=" + id +
 			", accountEntity=" + accountEntity +
-			", interviewId=" + interviewId +
+			", interviewId=" + interviewEntity.getId() +
 			", title='" + title + '\'' +
 			'}';
 	}

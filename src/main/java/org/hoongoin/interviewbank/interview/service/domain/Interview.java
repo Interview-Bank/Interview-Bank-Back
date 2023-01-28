@@ -2,32 +2,40 @@ package org.hoongoin.interviewbank.interview.service.domain;
 
 import java.time.LocalDateTime;
 
-import org.hoongoin.interviewbank.account.service.domain.Account;
-
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Interview {
 
-	public Interview(long interviewId, String title,
-		Account account, LocalDateTime createdAt, LocalDateTime updatedAt,
-		LocalDateTime deletedAt, boolean deletedFlag) {
+	public Interview(String title, Long accountId) {
+		this(null, title, accountId);
+	}
+
+	public Interview(Long interviewId, String title, Long accountId) {
+		this(interviewId, title, accountId, null, null, null, null);
+	}
+
+	public Interview(Long interviewId, String title,
+		Long accountId, LocalDateTime createdAt, LocalDateTime updatedAt,
+		LocalDateTime deletedAt, Boolean deletedFlag) {
 		this.interviewId = interviewId;
 		this.title = title;
-		this.account = account;
+		this.accountId = accountId;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.deletedAt = deletedAt;
 		this.deletedFlag = deletedFlag;
 	}
 
-	private long interviewId;
+	private Long interviewId;
 	private String title;
-	private Account account;
+	private Long accountId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;
-	private boolean deletedFlag;
+	private Boolean deletedFlag;
 }
