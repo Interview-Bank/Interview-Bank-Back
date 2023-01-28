@@ -16,13 +16,13 @@ public class AccountQueryService {
 	private final AccountRepository accountRepository;
 	private final AccountMapper accountMapper;
 
-	public Account findEntityByEmail(String email) {
+	public Account findAccountByEmail(String email) {
 		AccountEntity accountEntity = accountRepository.findByEmail(email)
 			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 
-	public Account findEntityByInterviewId(Long interviewId) {
+	public Account findAccountByInterviewId(Long interviewId) {
 		return accountMapper.accountEntityToAccount(
 			accountRepository.findById(interviewId).orElseThrow(() -> new IbEntityNotFoundException("Account")));
 	}

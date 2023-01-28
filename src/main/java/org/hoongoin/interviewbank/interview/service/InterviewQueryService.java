@@ -23,7 +23,7 @@ public class InterviewQueryService {
 	private final InterviewMapper interviewMapper;
 	private final AccountMapper accountMapper;
 
-	public Interview findEntityById(long interviewId) {
+	public Interview findInterviewById(long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("Interview"));
 
@@ -31,7 +31,7 @@ public class InterviewQueryService {
 			accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()));
 	}
 
-	public List<Interview> findEntitiesPageByPageAndSize(int page, int size) {
+	public List<Interview> findInterviewListByPageAndSize(int page, int size) {
 		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByPageableOrderByCreateTimeAsc(
 			PageRequest.of(page, size));
 

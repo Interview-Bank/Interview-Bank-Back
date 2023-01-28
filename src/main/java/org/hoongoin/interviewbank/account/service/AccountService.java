@@ -28,7 +28,7 @@ public class AccountService {
 	}
 
 	public Account loginByLoginRequest(LoginRequest loginRequest) {
-		Account account = accountQueryService.findEntityByEmail(loginRequest.getEmail());
+		Account account = accountQueryService.findAccountByEmail(loginRequest.getEmail());
 		if (!passwordEncoder.matches(loginRequest.getPassword(), account.getPassword())) {
 			throw new IbPasswordNotMatchException(account.getEmail());
 		}

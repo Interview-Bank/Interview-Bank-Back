@@ -55,7 +55,7 @@ public class InterviewService {
 			new Interview(createInterviewAndQuestionsRequest.getTitle(),
 				createInterviewAndQuestionsRequest.getAccountId()));
 
-		Interview createdInterview = interviewQueryService.findEntityById(createdInterviewId);
+		Interview createdInterview = interviewQueryService.findInterviewById(createdInterviewId);
 
 		List<Question> questions = questionCommandService.insertQuestions(
 			interviewMapper.createInterviewAndQuestionsRequestToQuestions(createInterviewAndQuestionsRequest,
@@ -75,7 +75,7 @@ public class InterviewService {
 
 	@Transactional(readOnly = true)
 	public FindInterviewResponse findInterviewById(long interviewId) {
-		Interview interview = interviewQueryService.findEntityById(interviewId);
+		Interview interview = interviewQueryService.findInterviewById(interviewId);
 
 		List<Question> questions = questionQueryService.findQuestionsByInterviewId(
 			interview.getInterviewId());
@@ -85,7 +85,7 @@ public class InterviewService {
 
 	@Transactional(readOnly = true)
 	public FindInterviewPageResponse findInterviewPageByPageAndSize(int page, int size) {
-		List<Interview> interviews = interviewQueryService.findEntitiesPageByPageAndSize(page, size);
+		List<Interview> interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
 
 		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
 
