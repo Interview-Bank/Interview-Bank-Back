@@ -11,10 +11,8 @@ import org.hoongoin.interviewbank.account.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.CreateQuestionRequest;
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
-import org.hoongoin.interviewbank.interview.controller.request.UpdateQuestionsRequest;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.repository.InterviewRepository;
@@ -47,30 +45,6 @@ class QuestionCommandServiceTest {
 	private static final String testNickname = "hunki";
 	private static final String testEmail = "gnsrl76@naver.com";
 	private static final String testPassword = "asdfasdf12!";
-
-	@Test
-	void insertQuestion_Success() {
-		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
-
-		String title = "title";
-
-		InterviewEntity savedInterviewEntity = interviewRepository.save(
-			InterviewEntity.builder().accountEntity(testAccountEntity).title(title).build());
-
-		String content = "content1";
-
-		CreateQuestionRequest createQuestionRequest = new CreateQuestionRequest(content, savedInterviewEntity.getId());
-
-		//when
-		long insertedQuestion = questionCommandService.insertQuestion(createQuestionRequest);
-
-		//then
-		Optional<QuestionEntity> selectedQuestionEntity = questionRepository.findById(insertedQuestion);
-		assertThat(selectedQuestionEntity).isPresent();
-		assertThat(selectedQuestionEntity.get().getContent()).isEqualTo(content);
-		assertThat(selectedQuestionEntity.get().getInterviewEntity().getId()).isEqualTo(savedInterviewEntity.getId());
-	}
 
 	@Test
 	void insertQuestions_Success() {

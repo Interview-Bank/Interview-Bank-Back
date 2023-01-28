@@ -9,9 +9,6 @@ import javax.persistence.PersistenceContext;
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
-import org.hoongoin.interviewbank.interview.controller.request.CreateQuestionRequest;
-import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.repository.InterviewRepository;
@@ -33,19 +30,6 @@ public class QuestionCommandService {
 	private EntityManager entityManager;
 
 	private static final String GET_BATCH_SIZE = "javax.persistence.jdbc.batch_size";
-
-	public long insertQuestion(CreateQuestionRequest createQuestionRequest) {
-		InterviewEntity interviewEntity = interviewRepository.findById(createQuestionRequest.getInterviewId())
-			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
-
-		QuestionEntity questionEntity = QuestionEntity.builder()
-			.content(createQuestionRequest.getContent())
-			.interviewEntity(interviewEntity)
-			.build();
-
-		QuestionEntity savedEntity = questionRepository.save(questionEntity);
-		return savedEntity.getId();
-	}
 
 	public List<Question> insertQuestions(List<Question> questions, long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
