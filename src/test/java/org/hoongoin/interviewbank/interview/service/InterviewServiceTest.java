@@ -9,6 +9,7 @@ import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
+import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
@@ -63,12 +64,63 @@ class InterviewServiceTest {
 			createInterviewAndQuestionsRequest);
 
 		//then
-		assertThat(createInterviewAndQuestionsResponse.getQuestions()).extracting("content").containsExactlyInAnyOrder("content1",
-			"content2");
+		assertThat(createInterviewAndQuestionsResponse.getQuestions()).extracting("content")
+			.containsExactlyInAnyOrder("content1",
+				"content2");
 		assertThat(createInterviewAndQuestionsResponse.getTitle()).isEqualTo(title);
 		assertThat(createInterviewAndQuestionsResponse.getQuestions()).hasSize(questionsRequest.getQuestions().size());
 		assertThat(createInterviewAndQuestionsResponse.getInterviewId()).isNotNull();
 
+	}
+
+	@Test
+	void createInterviewAndQuestionsByRequest_Fail_QuestionSizeIs1001() {
+		//given
+		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+
+		String title = "title";
+
+		List<QuestionsRequest.Question> questions = new ArrayList<>();
+
+		for (int i = 0; i < 1001; i++) {
+			questions.add(new QuestionsRequest.Question("content"));
+		}
+
+		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
+
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
+			title, testAccountEntity.getId(), questionsRequest);
+
+		//when //then
+		assertThatThrownBy(
+			() -> interviewService.createInterviewAndQuestionsByRequest(createInterviewAndQuestionsRequest)).hasMessage(
+			"Question size").isInstanceOf(IbValidationException.class);
+	}
+
+	@Test
+	void createInterviewAndQuestionsByRequest_Success_QuestionSizeIs1000() {
+		//given
+		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+
+		String title = "title";
+
+		List<QuestionsRequest.Question> questions = new ArrayList<>();
+
+		for (int i = 0; i < 1000; i++) {
+			questions.add(new QuestionsRequest.Question("content"));
+		}
+
+		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
+
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
+			title, testAccountEntity.getId(), questionsRequest);
+
+		//when
+		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
+			createInterviewAndQuestionsRequest);
+
+		//then
+		assertThat(createInterviewAndQuestionsResponse.getQuestions()).hasSize(1000);
 	}
 
 	private AccountEntity createTestAccountEntity() {

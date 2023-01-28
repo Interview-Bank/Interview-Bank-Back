@@ -3,6 +3,10 @@ package org.hoongoin.interviewbank.interview.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hoongoin.interviewbank.account.service.AccountQueryService;
+import org.hoongoin.interviewbank.account.service.domain.Account;
+import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
+import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
@@ -27,6 +31,7 @@ public class InterviewService {
 	private final InterviewMapper interviewMapper;
 	private final QuestionCommandService questionCommandService;
 	private final QuestionQueryService questionQueryService;
+	private final AccountQueryService accountQueryService;
 
 	@Transactional
 	public UpdateInterviewResponse updateInterviewResponseByRequestAndInterviewId(
@@ -39,13 +44,20 @@ public class InterviewService {
 
 		List<Question> updatedQuestions = questionCommandService.updateQuestions(newQuestions);
 
-		return interviewMapper.questionsAndTitleToUpdateInterviewResponse(updatedQuestions, interview.getTitle());
+		UpdateInterviewResponse updateInterviewResponse = interviewMapper.questionsAndTitleToUpdateInterviewResponse(
+			updatedQuestions, interview.getTitle());
+
+		validateQuestionsSize(updateInterviewResponse.getQuestions().size());
+
+		return updateInterviewResponse;
 	}
 
 	@Transactional
 	public DeleteInterviewResponse deleteInterviewById(long interviewId) {
 		long deletedInterviewId = interviewCommandService.deleteInterview(interviewId);
+
 		List<Long> deletedQuestionIds = questionCommandService.deleteQuestionsByInterviewId(interviewId);
+
 		return new DeleteInterviewResponse(deletedInterviewId, deletedQuestionIds);
 	}
 
@@ -67,8 +79,13 @@ public class InterviewService {
 		questions.forEach(question -> createInterviewAndQuestionsResponseQuiestions.add(
 			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getInterviewId())));
 
-		return new CreateInterviewAndQuestionsResponse(createdInterview.getTitle(),
+		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = new CreateInterviewAndQuestionsResponse(
+			createdInterview.getTitle(),
 			createdInterviewId, createInterviewAndQuestionsResponseQuiestions, createdInterview.getCreatedAt());
+
+		validateQuestionsSize(createInterviewAndQuestionsResponse.getQuestions().size());
+
+		return createInterviewAndQuestionsResponse;
 	}
 
 	@Transactional(readOnly = true)
@@ -78,6 +95,8 @@ public class InterviewService {
 		List<Question> questions = questionQueryService.findQuestionsByInterviewId(
 			interview.getInterviewId());
 
+		validateQuestionsSize(questions.size());
+
 		return interviewMapper.questionListAndInterviewToFindInterviewResponse(questions, interview);
 	}
 
@@ -85,11 +104,26 @@ public class InterviewService {
 	public FindInterviewPageResponse findInterviewPageByPageAndSize(int page, int size) {
 		List<Interview> interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
 
+		Account account = findAccountByInterviews(interviews);
+
 		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
 
 		interviews.forEach(interview -> findInterviewPageResponseInterview.add(
-			interviewMapper.interviewAndNicknameToFindInterviewPageResponseInterview(interview)));
+			interviewMapper.interviewAndNicknameToFindInterviewPageResponseInterview(interview, account)));
 
 		return new FindInterviewPageResponse(findInterviewPageResponseInterview);
+	}
+
+	private Account findAccountByInterviews(List<Interview> interviews) {
+		if (!interviews.isEmpty()) {
+			return accountQueryService.findAccountByAccountId(interviews.get(0).getAccountId());
+		}
+		throw new IbEntityNotFoundException("Account");
+	}
+
+	private void validateQuestionsSize(int questionSize) {
+		if (questionSize > 1000 || questionSize < 1) {
+			throw new IbValidationException("Question size");
+		}
 	}
 }

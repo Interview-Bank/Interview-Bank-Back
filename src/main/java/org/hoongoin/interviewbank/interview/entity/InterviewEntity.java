@@ -31,7 +31,7 @@ public class InterviewEntity extends SoftDeletedBaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false, length = 128)
 	private String title;
 
 	@ManyToOne(fetch = FetchType.LAZY)
