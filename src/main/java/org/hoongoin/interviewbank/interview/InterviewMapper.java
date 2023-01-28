@@ -6,7 +6,9 @@ import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRe
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
+import org.hoongoin.interviewbank.interview.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.service.domain.Interview;
+import org.hoongoin.interviewbank.interview.service.domain.Question;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,18 +18,22 @@ public interface InterviewMapper {
 	@Mapping(target = "id", source = "interview.interviewId")
 	InterviewEntity interviewToInterviewEntity(Interview interview, AccountEntity accountEntity);
 
-	@Mapping(target = "interviewId", source = "interviewEntity.id")
-	@Mapping(target = "createdAt", source = "interviewEntity.createdAt")
-	@Mapping(target = "updatedAt", source = "interviewEntity.updatedAt")
-	@Mapping(target = "deletedAt", source = "interviewEntity.deletedAt")
-	@Mapping(target = "deletedFlag", source = "interviewEntity.deletedFlag")
-	Interview interviewEntityToInterview(InterviewEntity interviewEntity, Account account);
+	default Interview interviewEntityToInterview(InterviewEntity interviewEntity, Account account) {
+		return new Interview(interviewEntity.getId(), interviewEntity.getTitle(), account.getAccountId(), interviewEntity.getCreatedAt(),
+			interviewEntity.getUpdatedAt(), interviewEntity.getDeletedAt(), interviewEntity.getDeletedFlag());
+	}
 
 	@Mapping(target = "createInterviewRequest.accountId", ignore = true)
 	@Mapping(target = "accountEntity", source = "accountEntity")
-	InterviewEntity createInterviewRequestToInterviewEntity(CreateInterviewRequest createInterviewRequest, AccountEntity accountEntity);
+	InterviewEntity createInterviewRequestToInterviewEntity(CreateInterviewRequest createInterviewRequest,
+		AccountEntity accountEntity);
 
 	UpdateInterviewResponse interviewToUpdateInterviewResponse(Interview interview);
 
 	FindInterviewResponse interviewToFindInterviewResponse(Interview interview);
+
+	default Question questionEntityToQuestion(QuestionEntity questionEntity) {
+		return new Question(questionEntity.getId(), questionEntity.getInterviewEntity().getId(),
+			questionEntity.getContent());
+	}
 }

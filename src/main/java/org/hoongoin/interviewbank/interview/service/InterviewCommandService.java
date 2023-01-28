@@ -3,8 +3,8 @@ package org.hoongoin.interviewbank.interview.service;
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
+import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
-import org.hoongoin.interviewbank.exception.CustomEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
@@ -27,7 +27,7 @@ public class InterviewCommandService {
 	@Transactional
 	public long insertInterview(CreateInterviewRequest createInterviewRequest) {
 		AccountEntity selectedAccountEntity = accountRepository.findById(createInterviewRequest.getAccountId())
-			.orElseThrow(() -> new CustomEntityNotFoundException("AccountEntity"));
+			.orElseThrow(() -> new IbEntityNotFoundException("AccountEntity"));
 
 		InterviewEntity interviewEntity = interviewMapper.createInterviewRequestToInterviewEntity(createInterviewRequest,
 			selectedAccountEntity);
@@ -46,7 +46,7 @@ public class InterviewCommandService {
 	@Transactional
 	public Interview updateInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new CustomEntityNotFoundException("InterviewEntity"));
+			.orElseThrow(() -> new IbEntityNotFoundException("InterviewEntity"));
 
 		interviewEntity.modifyEntity(updateInterviewRequest.getTitle());
 
