@@ -13,9 +13,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @EntityListeners(AuditingEntityListener.class)
 @Getter
+@Setter
 @MappedSuperclass
 @DynamicInsert
 public class SoftDeletedBaseEntity {
@@ -33,4 +35,9 @@ public class SoftDeletedBaseEntity {
 
 	@Column
 	private LocalDateTime deletedAt;
+
+	public void deleteEntityByFlag() {
+		this.setDeletedFlag(true);
+		this.setDeletedAt(LocalDateTime.now());
+	}
 }

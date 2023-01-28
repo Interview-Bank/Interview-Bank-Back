@@ -4,7 +4,7 @@ import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
 import org.hoongoin.interviewbank.account.service.domain.Account;
-import org.hoongoin.interviewbank.exception.CustomEntityNotFoundException;
+import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -16,9 +16,9 @@ public class AccountQueryService {
 	private final AccountRepository accountRepository;
 	private final AccountMapper accountMapper;
 
-	public Account findEntityByEmail(String email) {
+	public Account findAccountByEmail(String email) {
 		AccountEntity accountEntity = accountRepository.findByEmail(email)
-			.orElseThrow(() -> new CustomEntityNotFoundException("Account"));
+			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 }

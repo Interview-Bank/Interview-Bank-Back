@@ -10,22 +10,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UpdateInterviewResponse {
+public class CreateInterviewAndQuestionsResponse {
 
 	private String title;
-	private List<UpdateInterviewResponse.Question> questions;
+	private Long interviewId;
+	private List<Question> questions;
+	private LocalDateTime interviewCreatedAt;
 
 	@Getter
+	@Setter
+	@AllArgsConstructor
 	public static class Question {
 
-		public Question(long questionId, String content, LocalDateTime updatedAt) {
-			this.questionId = questionId;
-			this.content = content;
-			this.updatedAt = updatedAt;
-		}
-
-		private long questionId;
 		private String content;
-		private LocalDateTime updatedAt;
+		private long questionId;
 	}
 }

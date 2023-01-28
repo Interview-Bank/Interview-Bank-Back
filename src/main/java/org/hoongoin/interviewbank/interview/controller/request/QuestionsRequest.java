@@ -9,21 +9,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UpdateInterviewRequest {
+public class QuestionsRequest {
 
-	private List<UpdateInterviewRequest.Question> questions;
-	private String title;
+	private List<Question> questions;
 
 	@Getter
-	@Setter
 	public static class Question {
 
-		public Question(String content, Long questionId) {
+		public Question(String content) {
 			this.content = content;
-			this.questionId = questionId;
 		}
 
 		private String content;
-		private Long questionId;
 	}
 }

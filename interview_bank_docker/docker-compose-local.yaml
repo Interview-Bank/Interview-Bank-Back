@@ -1,5 +1,13 @@
 version: "3"
 services:
+  app:
+    build: ../
+    restart: always
+    ports:
+      - "8084:8084"
+    depends_on:
+      - db
+      - redis
   db:
     image: mysql:8.0
     container_name: mysql
