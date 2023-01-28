@@ -11,7 +11,6 @@ import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
-import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.entity.QuestionEntity;
@@ -21,7 +20,6 @@ import org.hoongoin.interviewbank.interview.service.domain.Interview;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.hoongoin.interviewbank.interview.service.domain.Question;
 
 @IbSpringBootTest
 @Transactional

@@ -72,15 +72,6 @@ public class QuestionCommandService {
 		return deletedQuestions;
 	}
 
-	public Question deleteQuestion(long questionId) {
-		QuestionEntity questionEntity = questionRepository.findById(questionId)
-			.orElseThrow(() -> new IbEntityNotFoundException("question"));
-
-		questionEntity.deleteEntityByFlag();
-
-		return interviewMapper.questionEntityToQuestion(questionEntity);
-	}
-
 	private List<Question> saveAllQuestions(List<Question> questions, InterviewEntity interviewEntity,
 		List<QuestionEntity> questionEntities) {
 		for (Question question : questions) {

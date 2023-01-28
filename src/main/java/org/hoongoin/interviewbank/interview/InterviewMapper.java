@@ -20,9 +20,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface InterviewMapper {
 
-	@Mapping(target = "id", source = "interview.interviewId")
-	InterviewEntity interviewToInterviewEntity(Interview interview, AccountEntity accountEntity);
-
 	default Interview interviewEntityToInterview(InterviewEntity interviewEntity, Account account) {
 		return new Interview(interviewEntity.getId(), interviewEntity.getTitle(), account.getAccountId(),
 			interviewEntity.getCreatedAt(),

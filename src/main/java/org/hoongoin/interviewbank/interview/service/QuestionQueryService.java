@@ -22,11 +22,6 @@ public class QuestionQueryService {
 	private final QuestionRepository questionRepository;
 	private final InterviewMapper interviewMapper;
 
-	public Question findQuestionByQuestionId(long questionId) {
-		return interviewMapper.questionEntityToQuestion(
-			questionRepository.findById(questionId).orElseThrow(() -> new IbEntityNotFoundException("question")));
-	}
-
 	public List<Question> findQuestionsByInterviewId(long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
