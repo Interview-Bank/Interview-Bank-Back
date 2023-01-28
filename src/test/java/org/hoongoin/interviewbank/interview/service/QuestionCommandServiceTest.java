@@ -10,6 +10,7 @@ import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
+import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.CreateQuestionRequest;
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
@@ -94,8 +95,13 @@ class QuestionCommandServiceTest {
 
 		QuestionsRequest questionsRequest = new QuestionsRequest(innerQuestions);
 
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
+			savedInterviewEntity.getTitle(), testAccountEntity.getId(), questionsRequest);
+
 		//when
-		List<Question> questions = questionCommandService.insertQuestions(questionsRequest,
+		List<Question> questions = questionCommandService.insertQuestions(
+			interviewMapper.createInterviewAndQuestionsRequestToQuestions(createInterviewAndQuestionsRequest,
+				savedInterviewEntity.getId()),
 			savedInterviewEntity.getId());
 
 		//then
@@ -147,7 +153,8 @@ class QuestionCommandServiceTest {
 
 		//when
 		List<Question> updatedQuestions = questionCommandService.updateQuestions(
-			new UpdateInterviewRequest(updatingQuestions, savedInterviewEntity.getTitle()));
+			interviewMapper.updateInterviewRequestToQuestions(
+				new UpdateInterviewRequest(updatingQuestions, savedInterviewEntity.getTitle()), savedInterviewEntity.getId()));
 
 		//then
 		assertThat(updatedQuestions.get(0).getContent()).isEqualTo(updatedContent1);
@@ -183,21 +190,20 @@ class QuestionCommandServiceTest {
 		questionRepository.saveAllAndFlush(questions);
 
 		//when
-		List<Question> deletedQuestions = questionCommandService.deleteQuestionsByInterviewId(
+		List<Long> deletedQuestionIds = questionCommandService.deleteQuestionsByInterviewId(
 			savedInterviewEntity.getId());
 
 		//then
-		deletedQuestions.forEach(deletedQuestion -> {
-			QuestionEntity question = questionRepository.findById(deletedQuestion.getQuestionId()).orElse(null);
+		deletedQuestionIds.forEach(deletedQuestionId -> {
+			QuestionEntity question = questionRepository.findById(deletedQuestionId).orElse(null);
 			assert question != null;
 			assertThat(question.getDeletedFlag()).isTrue();
 		});
 
-		long deletedQuestionsCount = deletedQuestions.size();
+		long deletedQuestionsCount = questions.size();
 		long allQuestionsCount = questionRepository.findAll().size();
 
 		assertThat(deletedQuestionsCount).isEqualTo(allQuestionsCount);
-
 	}
 
 	private AccountEntity createTestAccountEntity() {

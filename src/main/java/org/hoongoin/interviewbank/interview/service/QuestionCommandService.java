@@ -47,42 +47,35 @@ public class QuestionCommandService {
 		return savedEntity.getId();
 	}
 
-	public List<Question> insertQuestions(QuestionsRequest questionsRequest, long interviewId) {
+	public List<Question> insertQuestions(List<Question> questions, long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
 
 		List<QuestionEntity> questionEntities = new ArrayList<>();
 
-		List<Question> questions = new ArrayList<>();
-
-		questionsRequest.getQuestions()
-			.forEach(question -> questions.add(
-				new Question(interviewId, question.getContent())));
-
 		return saveAllQuestions(questions, interviewEntity, questionEntities);
 	}
 
-	public List<Question> updateQuestions(UpdateInterviewRequest updateInterviewRequest) {
+	public List<Question> updateQuestions(List<Question> newQuestions) {
 		List<Question> questions = new ArrayList<>();
 
-		updateInterviewRequest.getQuestions()
-			.forEach(question -> {
-				QuestionEntity questionEntity = questionRepository.findById(question.getQuestionId())
-					.orElseThrow(() -> new IbEntityNotFoundException("question"));
+		newQuestions.forEach(question -> {
+			QuestionEntity questionEntity = questionRepository.findById(question.getQuestionId())
+				.orElseThrow(() -> new IbEntityNotFoundException("question"));
 
-				questionEntity.modifyContent(question.getContent());
+			questionEntity.modifyContent(question.getContent());
 
-				questions.add(interviewMapper.questionEntityToQuestion(questionEntity));
-			});
+			questions.add(interviewMapper.questionEntityToQuestion(questionEntity));
+		});
 
 		return questions;
 	}
 
-	public List<Question> deleteQuestionsByInterviewId(long interviewId) {
+	public List<Long> deleteQuestionsByInterviewId(long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
 
-		List<Question> deletedQuestions = new ArrayList<>();
+		List<Long> deletedQuestions = new ArrayList<>();
 
 		List<QuestionEntity> registeredQuestionEntities = questionRepository.findQuestionEntitiesByInterviewEntity(
 			interviewEntity);
@@ -90,7 +83,7 @@ public class QuestionCommandService {
 		registeredQuestionEntities.forEach(SoftDeletedBaseEntity::deleteEntityByFlag);
 
 		registeredQuestionEntities.forEach(
-			questionEntity -> deletedQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity)));
+			questionEntity -> deletedQuestions.add(questionEntity.getId()));
 
 		return deletedQuestions;
 	}

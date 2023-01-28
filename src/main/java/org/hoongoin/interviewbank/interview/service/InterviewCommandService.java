@@ -5,7 +5,6 @@ import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
-import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.repository.InterviewRepository;
 import org.hoongoin.interviewbank.interview.service.domain.Interview;
@@ -41,11 +40,11 @@ public class InterviewCommandService {
 		return interviewId;
 	}
 
-	public Interview updateInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId) {
+	public Interview updateInterview(Interview interview, long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("InterviewEntity"));
 
-		interviewEntity.modifyEntity(updateInterviewRequest.getTitle());
+		interviewEntity.modifyEntity(interview.getTitle());
 
 		return interviewMapper.interviewEntityToInterview(interviewEntity,
 			accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()));

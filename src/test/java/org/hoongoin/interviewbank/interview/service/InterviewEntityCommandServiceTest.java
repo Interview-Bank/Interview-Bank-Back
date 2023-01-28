@@ -75,11 +75,20 @@ class InterviewEntityCommandServiceTest {
 		String newTitle = "newTitle";
 
 		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(title, testAccountEntity.getId());
-		InterviewEntity interviewEntity = InterviewEntity.builder().title(createInterviewRequest.getTitle()).accountEntity(testAccountEntity).build();
+		InterviewEntity interviewEntity = InterviewEntity.builder()
+			.title(createInterviewRequest.getTitle())
+			.accountEntity(testAccountEntity)
+			.build();
 		InterviewEntity savedInterviewEntity = interviewRepository.saveAndFlush(interviewEntity);
 
-		QuestionEntity question1 = QuestionEntity.builder().interviewEntity(savedInterviewEntity).content("content1").build();
-		QuestionEntity question2 = QuestionEntity.builder().interviewEntity(savedInterviewEntity).content("content2").build();
+		QuestionEntity question1 = QuestionEntity.builder()
+			.interviewEntity(savedInterviewEntity)
+			.content("content1")
+			.build();
+		QuestionEntity question2 = QuestionEntity.builder()
+			.interviewEntity(savedInterviewEntity)
+			.content("content2")
+			.build();
 
 		List<QuestionEntity> questions = new ArrayList<>();
 
@@ -91,20 +100,21 @@ class InterviewEntityCommandServiceTest {
 		List<QuestionEntity> questionEntities = questionRepository.findQuestionEntitiesByInterviewEntity(
 			savedInterviewEntity);
 
-		UpdateInterviewRequest.Question updatedQuestion1 = new UpdateInterviewRequest.Question("newContent1", questionEntities.get(0).getId());
-		UpdateInterviewRequest.Question updatedQuestion2 = new UpdateInterviewRequest.Question("newContent2", questionEntities.get(1).getId());
+		UpdateInterviewRequest.Question updatedQuestion1 = new UpdateInterviewRequest.Question("newContent1",
+			questionEntities.get(0).getId());
+		UpdateInterviewRequest.Question updatedQuestion2 = new UpdateInterviewRequest.Question("newContent2",
+			questionEntities.get(1).getId());
 
 		List<UpdateInterviewRequest.Question> updatedQuestions = new ArrayList<>();
 
 		updatedQuestions.add(updatedQuestion1);
 		updatedQuestions.add(updatedQuestion2);
 
-
 		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle);
 
 		//when
-		Interview updatedInterview = interviewCommandService.updateInterview(updateInterviewRequest,
-			savedInterviewEntity.getId());
+		Interview updatedInterview = interviewCommandService.updateInterview(
+			new Interview(updateInterviewRequest.getTitle()), savedInterviewEntity.getId());
 
 		//then
 		assertThat(updatedInterview.getTitle()).isEqualTo(newTitle);

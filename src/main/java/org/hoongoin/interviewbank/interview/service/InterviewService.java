@@ -3,11 +3,11 @@ package org.hoongoin.interviewbank.interview.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hoongoin.interviewbank.account.service.AccountQueryService;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
+import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
@@ -27,29 +27,25 @@ public class InterviewService {
 	private final InterviewMapper interviewMapper;
 	private final QuestionCommandService questionCommandService;
 	private final QuestionQueryService questionQueryService;
-	private final AccountQueryService accountQueryService;
 
 	@Transactional
 	public UpdateInterviewResponse updateInterviewResponseByRequestAndInterviewId(
 		UpdateInterviewRequest updateInterviewRequest, long interviewId) {
-		Interview interview = interviewCommandService.updateInterview(updateInterviewRequest, interviewId);
+		Interview interview = interviewCommandService.updateInterview(new Interview(updateInterviewRequest.getTitle()),
+			interviewId);
 
-		List<Question> questions = questionCommandService.updateQuestions(updateInterviewRequest);
+		List<Question> newQuestions = interviewMapper.updateInterviewRequestToQuestions(updateInterviewRequest, interviewId);
 
-		List<UpdateInterviewResponse.Question> updatedQuestions = new ArrayList<>();
+		List<Question> updatedQuestions = questionCommandService.updateQuestions(newQuestions);
 
-		questions.forEach(question -> updatedQuestions.add(
-			new UpdateInterviewResponse.Question(question.getQuestionId(), question.getInterviewId(),
-				question.getContent(), question.getUpdatedAt())));
-
-		return new UpdateInterviewResponse(interview.getTitle(), updatedQuestions);
+		return interviewMapper.questionsAndTitleToUpdateInterviewResponse(updatedQuestions, interview.getTitle());
 	}
 
 	@Transactional
-	public long deleteInterviewById(long interviewId) {
-		interviewCommandService.deleteInterview(interviewId);
-		questionCommandService.deleteQuestionsByInterviewId(interviewId);
-		return interviewId;
+	public DeleteInterviewResponse deleteInterviewById(long interviewId) {
+		long deletedInterviewId = interviewCommandService.deleteInterview(interviewId);
+		List<Long> deletedQuestionIds = questionCommandService.deleteQuestionsByInterviewId(interviewId);
+		return new DeleteInterviewResponse(deletedInterviewId, deletedQuestionIds);
 	}
 
 	@Transactional
@@ -62,7 +58,8 @@ public class InterviewService {
 		Interview createdInterview = interviewQueryService.findEntityById(createdInterviewId);
 
 		List<Question> questions = questionCommandService.insertQuestions(
-			createInterviewAndQuestionsRequest.getQuestionsRequest(), createdInterviewId);
+			interviewMapper.createInterviewAndQuestionsRequestToQuestions(createInterviewAndQuestionsRequest,
+				createdInterviewId), createdInterviewId);
 
 		List<String> questionContents = new ArrayList<>();
 		List<Long> questionIds = new ArrayList<>();
@@ -79,6 +76,7 @@ public class InterviewService {
 	@Transactional(readOnly = true)
 	public FindInterviewResponse findInterviewById(long interviewId) {
 		Interview interview = interviewQueryService.findEntityById(interviewId);
+
 		List<Question> questions = questionQueryService.findQuestionsByInterviewId(
 			interview.getInterviewId());
 
@@ -88,9 +86,12 @@ public class InterviewService {
 	@Transactional(readOnly = true)
 	public FindInterviewPageResponse findInterviewPageByPageAndSize(int page, int size) {
 		List<Interview> interviews = interviewQueryService.findEntitiesPageByPageAndSize(page, size);
+
 		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
+
 		interviews.forEach(interview -> findInterviewPageResponseInterview.add(
 			interviewMapper.interviewAndNicknameToFindInterviewPageResponseInterview(interview)));
+
 		return new FindInterviewPageResponse(findInterviewPageResponseInterview);
 	}
 }

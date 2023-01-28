@@ -106,13 +106,13 @@ class InterviewControllerTest {
 			.interviewEntity(savedInterviewEntity)
 			.build();
 
-		questionRepository.saveAndFlush(question1);
-		questionRepository.saveAndFlush(question2);
+		QuestionEntity savedQuestion1 = questionRepository.saveAndFlush(question1);
+		QuestionEntity savedQuestion2 = questionRepository.saveAndFlush(question2);
 
 		UpdateInterviewRequest.Question newQuestion1 = new UpdateInterviewRequest.Question("newContent1",
-			question1.getId());
+			savedQuestion1.getId());
 		UpdateInterviewRequest.Question newQuestion2 = new UpdateInterviewRequest.Question("newContent2",
-			question2.getId());
+			savedQuestion2.getId());
 
 		List<UpdateInterviewRequest.Question> questions = new ArrayList<>();
 

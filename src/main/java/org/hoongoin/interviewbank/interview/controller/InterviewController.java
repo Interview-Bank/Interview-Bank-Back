@@ -3,6 +3,7 @@ package org.hoongoin.interviewbank.interview.controller;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
+import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
@@ -36,7 +37,7 @@ public class InterviewController {
 	}
 
 	@DeleteMapping("/{interview-id}")
-	public ResponseEntity<Long> deleteInterview(@PathVariable("interview-id") long interviewId) {
+	public ResponseEntity<DeleteInterviewResponse> deleteInterview(@PathVariable("interview-id") long interviewId) {
 		return ResponseEntity.ok(interviewService.deleteInterviewById(interviewId));
 	}
 
