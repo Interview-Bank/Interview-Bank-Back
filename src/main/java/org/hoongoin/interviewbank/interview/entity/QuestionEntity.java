@@ -34,7 +34,7 @@ public class QuestionEntity extends SoftDeletedBaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(nullable = false, length = 1000)
+	@Column(nullable = false, length = 100000)
 	private String content;
 
 	@ManyToOne(fetch = FetchType.LAZY)

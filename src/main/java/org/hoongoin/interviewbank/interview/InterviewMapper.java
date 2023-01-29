@@ -3,7 +3,6 @@ package org.hoongoin.interviewbank.interview;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.service.domain.Account;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
@@ -15,16 +14,14 @@ import org.hoongoin.interviewbank.interview.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.service.domain.Interview;
 import org.hoongoin.interviewbank.interview.service.domain.Question;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface InterviewMapper {
 
 	default Interview interviewEntityToInterview(InterviewEntity interviewEntity, Account account) {
 		return new Interview(interviewEntity.getId(), interviewEntity.getTitle(), account.getAccountId(),
-			interviewEntity.getCreatedAt(),
-			interviewEntity.getUpdatedAt(), interviewEntity.getDeletedAt(), interviewEntity.getDeletedFlag(),
-			account.getNickname());
+			interviewEntity.getCreatedAt(), interviewEntity.getUpdatedAt(), interviewEntity.getDeletedAt(),
+			interviewEntity.getDeletedFlag());
 	}
 
 	default Question questionEntityToQuestion(QuestionEntity questionEntity) {
@@ -44,8 +41,8 @@ public interface InterviewMapper {
 	}
 
 	default FindInterviewPageResponse.Interview interviewAndNicknameToFindInterviewPageResponseInterview(
-		Interview interview) {
-		return new FindInterviewPageResponse.Interview(interview.getInterviewId(), interview.getNickname(),
+		Interview interview, Account account) {
+		return new FindInterviewPageResponse.Interview(interview.getInterviewId(), account.getNickname(),
 			interview.getCreatedAt(), interview.getTitle());
 	}
 
