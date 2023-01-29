@@ -48,7 +48,6 @@ public class Interview {
 		if (validateTitle(title)) {
 			throw new IbValidationException("title");
 		}
-
 		this.title = title;
 	}
 

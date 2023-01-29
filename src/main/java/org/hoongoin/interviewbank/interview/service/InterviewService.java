@@ -115,10 +115,10 @@ public class InterviewService {
 	}
 
 	private Account findAccountByInterviews(List<Interview> interviews) {
-		if (!interviews.isEmpty()) {
-			return accountQueryService.findAccountByAccountId(interviews.get(0).getAccountId());
+		if (interviews.isEmpty()) {
+			throw new IbEntityNotFoundException("Account");
 		}
-		throw new IbEntityNotFoundException("Account");
+		return accountQueryService.findAccountByAccountId(interviews.get(0).getAccountId());
 	}
 
 	private void validateQuestionsSize(int questionSize) {
