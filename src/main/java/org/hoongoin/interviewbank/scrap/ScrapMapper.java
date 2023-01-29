@@ -4,8 +4,10 @@ import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.service.domain.Account;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.service.domain.Interview;
+import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.entity.ScrapEntity;
 import org.hoongoin.interviewbank.scrap.entity.ScrapQuestionEntity;
 import org.hoongoin.interviewbank.scrap.service.domain.Scrap;
@@ -50,4 +52,12 @@ public interface ScrapMapper {
 
 	ScrapQuestionResponse scrapQuestionToScrapQuestionResponse(ScrapQuestion scrapQuestion);
 
+	UpdateScrapResponse scrapToUpdateScrapResponse(Scrap scrap);
+
+	@Mapping(target = "scrapId", ignore = true)
+	@Mapping(target = "accountId", ignore = true)
+	@Mapping(target = "interviewId", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "updatedAt", ignore = true)
+	Scrap updateScrapRequestToScrap(UpdateScrapRequest updateScrapRequest);
 }

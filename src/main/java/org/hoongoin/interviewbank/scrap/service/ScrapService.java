@@ -6,16 +6,20 @@ import java.util.List;
 import org.hoongoin.interviewbank.account.service.AccountQueryService;
 import org.hoongoin.interviewbank.account.service.domain.Account;
 import org.hoongoin.interviewbank.exception.IbEntityExistsException;
+import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.interview.service.InterviewQueryService;
 import org.hoongoin.interviewbank.interview.service.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.service.domain.Interview;
 import org.hoongoin.interviewbank.interview.service.domain.Question;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
+import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.OriginalInterviewResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.service.domain.Scrap;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapAndScrapQuestions;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestion;
@@ -29,6 +33,9 @@ import lombok.RequiredArgsConstructor;
 public class ScrapService {
 
 	private final ScrapCommandService scrapCommandService;
+	private final ScrapQueryService scrapQueryService;
+	private final ScrapQuestionCommandService scrapQuestionCommandService;
+	private final ScrapQuestionQueryService scrapQuestionQueryService;
 	private final AccountQueryService accountQueryService;
 	private final InterviewQueryService interviewQueryService;
 	private final QuestionQueryService questionQueryService;
@@ -38,7 +45,6 @@ public class ScrapService {
 	public CreateScrapResponse createScrapByCreateRequest(CreateScrapRequest createScrapRequest,
 		String requestingAccountOfEmail) {
 		Interview originalInterview = interviewQueryService.findEntityById(createScrapRequest.getInterviewId());
-		Account interviewWriterAccount = accountQueryService.findAccountById(originalInterview.getAccountId());
 		List<Question> originalQuestionsInInterview = questionQueryService.findEntitiesByInterviewId(createScrapRequest.getInterviewId());
 
 		Scrap scrap = Scrap.builder().interviewId(originalInterview.getInterviewId()).title(originalInterview.getTitle()).build();
@@ -53,13 +59,68 @@ public class ScrapService {
 		ScrapAndScrapQuestions savedScrapAndScrapQuestions  = scrapCommandService.insertScrapAndScrapQuestions(scrap,
 			scrapQuestions, requestingAccount, originalInterview);
 
-		OriginalInterviewResponse originalInterviewResponse = new OriginalInterviewResponse(
-			originalInterview.getInterviewId(), originalInterview.getTitle(), interviewWriterAccount.getNickname());
-		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(savedScrapAndScrapQuestions.getScrap());
-		List<ScrapQuestionResponse> scrapQuestionResponseList = new ArrayList<>();
-		savedScrapAndScrapQuestions.getScrapQuestionList().forEach(
-			scrapQuestion -> scrapQuestionResponseList.add(scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestion)));
+		return makeCreateScrapResponse(originalInterview, savedScrapAndScrapQuestions);
+	}
 
+	@Transactional
+	public UpdateScrapResponse updateScrapByRequestAndScrapId(UpdateScrapRequest updateScrapRequest, long scrapId,
+		String requestingAccountOfEmail) {
+		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
+		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
+		if(scrap.getAccountId() != requestingAccount.getAccountId()){
+			throw new IbUnauthorizedException("Scrap");
+		}
+
+		Scrap scrapToUpdate = scrapMapper.updateScrapRequestToScrap(updateScrapRequest);
+		scrap = scrapCommandService.updateScrap(scrapId, scrapToUpdate);
+		return scrapMapper.scrapToUpdateScrapResponse(scrap);
+	}
+
+	@Transactional
+	public void deleteScrapByRequestAndScrapId(long scrapId, String requestingAccountOfEmail) {
+		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
+		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
+		if(scrap.getAccountId() != requestingAccount.getAccountId()){
+			throw new IbUnauthorizedException("Scrap");
+		}
+
+		scrapQuestionCommandService.deleteAllScrapQuestionByScrapId(scrapId);
+		scrapCommandService.deleteScrapById(scrapId);
+	}
+
+	@Transactional(readOnly = true)
+	public ReadScrapResponse readScrapById(long scrapId, String requestingAccountOfEmail) {
+		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
+		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
+		if(scrap.getAccountId() != requestingAccount.getAccountId()){
+			throw new IbUnauthorizedException("Scrap");
+		}
+
+		Interview interview = interviewQueryService.findEntityById(scrap.getInterviewId());
+
+		List<ScrapQuestion> scrapQuestions= scrapQuestionQueryService.findAllScrapQuestionByScrapId(scrapId);
+
+		return makeReadScrapResponse(scrap, interview, scrapQuestions);
+	}
+
+	private CreateScrapResponse makeCreateScrapResponse(Interview interview, ScrapAndScrapQuestions scrapAndScrapQuestions){
+		OriginalInterviewResponse originalInterviewResponse = new OriginalInterviewResponse(
+			interview.getInterviewId(), interview.getTitle());
+		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(scrapAndScrapQuestions.getScrap());
+		List<ScrapQuestionResponse> scrapQuestionResponseList = new ArrayList<>();
+		scrapAndScrapQuestions.getScrapQuestionList().forEach(
+			scrapQuestion -> scrapQuestionResponseList.add(scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestion)));
 		return new CreateScrapResponse(originalInterviewResponse, scrapResponse, scrapQuestionResponseList);
+	}
+
+	private ReadScrapResponse makeReadScrapResponse(Scrap scrap, Interview interview, List<ScrapQuestion> scrapQuestions){
+		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(scrap);
+		OriginalInterviewResponse interviewResponse = new OriginalInterviewResponse(
+			interview.getInterviewId(), interview.getTitle());
+		List<ScrapQuestionResponse> scrapQuestionResponses = new ArrayList<>();
+		scrapQuestions.forEach(
+			scrapQuestion -> scrapQuestionResponses.add(scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestion))
+		);
+		return new ReadScrapResponse(scrapResponse, interviewResponse, scrapQuestionResponses);
 	}
 }

@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class CreateScrapResponse {
 
-	private OriginalInterviewResponse originalInterviewResponse;
-	private ScrapResponse scrapResponse;
-	private List<ScrapQuestionResponse> scrapQuestionResponseList;
+	private OriginalInterviewResponse originalInterview;
+	private ScrapResponse scrap;
+	private List<ScrapQuestionResponse> scrapQuestion;
 }
