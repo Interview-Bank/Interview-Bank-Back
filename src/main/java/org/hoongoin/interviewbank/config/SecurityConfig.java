@@ -22,7 +22,7 @@ public class SecurityConfig {
 		http.authorizeRequests()
 			.antMatchers("/account/logout").authenticated()
 			.antMatchers("/account/**").permitAll()
-			.antMatchers("/scrap/**").authenticated()
+			.antMatchers("/scraps/**").authenticated()
 			.antMatchers("/**").permitAll()
 			.and().formLogin().disable().csrf().disable()
 			.exceptionHandling()
