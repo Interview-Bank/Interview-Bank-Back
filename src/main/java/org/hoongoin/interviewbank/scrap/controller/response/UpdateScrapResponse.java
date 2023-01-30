@@ -1,14 +1,11 @@
 package org.hoongoin.interviewbank.scrap.controller.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@AllArgsConstructor
-@Getter
 @Setter
-public class OriginalInterviewResponse {
+@Getter
+public class UpdateScrapResponse {
 
-	private long interviewId;
 	private String title;
 }

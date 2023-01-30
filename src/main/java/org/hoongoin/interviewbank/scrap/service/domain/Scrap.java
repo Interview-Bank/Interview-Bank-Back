@@ -1,5 +1,11 @@
 package org.hoongoin.interviewbank.scrap.service.domain;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+
+import org.hoongoin.interviewbank.exception.IbValidationException;
+import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,4 +21,12 @@ public class Scrap {
 	private long accountId;
 	private long interviewId;
 	private String title;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
+
+	public void setTitle(String title){
+		if(title.getBytes(StandardCharsets.UTF_8).length > 128){
+			throw new IbValidationException("Title over 128 byte");
+		}
+	}
 }

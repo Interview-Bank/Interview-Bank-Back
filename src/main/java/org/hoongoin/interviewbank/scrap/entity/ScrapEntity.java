@@ -43,6 +43,10 @@ public class ScrapEntity extends BaseEntity {
 	@Column(nullable = false, length = 50)
 	private String title;
 
+	public void modifyEntity(String title) {
+		this.title = title;
+	}
+
 	@Override
 	public String toString() {
 		return "ScrapEntity{" +

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hoongoin.interviewbank.account.service.domain.Account;
+import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.service.domain.Interview;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.entity.ScrapEntity;
@@ -49,5 +50,16 @@ public class ScrapCommandService {
 		Account requestingAccount) {
 		return scrapRepository.existsByInterviewIdAndAccountId(originalInterview.getInterviewId(),
 			requestingAccount.getAccountId());
+	}
+
+	public Scrap updateScrap(long scrapId, Scrap scrap) {
+		ScrapEntity scrapEntity = scrapRepository.findById(scrapId)
+			.orElseThrow(() -> new IbEntityNotFoundException("ScrapEntity"));
+		scrapEntity.modifyEntity(scrap.getTitle());
+		return scrapMapper.scrapEntityToScrap(scrapEntity);
+	}
+
+	public void deleteScrapById(long scrapId) {
+		scrapRepository.deleteById(scrapId);
 	}
 }
