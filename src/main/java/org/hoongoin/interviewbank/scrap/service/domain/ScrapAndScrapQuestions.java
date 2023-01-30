@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ScrapAndScrapQuestions {
+
 	private Scrap scrap;
 	private List<ScrapQuestion> scrapQuestionList;
 }

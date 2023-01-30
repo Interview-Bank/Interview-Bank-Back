@@ -24,7 +24,6 @@ public class ScrapCommandService {
 
 	private final ScrapRepository scrapRepository;
 	private final ScrapQuestionRepository scrapQuestionRepository;
-
 	private final ScrapMapper scrapMapper;
 
 	public ScrapAndScrapQuestions insertScrapAndScrapQuestions(Scrap scrap, List<ScrapQuestion> scrapQuestions,
@@ -33,7 +32,7 @@ public class ScrapCommandService {
 		scrapRepository.save(scrapEntity);
 
 		List<ScrapQuestion> savedScrapQuestions = new ArrayList<>();
-		for(ScrapQuestion scrapQuestion: scrapQuestions){
+		for (ScrapQuestion scrapQuestion : scrapQuestions) {
 			ScrapQuestionEntity scrapQuestionEntity = ScrapQuestionEntity
 				.builder()
 				.scrapEntity(scrapEntity)

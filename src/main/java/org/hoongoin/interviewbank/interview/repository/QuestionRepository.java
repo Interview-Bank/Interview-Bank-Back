@@ -11,7 +11,8 @@ import org.springframework.data.repository.query.Param;
 public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> {
 
 	@Query("SELECT q FROM QuestionEntity q JOIN FETCH q.interviewEntity WHERE q.interviewEntity = :interviewEntity")
-	List<QuestionEntity> findQuestionEntitiesByInterviewEntity(@Param("interviewEntity") InterviewEntity interviewEntity);
+	List<QuestionEntity> findQuestionEntitiesByInterviewEntity(
+		@Param("interviewEntity") InterviewEntity interviewEntity);
 
 	@Query("SELECT question FROM QuestionEntity question WHERE question.interviewEntity.id = :interview_id")
 	List<QuestionEntity> findAllByInterviewId(@Param("interview_id") Long interviewId);

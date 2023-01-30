@@ -29,9 +29,9 @@ public class ScrapController {
 	private final ScrapService scrapService;
 
 	@PostMapping
-	public ResponseEntity<CreateScrapResponse> createScrap(@RequestBody CreateScrapRequest createScrapRequest){
+	public ResponseEntity<CreateScrapResponse> createScrap(@RequestBody CreateScrapRequest createScrapRequest) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
-		String requestingAccountOfEmail = (String) securityContext.getAuthentication().getPrincipal();
+		String requestingAccountOfEmail = (String)securityContext.getAuthentication().getPrincipal();
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
 			.body(scrapService.createScrapByCreateRequest(createScrapRequest, requestingAccountOfEmail));
@@ -39,26 +39,26 @@ public class ScrapController {
 
 	@PutMapping("/{scrap-id}")
 	public ResponseEntity<UpdateScrapResponse> updateScrap(@RequestBody UpdateScrapRequest updateScrapRequest,
-		@PathVariable("scrap-id") long scrapId){
+		@PathVariable("scrap-id") long scrapId) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
-		String requestingAccountOfEmail = (String) securityContext.getAuthentication().getPrincipal();
+		String requestingAccountOfEmail = (String)securityContext.getAuthentication().getPrincipal();
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
 			.body(scrapService.updateScrapByRequestAndScrapId(updateScrapRequest, scrapId, requestingAccountOfEmail));
 	}
 
 	@DeleteMapping("/{scrap-id}")
-	public ResponseEntity<Object> deleteScrap(@PathVariable("scrap-id") long scrapId){
+	public ResponseEntity<Object> deleteScrap(@PathVariable("scrap-id") long scrapId) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
-		String requestingAccountOfEmail = (String) securityContext.getAuthentication().getPrincipal();
+		String requestingAccountOfEmail = (String)securityContext.getAuthentication().getPrincipal();
 		scrapService.deleteScrapByRequestAndScrapId(scrapId, requestingAccountOfEmail);
 		return ResponseEntity.ok().body("Success");
 	}
 
 	@GetMapping("/{scrap-id}")
-	public ResponseEntity<ReadScrapResponse> readScrap(@PathVariable("scrap-id") long scrapId){
+	public ResponseEntity<ReadScrapResponse> readScrap(@PathVariable("scrap-id") long scrapId) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
-		String requestingAccountOfEmail = (String) securityContext.getAuthentication().getPrincipal();
+		String requestingAccountOfEmail = (String)securityContext.getAuthentication().getPrincipal();
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
 			.body(scrapService.readScrapById(scrapId, requestingAccountOfEmail));

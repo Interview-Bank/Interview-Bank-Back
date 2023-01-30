@@ -45,18 +45,24 @@ public class ScrapService {
 	public CreateScrapResponse createScrapByCreateRequest(CreateScrapRequest createScrapRequest,
 		String requestingAccountOfEmail) {
 		Interview originalInterview = interviewQueryService.findEntityById(createScrapRequest.getInterviewId());
-		List<Question> originalQuestionsInInterview = questionQueryService.findEntitiesByInterviewId(createScrapRequest.getInterviewId());
+		List<Question> originalQuestionsInInterview = questionQueryService.findEntitiesByInterviewId(
+			createScrapRequest.getInterviewId());
 
-		Scrap scrap = Scrap.builder().interviewId(originalInterview.getInterviewId()).title(originalInterview.getTitle()).build();
+		Scrap scrap = Scrap.builder()
+			.interviewId(originalInterview.getInterviewId())
+			.title(originalInterview.getTitle())
+			.build();
 		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
 		List<ScrapQuestion> scrapQuestions = new ArrayList<>();
-		for(Question question: originalQuestionsInInterview){
-			scrapQuestions.add(ScrapQuestion.builder().scrapId(scrap.getScrapId()).content(question.getContent()).build());
+		for (Question question : originalQuestionsInInterview) {
+			scrapQuestions.add(
+				ScrapQuestion.builder().scrapId(scrap.getScrapId()).content(question.getContent()).build());
 		}
-		if(scrapCommandService.existsScrapByOriginalInterviewAndRequestingAccount(originalInterview, requestingAccount)){
+		if (scrapCommandService.existsScrapByOriginalInterviewAndRequestingAccount(originalInterview,
+			requestingAccount)) {
 			throw new IbEntityExistsException("Scrap");
 		}
-		ScrapAndScrapQuestions savedScrapAndScrapQuestions  = scrapCommandService.insertScrapAndScrapQuestions(scrap,
+		ScrapAndScrapQuestions savedScrapAndScrapQuestions = scrapCommandService.insertScrapAndScrapQuestions(scrap,
 			scrapQuestions, requestingAccount, originalInterview);
 
 		return makeCreateScrapResponse(originalInterview, savedScrapAndScrapQuestions);
@@ -67,7 +73,7 @@ public class ScrapService {
 		String requestingAccountOfEmail) {
 		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
-		if(scrap.getAccountId() != requestingAccount.getAccountId()){
+		if (scrap.getAccountId() != requestingAccount.getAccountId()) {
 			throw new IbUnauthorizedException("Scrap");
 		}
 
@@ -96,28 +102,31 @@ public class ScrapService {
 
 		Interview interview = interviewQueryService.findEntityById(scrap.getInterviewId());
 
-		List<ScrapQuestion> scrapQuestions= scrapQuestionQueryService.findAllScrapQuestionByScrapId(scrapId);
+		List<ScrapQuestion> scrapQuestions = scrapQuestionQueryService.findAllScrapQuestionByScrapId(scrapId);
 
 		return makeReadScrapResponse(scrap, interview, scrapQuestions);
 	}
 
-	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId){
-		if(scrapWriterAccountId != requestingAccountId){
+	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId) {
+		if (scrapWriterAccountId != requestingAccountId) {
 			throw new IbUnauthorizedException("Scrap");
 		}
 	}
 
-	private CreateScrapResponse makeCreateScrapResponse(Interview interview, ScrapAndScrapQuestions scrapAndScrapQuestions){
+	private CreateScrapResponse makeCreateScrapResponse(Interview interview,
+		ScrapAndScrapQuestions scrapAndScrapQuestions) {
 		OriginalInterviewResponse originalInterviewResponse = new OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());
 		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(scrapAndScrapQuestions.getScrap());
 		List<ScrapQuestionResponse> scrapQuestionResponseList = new ArrayList<>();
 		scrapAndScrapQuestions.getScrapQuestionList().forEach(
-			scrapQuestion -> scrapQuestionResponseList.add(scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestion)));
+			scrapQuestion -> scrapQuestionResponseList.add(
+				scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestion)));
 		return new CreateScrapResponse(originalInterviewResponse, scrapResponse, scrapQuestionResponseList);
 	}
 
-	private ReadScrapResponse makeReadScrapResponse(Scrap scrap, Interview interview, List<ScrapQuestion> scrapQuestions){
+	private ReadScrapResponse makeReadScrapResponse(Scrap scrap, Interview interview,
+		List<ScrapQuestion> scrapQuestions) {
 		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(scrap);
 		OriginalInterviewResponse interviewResponse = new OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());

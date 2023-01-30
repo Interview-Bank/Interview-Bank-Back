@@ -17,7 +17,7 @@ public class ScrapQueryService {
 	private final ScrapRepository scrapRepository;
 	private final ScrapMapper scrapMapper;
 
-	public Scrap findScrapByScrapId(long scrapId){
+	public Scrap findScrapByScrapId(long scrapId) {
 		ScrapEntity scrapEntity = scrapRepository.findById(scrapId)
 			.orElseThrow(() -> new IbEntityNotFoundException("Scrap"));
 		return scrapMapper.scrapEntityToScrap(scrapEntity);

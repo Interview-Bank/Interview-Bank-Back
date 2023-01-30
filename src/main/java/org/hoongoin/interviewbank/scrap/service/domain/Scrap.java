@@ -24,8 +24,8 @@ public class Scrap {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
-	public void setTitle(String title){
-		if(title.getBytes(StandardCharsets.UTF_8).length > 128){
+	public void setTitle(String title) {
+		if (title.getBytes(StandardCharsets.UTF_8).length > 128) {
 			throw new IbValidationException("Title over 128 byte");
 		}
 	}

@@ -21,8 +21,8 @@ class ScrapMapperTest {
 	private static ScrapQuestionEntity scrapQuestionEntity;
 
 	@BeforeAll
-	public static void setUp(){
-		scrapMapper =  Mappers.getMapper(ScrapMapper.class);
+	public static void setUp() {
+		scrapMapper = Mappers.getMapper(ScrapMapper.class);
 		accountEntity = AccountEntity.builder()
 			.id(12)
 			.nickname("nickname")
@@ -48,7 +48,7 @@ class ScrapMapperTest {
 	}
 
 	@Test
-	public void scrapEntityToScrap_Success(){
+	public void scrapEntityToScrap_Success() {
 		//given
 
 		//when
@@ -62,7 +62,7 @@ class ScrapMapperTest {
 	}
 
 	@Test
-	public void scrapQuestionEntityToScrapQuestion_Success(){
+	public void scrapQuestionEntityToScrapQuestion_Success() {
 		//given
 
 		//when

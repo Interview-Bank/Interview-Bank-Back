@@ -18,7 +18,7 @@ public class ScrapQuestionQueryService {
 	private final ScrapQuestionRepository scrapQuestionRepository;
 	private final ScrapMapper scrapMapper;
 
-	public List<ScrapQuestion> findAllScrapQuestionByScrapId(long scrapId){
+	public List<ScrapQuestion> findAllScrapQuestionByScrapId(long scrapId) {
 		List<ScrapQuestionEntity> scrapQuestionEntities = scrapQuestionRepository.findAllByScrapId(scrapId);
 
 		List<ScrapQuestion> savedScrapQuestions = new ArrayList<>();

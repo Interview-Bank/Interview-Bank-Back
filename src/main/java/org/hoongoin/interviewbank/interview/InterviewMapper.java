@@ -19,8 +19,9 @@ public interface InterviewMapper {
 	InterviewEntity interviewToInterviewEntity(Interview interview, AccountEntity accountEntity);
 
 	default Interview interviewEntityToInterview(InterviewEntity interviewEntity, Account account) {
-		return new Interview(interviewEntity.getId(), interviewEntity.getTitle(), account.getAccountId(), interviewEntity.getCreatedAt(),
-			interviewEntity.getUpdatedAt(), interviewEntity.getDeletedAt(), interviewEntity.getDeletedFlag());
+		return new Interview(interviewEntity.getId(), interviewEntity.getTitle(), account.getAccountId(),
+			interviewEntity.getCreatedAt(), interviewEntity.getUpdatedAt(), interviewEntity.getDeletedAt(),
+			interviewEntity.getDeletedFlag());
 	}
 
 	@Mapping(target = "createInterviewRequest.accountId", ignore = true)

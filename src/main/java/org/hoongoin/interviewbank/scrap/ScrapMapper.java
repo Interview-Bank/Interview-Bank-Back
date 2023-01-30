@@ -23,7 +23,7 @@ public interface ScrapMapper {
 	@Mapping(target = "interviewId", source = "interviewEntity.id")
 	Scrap scrapEntityToScrap(ScrapEntity scrapEntity);
 
-	default ScrapEntity scrapToScrapEntity(Scrap scrap, Account account, Interview interview){
+	default ScrapEntity scrapToScrapEntity(Scrap scrap, Account account, Interview interview) {
 		AccountEntity accountEntity = AccountEntity.builder()
 			.id(account.getAccountId())
 			.nickname(account.getNickname())
@@ -42,7 +42,6 @@ public interface ScrapMapper {
 			.title(scrap.getTitle())
 			.build();
 	}
-
 
 	@Mapping(target = "scrapQuestionId", source = "id")
 	@Mapping(target = "scrapId", source = "scrapEntity.id")
