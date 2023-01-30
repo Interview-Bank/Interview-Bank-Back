@@ -4,14 +4,12 @@ import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.repository.AccountRepository;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
-import org.hoongoin.interviewbank.interview.InterviewMapper;
-import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
-import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
+import org.hoongoin.interviewbank.interview.InterviewMapper;;
+
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.repository.InterviewRepository;
 import org.hoongoin.interviewbank.interview.service.domain.Interview;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,32 +22,32 @@ public class InterviewCommandService {
 	private final InterviewMapper interviewMapper;
 	private final AccountMapper accountMapper;
 
-	@Transactional
-	public long insertInterview(CreateInterviewRequest createInterviewRequest) {
-		AccountEntity selectedAccountEntity = accountRepository.findById(createInterviewRequest.getAccountId())
+	public long insertInterview(Interview interview) {
+		AccountEntity selectedAccountEntity = accountRepository.findById(interview.getAccountId())
 			.orElseThrow(() -> new IbEntityNotFoundException("AccountEntity"));
 
-		InterviewEntity interviewEntity = interviewMapper.createInterviewRequestToInterviewEntity(createInterviewRequest,
-			selectedAccountEntity);
+		InterviewEntity interviewEntity = InterviewEntity.builder()
+			.title(interview.getTitle())
+			.accountEntity(selectedAccountEntity)
+			.build();
 
 		InterviewEntity savedInterviewEntity = interviewRepository.save(interviewEntity);
 
 		return savedInterviewEntity.getId();
 	}
 
-	@Transactional
 	public long deleteInterview(long interviewId) {
 		interviewRepository.deleteById(interviewId);
 		return interviewId;
 	}
 
-	@Transactional
-	public Interview updateInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId) {
+	public Interview updateInterview(Interview interview, long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("InterviewEntity"));
 
-		interviewEntity.modifyEntity(updateInterviewRequest.getTitle());
+		interviewEntity.modifyEntity(interview.getTitle());
 
-		return interviewMapper.interviewEntityToInterview(interviewEntity, accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()));
+		return interviewMapper.interviewEntityToInterview(interviewEntity,
+			accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()));
 	}
 }

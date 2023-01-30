@@ -7,8 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CreateInterviewRequest {
+public class CreateInterviewAndQuestionsRequest {
 
 	private String title;
-	private long accountId;
+	private Long accountId;
+	private QuestionsRequest questionsRequest;
 }

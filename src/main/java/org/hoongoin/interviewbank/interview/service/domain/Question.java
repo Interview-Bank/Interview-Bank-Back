@@ -2,6 +2,8 @@ package org.hoongoin.interviewbank.interview.service.domain;
 
 import java.time.LocalDateTime;
 
+import org.hoongoin.interviewbank.exception.IbValidationException;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,13 +23,13 @@ public class Question {
 
 	public Question(Long questionId, long interviewId, String content, LocalDateTime createdAt,
 		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag) {
-		this.questionId = questionId;
-		this.interviewId = interviewId;
-		this.content = content;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-		this.deletedAt = deletedAt;
-		this.deletedFlag = deletedFlag;
+		this.setQuestionId(questionId);
+		this.setInterviewId(interviewId);
+		this.setContent(content);
+		this.setCreatedAt(createdAt);
+		this.setUpdatedAt(updatedAt);
+		this.setDeletedAt(deletedAt);
+		this.setDeletedFlag(deletedFlag);
 	}
 
 	private Long questionId;
@@ -37,4 +39,15 @@ public class Question {
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;
 	private Boolean deletedFlag;
+
+	public void setContent(String content) {
+		if (validateContent(content)) {
+			throw new IbValidationException("Question");
+		}
+		this.content = content;
+	}
+
+	private boolean validateContent(String content) {
+		return content.getBytes().length < 1 || content.getBytes().length > 100000 || content.isEmpty();
+	}
 }

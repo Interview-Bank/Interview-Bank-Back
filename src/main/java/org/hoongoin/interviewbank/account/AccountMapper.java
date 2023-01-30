@@ -10,15 +10,21 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
 
-	@Mapping(target = "accountId", source = "accountEntity.id")
-	Account accountEntityToAccount(AccountEntity accountEntity);
+	default Account accountEntityToAccount(AccountEntity accountEntity) {
+		return new Account(accountEntity.getId(), accountEntity.getNickname(), accountEntity.getEmail(),
+			accountEntity.getPassword(), accountEntity.getCreatedAt(), accountEntity.getUpdatedAt(),
+			accountEntity.getDeletedAt(), accountEntity.getDeletedFlag());
+	}
 
 	@Mapping(target = "id", source = "account.accountId")
 	AccountEntity accountToAccountEntity(Account account);
 
+	@Mapping(target = "accountId", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "updatedAt", ignore = true)
+	@Mapping(target = "deletedAt", ignore = true)
+	@Mapping(target = "deletedFlag", ignore = true)
 	Account registerRequestToAccount(RegisterRequest registerRequest);
-
-	AccountEntity registerRequestToAccountEntity(RegisterRequest registerRequest);
 
 	RegisterResponse accountToRegisterResponse(Account account);
 }

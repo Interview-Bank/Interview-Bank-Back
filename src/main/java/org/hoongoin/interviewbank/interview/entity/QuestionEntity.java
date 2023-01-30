@@ -26,16 +26,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "question")
 public class QuestionEntity extends SoftDeletedBaseEntity {
 
-	public QuestionEntity(Long id, String content) {
-		this.id = id;
-		this.content = content;
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(nullable = false, length = 1000)
+	@Column(nullable = false, length = 100000)
 	private String content;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -51,6 +46,7 @@ public class QuestionEntity extends SoftDeletedBaseEntity {
 		return "QuestionEntity{" +
 			"id=" + id +
 			", content='" + content + '\'' +
+			", interviewEntity=" + interviewEntity +
 			'}';
 	}
 }

@@ -44,8 +44,8 @@ public class ScrapService {
 	@Transactional
 	public CreateScrapResponse createScrapByCreateRequest(CreateScrapRequest createScrapRequest,
 		String requestingAccountOfEmail) {
-		Interview originalInterview = interviewQueryService.findEntityById(createScrapRequest.getInterviewId());
-		List<Question> originalQuestionsInInterview = questionQueryService.findEntitiesByInterviewId(
+		Interview originalInterview = interviewQueryService.findInterviewById(createScrapRequest.getInterviewId());
+		List<Question> originalQuestionsInInterview = questionQueryService.findQuestionsByInterviewId(
 			createScrapRequest.getInterviewId());
 
 		Scrap scrap = Scrap.builder()
@@ -100,7 +100,7 @@ public class ScrapService {
 
 		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
 
-		Interview interview = interviewQueryService.findEntityById(scrap.getInterviewId());
+		Interview interview = interviewQueryService.findInterviewById(scrap.getInterviewId());
 
 		List<ScrapQuestion> scrapQuestions = scrapQuestionQueryService.findAllScrapQuestionByScrapId(scrapId);
 

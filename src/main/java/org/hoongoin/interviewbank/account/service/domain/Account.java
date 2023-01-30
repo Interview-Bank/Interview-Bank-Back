@@ -13,7 +13,7 @@ import lombok.Setter;
 public class Account {
 
 	public Account(long accountId, String nickname, String email, String password, LocalDateTime createdAt,
-		LocalDateTime updatedAt, LocalDateTime deletedAt, boolean deletedFlag) {
+		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag) {
 		this.setAccountId(accountId);
 		this.setNickname(nickname);
 		this.setEmail(email);
@@ -24,14 +24,14 @@ public class Account {
 		this.setDeletedFlag(deletedFlag);
 	}
 
-	private long accountId;
+	private Long accountId;
 	private String nickname;
 	private String email;
 	private String password;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;
-	private boolean deletedFlag;
+	private Boolean deletedFlag;
 
 	public void setNickname(String nickname){
 		if(nickname==null){

@@ -1,21 +1,44 @@
 package org.hoongoin.interviewbank.interview.controller.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import org.hoongoin.interviewbank.account.service.domain.Account;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class FindInterviewResponse {
 
-	private long interviewId;
+	private Long interviewId;
 	private String title;
-	private Account account;
+	private Long accountId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;
-	private boolean deletedFlag;
+	private Boolean deletedFlag;
+	private List<Question> questions;
+
+	@Getter
+	public static class Question {
+
+		public Question(Long questionId, String content, LocalDateTime createdAt, LocalDateTime updatedAt,
+			LocalDateTime deletedAt, Boolean deletedFlag) {
+			this.questionId = questionId;
+			this.content = content;
+			this.createdAt = createdAt;
+			this.updatedAt = updatedAt;
+			this.deletedAt = deletedAt;
+			this.deletedFlag = deletedFlag;
+		}
+
+		private Long questionId;
+		private String content;
+		private LocalDateTime createdAt;
+		private LocalDateTime updatedAt;
+		private LocalDateTime deletedAt;
+		private Boolean deletedFlag;
+	}
 }
