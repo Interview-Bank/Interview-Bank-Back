@@ -5,12 +5,16 @@ import org.hoongoin.interviewbank.account.service.domain.Account;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.service.domain.Interview;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
+import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
+import org.hoongoin.interviewbank.scrap.entity.ScrapAnswerEntity;
 import org.hoongoin.interviewbank.scrap.entity.ScrapEntity;
 import org.hoongoin.interviewbank.scrap.entity.ScrapQuestionEntity;
 import org.hoongoin.interviewbank.scrap.service.domain.Scrap;
+import org.hoongoin.interviewbank.scrap.service.domain.ScrapAnswer;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestion;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -59,4 +63,20 @@ public interface ScrapMapper {
 	@Mapping(target = "createdAt", ignore = true)
 	@Mapping(target = "updatedAt", ignore = true)
 	Scrap updateScrapRequestToScrap(UpdateScrapRequest updateScrapRequest);
+
+	@Mapping(target = "scrapAnswerId", source = "id")
+	@Mapping(target = "scrapQuestionId", source = "scrapQuestionEntity.id")
+	ScrapAnswer scrapAnswerEntityToScrapAnswer(ScrapAnswerEntity scrapAnswerEntity);
+
+	default ScrapAnswerEntity scrapAnswerAndScrapQuestionEntityToScrapAnswerEntity(ScrapAnswer scrapAnswer,
+		ScrapQuestionEntity scrapQuestionEntity) {
+		return ScrapAnswerEntity.builder()
+			.scrapQuestionEntity(scrapQuestionEntity)
+			.content(scrapAnswer.getContent())
+			.build();
+	}
+
+	CreateScrapAnswerResponse scrapAnswerToCreateScrapAnswerResponse(ScrapAnswer scrapAnswer);
+
+	UpdateScrapAnswerResponse scrapAnswerToUpdateScrapAnswerResponse(ScrapAnswer scrapAnswer);
 }

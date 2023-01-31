@@ -35,8 +35,12 @@ public class ScrapAnswerEntity extends BaseEntity {
 	private ScrapQuestionEntity scrapQuestionEntity;
 
 
-	@Column(nullable = false, length = 1000)
+	@Column(nullable = true, length = 1000)
 	private String content;
+
+	public void modifyEntity(String content) {
+		this.content = content;
+	}
 
 	@Override
 	public String toString() {

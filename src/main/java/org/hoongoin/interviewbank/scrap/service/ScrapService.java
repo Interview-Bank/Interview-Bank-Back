@@ -86,8 +86,9 @@ public class ScrapService {
 	public void deleteScrapByRequestAndScrapId(long scrapId, String requestingAccountOfEmail) {
 		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
-
-		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
+		if (scrap.getAccountId() != requestingAccount.getAccountId()) {
+			throw new IbUnauthorizedException("Scrap");
+		}
 
 		scrapQuestionCommandService.deleteAllScrapQuestionByScrapId(scrapId);
 		scrapCommandService.deleteScrapById(scrapId);
@@ -97,20 +98,15 @@ public class ScrapService {
 	public ReadScrapResponse readScrapById(long scrapId, String requestingAccountOfEmail) {
 		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
-
-		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
+		if (scrap.getAccountId() != requestingAccount.getAccountId()) {
+			throw new IbUnauthorizedException("Scrap");
+		}
 
 		Interview interview = interviewQueryService.findInterviewById(scrap.getInterviewId());
 
 		List<ScrapQuestion> scrapQuestions = scrapQuestionQueryService.findAllScrapQuestionByScrapId(scrapId);
 
 		return makeReadScrapResponse(scrap, interview, scrapQuestions);
-	}
-
-	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId) {
-		if (scrapWriterAccountId != requestingAccountId) {
-			throw new IbUnauthorizedException("Scrap");
-		}
 	}
 
 	private CreateScrapResponse makeCreateScrapResponse(Interview interview,

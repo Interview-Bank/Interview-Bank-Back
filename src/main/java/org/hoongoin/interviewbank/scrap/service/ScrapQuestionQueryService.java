@@ -27,4 +27,8 @@ public class ScrapQuestionQueryService {
 		});
 		return savedScrapQuestions;
 	}
+
+	public boolean existsScrapQuestionByScrapQuestionId(long scrapQuestionId) {
+		return scrapQuestionRepository.existsById(scrapQuestionId);
+	}
 }
