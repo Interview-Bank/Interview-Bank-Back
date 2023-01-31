@@ -74,6 +74,4 @@ public interface InterviewMapper {
 
 		return questions;
 	}
-
-	FindInterviewResponse interviewToFindInterviewResponse(Interview interview);
 }
