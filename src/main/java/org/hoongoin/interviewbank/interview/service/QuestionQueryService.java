@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class QuestionQueryService {
-
 	private final InterviewRepository interviewRepository;
+
 	private final QuestionRepository questionRepository;
 	private final InterviewMapper interviewMapper;
 
@@ -26,7 +26,8 @@ public class QuestionQueryService {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
 
-		List<QuestionEntity> questionEntities = questionRepository.findQuestionEntitiesByInterviewEntity(interviewEntity);
+		List<QuestionEntity> questionEntities = questionRepository.findQuestionEntitiesByInterviewEntity(
+			interviewEntity);
 
 		List<Question> questions = new ArrayList<>();
 

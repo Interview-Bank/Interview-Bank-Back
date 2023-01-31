@@ -19,9 +19,12 @@ public interface AccountMapper {
 	@Mapping(target = "id", source = "account.accountId")
 	AccountEntity accountToAccountEntity(Account account);
 
+	@Mapping(target = "accountId", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "updatedAt", ignore = true)
+	@Mapping(target = "deletedAt", ignore = true)
+	@Mapping(target = "deletedFlag", ignore = true)
 	Account registerRequestToAccount(RegisterRequest registerRequest);
-
-	AccountEntity registerRequestToAccountEntity(RegisterRequest registerRequest);
 
 	RegisterResponse accountToRegisterResponse(Account account);
 }

@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,15 +21,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "question")
 public class QuestionEntity extends SoftDeletedBaseEntity {
-
-	public QuestionEntity(long id, String content, InterviewEntity interviewEntity) {
-		this.id = id;
-		this.content = content;
-		this.interviewEntity = interviewEntity;
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -61,7 +61,6 @@ public interface InterviewMapper {
 		questions.forEach(question -> updateInterviewResponseQuestions.add(
 			new UpdateInterviewResponse.Question(question.getQuestionId(), question.getContent(),
 				question.getUpdatedAt())));
-
 		return new UpdateInterviewResponse(title, updateInterviewResponseQuestions);
 	}
 
