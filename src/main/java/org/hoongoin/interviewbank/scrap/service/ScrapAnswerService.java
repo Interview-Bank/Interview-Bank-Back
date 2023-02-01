@@ -32,9 +32,7 @@ public class ScrapAnswerService {
 		ScrapQuestionIdsDto scrapQuestionIdsDto, String requestingAccountOfEmail) {
 		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapQuestionIdsDto.getScrapId());
-		if (scrap.getAccountId() != requestingAccount.getAccountId()) {
-			throw new IbUnauthorizedException("Scrap");
-		}
+		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
 
 		if (!scrapQuestionQueryService.existsScrapQuestionByScrapQuestionId(scrapQuestionIdsDto.getScrapQuestionId())) {
 			throw new IbEntityNotFoundException("ScrapQuestion");
@@ -51,9 +49,7 @@ public class ScrapAnswerService {
 		String requestingAccountOfEmail) {
 		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapAnswerIdsDto.getScrapId());
-		if (scrap.getAccountId() != requestingAccount.getAccountId()) {
-			throw new IbUnauthorizedException("Scrap");
-		}
+		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
 
 		ScrapAnswer updatedScrapAnswer = scrapAnswerCommandService.updateScrapAnswer(scrapAnswerIdsDto,
 			new ScrapAnswer(updateScrapAnswerRequest.getContent()));
@@ -63,10 +59,14 @@ public class ScrapAnswerService {
 	public void deleteScrapAnswerByIds(ScrapAnswerIdsDto scrapAnswerIdsDto, String requestingAccountOfEmail) {
 		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapAnswerIdsDto.getScrapId());
-		if (scrap.getAccountId() != requestingAccount.getAccountId()) {
-			throw new IbUnauthorizedException("Scrap");
-		}
+		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
 
 		scrapAnswerQueryService.deleteScrapAnswer(scrapAnswerIdsDto);
+	}
+
+	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId) {
+		if (scrapWriterAccountId != requestingAccountId) {
+			throw new IbUnauthorizedException("Scrap");
+		}
 	}
 }
