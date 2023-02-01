@@ -24,11 +24,16 @@ public class ScrapAnswerQueryService {
 		ScrapQuestionEntity scrapQuestionEntity = scrapAnswerEntity.getScrapQuestionEntity();
 		ScrapEntity scrapEntity = scrapQuestionEntity.getScrapEntity();
 
-		if (scrapQuestionEntity.getId() != scrapAnswerIdsDto.getScrapQuestionId()
-			|| scrapEntity.getId() != scrapAnswerIdsDto.getScrapId()) {
+		if (isScrapAnswerBelongToScrap(scrapEntity, scrapQuestionEntity, scrapAnswerIdsDto)) {
 			throw new IbBadRequestException("");
 		}
 
 		scrapAnswerRepository.deleteById(scrapAnswerIdsDto.getScrapAnswerId());
+	}
+
+	private boolean isScrapAnswerBelongToScrap(ScrapEntity scrapEntity, ScrapQuestionEntity scrapQuestionEntity,
+		ScrapAnswerIdsDto scrapAnswerIdsDto) {
+		return scrapQuestionEntity.getId() != scrapAnswerIdsDto.getScrapQuestionId()
+			|| scrapEntity.getId() != scrapAnswerIdsDto.getScrapId();
 	}
 }
