@@ -1,22 +1,6 @@
 version: "3"
 
-networks:
-  backend:
-
 services:
-  app:
-    build: ../
-    restart: always
-    env_file:
-      - common.env
-    ports:
-      - "8084:8084"
-    depends_on:
-      - db
-      - redis
-    networks:
-      backend:
-
   db:
     image: mysql:8.0
     container_name: mysql
@@ -29,10 +13,6 @@ services:
       - --collation-server=utf8mb4_unicode_ci
     volumes:
       - ../datadir/mysql:/var/lib/mysql
-    networks:
-      backend:
-        aliases:
-          - db.interviewbank
 
   redis:
     image: redis:7.0
@@ -43,7 +23,3 @@ services:
      - redis-server
     volumes:
       - ../datadir/redis:/data
-    networks:
-      backend:
-        aliases:
-        - redis.interviewbank
