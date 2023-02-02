@@ -23,10 +23,12 @@ import org.hoongoin.interviewbank.interview.repository.QuestionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @IbSpringBootTest
 @Transactional
+@Sql(scripts = "classpath:/account-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class InterviewControllerTest {
 
 	@Autowired
@@ -50,13 +52,6 @@ class InterviewControllerTest {
 	@Test
 	void createInterview_Success() {
 		//given
-		AccountEntity savedAccount = accountRepository.saveAndFlush(AccountEntity.builder()
-			.id(testAccountId)
-			.nickname(testNickname)
-			.password(testPassword)
-			.email(testEmail)
-			.build());
-
 		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
 		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
 
@@ -82,12 +77,12 @@ class InterviewControllerTest {
 	@Test
 	void updateInterview_Success() {
 		//given
-		AccountEntity savedAccount = accountRepository.saveAndFlush(AccountEntity.builder()
+		AccountEntity savedAccount = AccountEntity.builder()
 			.id(testAccountId)
 			.nickname(testNickname)
 			.password(testPassword)
 			.email(testEmail)
-			.build());
+			.build();
 
 		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(testTitle, savedAccount.getId());
 
@@ -137,13 +132,6 @@ class InterviewControllerTest {
 	@Test
 	void findInterview_Success() {
 		//given
-		AccountEntity savedAccount = accountRepository.saveAndFlush(AccountEntity.builder()
-			.id(testAccountId)
-			.nickname(testNickname)
-			.password(testPassword)
-			.email(testEmail)
-			.build());
-
 		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
 		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
 
@@ -174,13 +162,6 @@ class InterviewControllerTest {
 	@Test
 	void findInterviewPage_Success() {
 		//given
-		AccountEntity savedAccount = accountRepository.saveAndFlush(AccountEntity.builder()
-			.id(testAccountId)
-			.nickname(testNickname)
-			.password(testPassword)
-			.email(testEmail)
-			.build());
-
 		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
 		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
 

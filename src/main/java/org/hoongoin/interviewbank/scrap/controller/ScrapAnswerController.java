@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.scrap.controller;
 
-import org.hoongoin.interviewbank.config.IbUserDetails;
+import static org.hoongoin.interviewbank.utils.SecurityUtil.*;
+
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapAnswerRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapAnswerResponse;
@@ -9,7 +10,6 @@ import org.hoongoin.interviewbank.scrap.service.dto.ScrapAnswerIdsDto;
 import org.hoongoin.interviewbank.scrap.service.dto.ScrapQuestionIdsDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,12 +66,5 @@ public class ScrapAnswerController {
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
 			.body("Success");
-	}
-
-	private String getRequestingAccountOfEmail() {
-		IbUserDetails userDetails = (IbUserDetails)SecurityContextHolder.getContext()
-			.getAuthentication()
-			.getPrincipal();
-		return userDetails.getUsername();
 	}
 }
