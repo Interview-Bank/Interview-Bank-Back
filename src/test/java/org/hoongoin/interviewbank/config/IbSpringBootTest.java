@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@IbWithMockUser
 @SpringBootTest(classes = TestRedisConfig.class)
 public @interface IbSpringBootTest {
 }

@@ -1,5 +1,6 @@
 package org.hoongoin.interviewbank.scrap.controller;
 
+import org.hoongoin.interviewbank.config.IbUserDetails;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapAnswerRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapAnswerResponse;
@@ -8,7 +9,6 @@ import org.hoongoin.interviewbank.scrap.service.dto.ScrapAnswerIdsDto;
 import org.hoongoin.interviewbank.scrap.service.dto.ScrapQuestionIdsDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +30,7 @@ public class ScrapAnswerController {
 	@PostMapping()
 	public ResponseEntity<CreateScrapAnswerResponse> createScrapAnswer(@PathVariable("scrap-id") long scrapId,
 		@PathVariable("question-id") long scrapQuestionId) {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		String requestingAccountOfEmail = (String)securityContext.getAuthentication().getPrincipal();
+		String requestingAccountOfEmail = getRequestingAccountOfEmail();
 
 		ScrapQuestionIdsDto scrapQuestionIdsDto = new ScrapQuestionIdsDto(scrapId, scrapQuestionId);
 
@@ -45,8 +44,7 @@ public class ScrapAnswerController {
 	public ResponseEntity<UpdateScrapAnswerResponse> updateScrapAnswer(@PathVariable("scrap-id") long scrapId,
 		@PathVariable("question-id") long scrapQuestionId, @PathVariable("answer-id") long scrapAnswerId,
 		@RequestBody UpdateScrapAnswerRequest updateScrapAnswerRequest) {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		String requestingAccountOfEmail = (String)securityContext.getAuthentication().getPrincipal();
+		String requestingAccountOfEmail = getRequestingAccountOfEmail();
 
 		ScrapAnswerIdsDto scrapAnswerIdsDto = new ScrapAnswerIdsDto(scrapId, scrapQuestionId, scrapAnswerId);
 
@@ -59,8 +57,7 @@ public class ScrapAnswerController {
 	@DeleteMapping("{answer-id}")
 	public ResponseEntity<Object> deleteScrapAnswer(@PathVariable("scrap-id") long scrapId,
 		@PathVariable("question-id") long scrapQuestionId, @PathVariable("answer-id") long scrapAnswerId) {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		String requestingAccountOfEmail = (String)securityContext.getAuthentication().getPrincipal();
+		String requestingAccountOfEmail = getRequestingAccountOfEmail();
 
 		ScrapAnswerIdsDto scrapAnswerIdsDto = new ScrapAnswerIdsDto(scrapId, scrapQuestionId, scrapAnswerId);
 
@@ -69,5 +66,12 @@ public class ScrapAnswerController {
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
 			.body("Success");
+	}
+
+	private String getRequestingAccountOfEmail() {
+		IbUserDetails userDetails = (IbUserDetails)SecurityContextHolder.getContext()
+			.getAuthentication()
+			.getPrincipal();
+		return userDetails.getUsername();
 	}
 }

@@ -51,6 +51,7 @@ class InterviewControllerTest {
 	void createInterview_Success() {
 		//given
 		AccountEntity savedAccount = accountRepository.saveAndFlush(AccountEntity.builder()
+			.id(testAccountId)
 			.nickname(testNickname)
 			.password(testPassword)
 			.email(testEmail)
@@ -67,7 +68,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, savedAccount.getId(), questionsRequest);
+			testTitle, questionsRequest);
 
 		//when
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
@@ -82,6 +83,7 @@ class InterviewControllerTest {
 	void updateInterview_Success() {
 		//given
 		AccountEntity savedAccount = accountRepository.saveAndFlush(AccountEntity.builder()
+			.id(testAccountId)
 			.nickname(testNickname)
 			.password(testPassword)
 			.email(testEmail)
@@ -136,6 +138,7 @@ class InterviewControllerTest {
 	void findInterview_Success() {
 		//given
 		AccountEntity savedAccount = accountRepository.saveAndFlush(AccountEntity.builder()
+			.id(testAccountId)
 			.nickname(testNickname)
 			.password(testPassword)
 			.email(testEmail)
@@ -152,7 +155,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, savedAccount.getId(), questionsRequest);
+			testTitle, questionsRequest);
 
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
 			createInterviewAndQuestionsRequest);
@@ -172,6 +175,7 @@ class InterviewControllerTest {
 	void findInterviewPage_Success() {
 		//given
 		AccountEntity savedAccount = accountRepository.saveAndFlush(AccountEntity.builder()
+			.id(testAccountId)
 			.nickname(testNickname)
 			.password(testPassword)
 			.email(testEmail)
@@ -188,7 +192,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, savedAccount.getId(), questionsRequest);
+			testTitle, questionsRequest);
 
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
 			createInterviewAndQuestionsRequest);

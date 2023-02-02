@@ -4,7 +4,7 @@ spring:
 
   redis:
     host: localhost
-    port: 6377
+    port: 6378
 
   h2:
     console:
