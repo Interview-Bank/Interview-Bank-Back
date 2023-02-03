@@ -57,11 +57,11 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, testAccountEntity.getId(), questionsRequest);
+			title, questionsRequest);
 
 		//when
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
-			createInterviewAndQuestionsRequest);
+			createInterviewAndQuestionsRequest, testAccountEntity.getId());
 
 		//then
 		assertThat(createInterviewAndQuestionsResponse.getQuestions()).extracting("content")
@@ -89,12 +89,12 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, testAccountEntity.getId(), questionsRequest);
+			title, questionsRequest);
 
 		//when //then
 		assertThatThrownBy(
-			() -> interviewService.createInterviewAndQuestionsByRequest(createInterviewAndQuestionsRequest)).hasMessage(
-			"Question size").isInstanceOf(IbValidationException.class);
+			() -> interviewService.createInterviewAndQuestionsByRequest(createInterviewAndQuestionsRequest,
+				testAccountEntity.getId())).hasMessage("Question size").isInstanceOf(IbValidationException.class);
 	}
 
 	@Test
@@ -113,11 +113,11 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, testAccountEntity.getId(), questionsRequest);
+			title, questionsRequest);
 
 		//when
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
-			createInterviewAndQuestionsRequest);
+			createInterviewAndQuestionsRequest, testAccountEntity.getId());
 
 		//then
 		assertThat(createInterviewAndQuestionsResponse.getQuestions()).hasSize(1000);

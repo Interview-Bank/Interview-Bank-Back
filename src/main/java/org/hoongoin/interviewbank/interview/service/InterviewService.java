@@ -63,10 +63,10 @@ public class InterviewService {
 
 	@Transactional
 	public CreateInterviewAndQuestionsResponse createInterviewAndQuestionsByRequest(
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest) {
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest, long accountId) {
 		long createdInterviewId = interviewCommandService.insertInterview(
 			new Interview(createInterviewAndQuestionsRequest.getTitle(),
-				createInterviewAndQuestionsRequest.getAccountId()));
+				accountId));
 
 		Interview createdInterview = interviewQueryService.findInterviewById(createdInterviewId);
 

@@ -69,7 +69,7 @@ class QuestionCommandServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(innerQuestions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			savedInterviewEntity.getTitle(), testAccountEntity.getId(), questionsRequest);
+			savedInterviewEntity.getTitle(), questionsRequest);
 
 		//when
 		List<Question> questions = questionCommandService.insertQuestions(
@@ -127,7 +127,8 @@ class QuestionCommandServiceTest {
 		//when
 		List<Question> updatedQuestions = questionCommandService.updateQuestions(
 			interviewMapper.updateInterviewRequestToQuestions(
-				new UpdateInterviewRequest(updatingQuestions, savedInterviewEntity.getTitle()), savedInterviewEntity.getId()));
+				new UpdateInterviewRequest(updatingQuestions, savedInterviewEntity.getTitle()),
+				savedInterviewEntity.getId()));
 
 		//then
 		assertThat(updatedQuestions.get(0).getContent()).isEqualTo(updatedContent1);
