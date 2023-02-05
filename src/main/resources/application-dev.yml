@@ -39,3 +39,7 @@ spring:
         min-idle: 2
     host: localhost
     port: 6378
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
