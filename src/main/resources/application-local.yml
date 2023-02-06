@@ -39,3 +39,7 @@ spring:
         min-idle: 2
     host: redis.interviewbank
     port: 6379
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
