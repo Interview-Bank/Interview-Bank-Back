@@ -16,13 +16,15 @@ import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.OriginalInterviewResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.service.domain.Scrap;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapAndScrapQuestions;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestion;
+import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestionWithScrapAnswers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,16 +93,17 @@ public class ScrapService {
 	}
 
 	@Transactional(readOnly = true)
-	public ReadScrapResponse readScrapById(long scrapId, String requestingAccountOfEmail) {
+	public ReadScrapDetailResponse readScrapById(long scrapId, String requestingAccountOfEmail) {
 		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
 		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
 
 		Interview interview = interviewQueryService.findInterviewById(scrap.getInterviewId());
 
-		List<ScrapQuestion> scrapQuestions = scrapQuestionQueryService.findAllScrapQuestionByScrapId(scrapId);
+		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers = scrapQuestionQueryService
+			.findAllScrapQuestionWithScrapAnswersByScrapId(scrapId);
 
-		return makeReadScrapResponse(scrap, interview, scrapQuestions);
+		return makeReadScrapResponse(scrap, interview, scrapQuestionsWithScrapAnswers);
 	}
 
 	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId) {
@@ -121,15 +124,17 @@ public class ScrapService {
 		return new CreateScrapResponse(originalInterviewResponse, scrapResponse, scrapQuestionResponseList);
 	}
 
-	private ReadScrapResponse makeReadScrapResponse(Scrap scrap, Interview interview,
-		List<ScrapQuestion> scrapQuestions) {
+	private ReadScrapDetailResponse makeReadScrapResponse(Scrap scrap, Interview interview,
+		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers) {
 		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(scrap);
 		OriginalInterviewResponse interviewResponse = new OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());
-		List<ScrapQuestionResponse> scrapQuestionResponses = new ArrayList<>();
-		scrapQuestions.forEach(
-			scrapQuestion -> scrapQuestionResponses.add(scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestion))
+
+		List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = new ArrayList<>();
+		scrapQuestionsWithScrapAnswers.forEach(
+			scrapQuestionWithScrapAnswers -> scrapQuestionWithScrapAnswersResponses.add(
+				scrapMapper.scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(scrapQuestionWithScrapAnswers))
 		);
-		return new ReadScrapResponse(scrapResponse, interviewResponse, scrapQuestionResponses);
+		return new ReadScrapDetailResponse(scrapResponse, interviewResponse, scrapQuestionWithScrapAnswersResponses);
 	}
 }

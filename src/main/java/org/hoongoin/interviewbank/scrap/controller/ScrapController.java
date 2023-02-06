@@ -3,7 +3,7 @@ package org.hoongoin.interviewbank.scrap.controller;
 import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.service.ScrapService;
 import org.springframework.http.HttpHeaders;
@@ -56,7 +56,7 @@ public class ScrapController {
 	}
 
 	@GetMapping("/{scrap-id}")
-	public ResponseEntity<ReadScrapResponse> readScrap(@PathVariable("scrap-id") long scrapId) {
+	public ResponseEntity<ReadScrapDetailResponse> readScrap(@PathVariable("scrap-id") long scrapId) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		String requestingAccountOfEmail = (String)securityContext.getAuthentication().getPrincipal();
 		return ResponseEntity.ok()

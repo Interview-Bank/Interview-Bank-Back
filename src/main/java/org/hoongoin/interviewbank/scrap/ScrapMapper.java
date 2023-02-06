@@ -1,5 +1,7 @@
 package org.hoongoin.interviewbank.scrap;
 
+import java.util.ArrayList;
+
 import org.hoongoin.interviewbank.account.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.service.domain.Account;
 import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
@@ -7,6 +9,7 @@ import org.hoongoin.interviewbank.interview.service.domain.Interview;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
@@ -16,6 +19,7 @@ import org.hoongoin.interviewbank.scrap.entity.ScrapQuestionEntity;
 import org.hoongoin.interviewbank.scrap.service.domain.Scrap;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapAnswer;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestion;
+import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestionWithScrapAnswers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -79,4 +83,28 @@ public interface ScrapMapper {
 	CreateScrapAnswerResponse scrapAnswerToCreateScrapAnswerResponse(ScrapAnswer scrapAnswer);
 
 	UpdateScrapAnswerResponse scrapAnswerToUpdateScrapAnswerResponse(ScrapAnswer scrapAnswer);
+
+	default ScrapQuestionWithScrapAnswers scrapQuestionEntityWithScrapAnswerEntitiesToScrapQuestionWithScrapAnswers(
+		ScrapQuestionEntity scrapQuestionEntity){
+		ScrapQuestionWithScrapAnswers scrapQuestionWithScrapAnswers = ScrapQuestionWithScrapAnswers.builder()
+			.scrapQuestionId(scrapQuestionEntity.getId())
+			.scrapId(scrapQuestionEntity.getScrapEntity().getId())
+			.content(scrapQuestionEntity.getContent())
+			.createdAt(scrapQuestionEntity.getCreatedAt())
+			.updatedAt(scrapQuestionEntity.getUpdatedAt())
+			.scrapAnswers(new ArrayList<>())
+			.build();
+
+		scrapQuestionEntity.getScrapAnswerEntities().forEach(
+			scrapAnswerEntity -> {
+				scrapQuestionWithScrapAnswers.addScrapAnswer(this.scrapAnswerEntityToScrapAnswer(scrapAnswerEntity));
+			}
+		);
+
+		return scrapQuestionWithScrapAnswers;
+	}
+
+	@Mapping(target = "scrapAnswerResponseList", source = "scrapAnswers")
+	ScrapQuestionWithScrapAnswersResponse scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(
+		ScrapQuestionWithScrapAnswers scrapQuestionWithScrapAnswers);
 }

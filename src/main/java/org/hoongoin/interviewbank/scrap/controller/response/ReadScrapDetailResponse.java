@@ -7,9 +7,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ReadScrapResponse {
+public class ReadScrapDetailResponse {
 
 	private ScrapResponse scrap;
 	private OriginalInterviewResponse originalInterview;
-	private List<ScrapQuestionResponse> scrapQuestionList;
+	private List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersList;
 }
