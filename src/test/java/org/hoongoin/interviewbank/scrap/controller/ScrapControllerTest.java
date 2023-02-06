@@ -44,6 +44,7 @@ class ScrapControllerTest {
 
 	@Autowired
 	private ScrapRepository scrapRepository;
+
 	@Autowired
 	private ScrapQuestionRepository scrapQuestionRepository;
 
