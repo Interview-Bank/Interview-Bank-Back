@@ -46,4 +46,8 @@ public class ScrapAnswerCommandService {
 		scrapAnswerEntity.modifyEntity(scrapAnswer.getContent());
 		return scrapMapper.scrapAnswerEntityToScrapAnswer(scrapAnswerEntity);
 	}
+
+	public void deleteAllScrapAnswerByScrapId(long scrapId) {
+		scrapAnswerRepository.deleteAllByScrapId(scrapId);
+	}
 }

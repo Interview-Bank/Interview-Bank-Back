@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.hoongoin.interviewbank.account.service.AccountQueryService;
 import org.hoongoin.interviewbank.account.service.domain.Account;
-import org.hoongoin.interviewbank.exception.IbEntityExistsException;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.interview.service.InterviewQueryService;
 import org.hoongoin.interviewbank.interview.service.QuestionQueryService;
@@ -22,6 +21,7 @@ import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionRespons
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
+import org.hoongoin.interviewbank.scrap.repository.ScrapAnswerRepository;
 import org.hoongoin.interviewbank.scrap.service.domain.Scrap;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapAndScrapQuestions;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestion;
@@ -43,6 +43,7 @@ public class ScrapService {
 	private final InterviewQueryService interviewQueryService;
 	private final QuestionQueryService questionQueryService;
 	private final ScrapMapper scrapMapper;
+	private final ScrapAnswerCommandService scrapAnswerCommandService;
 
 	@Transactional
 	public CreateScrapResponse createScrapByCreateRequest(CreateScrapRequest createScrapRequest,
@@ -86,6 +87,7 @@ public class ScrapService {
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
 		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 
+		scrapAnswerCommandService.deleteAllScrapAnswerByScrapId(scrapId);
 		scrapQuestionCommandService.deleteAllScrapQuestionByScrapId(scrapId);
 		scrapCommandService.deleteScrapById(scrapId);
 	}
