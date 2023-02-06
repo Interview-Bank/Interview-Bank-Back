@@ -29,10 +29,9 @@ public class ScrapAnswerService {
 	private final ScrapMapper scrapMapper;
 
 	public CreateScrapAnswerResponse createScrapAnswerByScrapIdAndScrapQuestionId(
-		ScrapQuestionIdsDto scrapQuestionIdsDto, String requestingAccountOfEmail) {
-		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
+		ScrapQuestionIdsDto scrapQuestionIdsDto, long requestingAccountId) {
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapQuestionIdsDto.getScrapId());
-		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
+		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 
 		if (!scrapQuestionQueryService.existsScrapQuestionByScrapQuestionId(scrapQuestionIdsDto.getScrapQuestionId())) {
 			throw new IbEntityNotFoundException("ScrapQuestion");
@@ -46,20 +45,18 @@ public class ScrapAnswerService {
 	@Transactional
 	public UpdateScrapAnswerResponse updateScrapAnswerByRequestAndSIds(
 		UpdateScrapAnswerRequest updateScrapAnswerRequest, ScrapAnswerIdsDto scrapAnswerIdsDto,
-		String requestingAccountOfEmail) {
-		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
+		long requestingAccountId) {
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapAnswerIdsDto.getScrapId());
-		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
+		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 
 		ScrapAnswer updatedScrapAnswer = scrapAnswerCommandService.updateScrapAnswer(scrapAnswerIdsDto,
 			new ScrapAnswer(updateScrapAnswerRequest.getContent()));
 		return scrapMapper.scrapAnswerToUpdateScrapAnswerResponse(updatedScrapAnswer);
 	}
 
-	public void deleteScrapAnswerByIds(ScrapAnswerIdsDto scrapAnswerIdsDto, String requestingAccountOfEmail) {
-		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
+	public void deleteScrapAnswerByIds(ScrapAnswerIdsDto scrapAnswerIdsDto, long requestingAccountId) {
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapAnswerIdsDto.getScrapId());
-		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
+		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 
 		scrapAnswerQueryService.deleteScrapAnswer(scrapAnswerIdsDto);
 	}

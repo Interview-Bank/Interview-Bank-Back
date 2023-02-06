@@ -46,25 +46,24 @@ public class ScrapService {
 
 	@Transactional
 	public CreateScrapResponse createScrapByCreateRequest(CreateScrapRequest createScrapRequest,
-		String requestingAccountOfEmail) {
+		long requestingAccountId) {
 		Interview originalInterview = interviewQueryService.findInterviewById(createScrapRequest.getInterviewId());
 		List<Question> originalQuestionsInInterview = questionQueryService.findQuestionsByInterviewId(
 			createScrapRequest.getInterviewId());
+
+		Account requestingAccount = accountQueryService.findAccountByAccountId(requestingAccountId);
 
 		Scrap scrap = Scrap.builder()
 			.interviewId(originalInterview.getInterviewId())
 			.title(originalInterview.getTitle())
 			.build();
-		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
+
 		List<ScrapQuestion> scrapQuestions = new ArrayList<>();
 		for (Question question : originalQuestionsInInterview) {
 			scrapQuestions.add(
 				ScrapQuestion.builder().scrapId(scrap.getScrapId()).content(question.getContent()).build());
 		}
-		if (scrapCommandService.existsScrapByOriginalInterviewAndRequestingAccount(originalInterview,
-			requestingAccount)) {
-			throw new IbEntityExistsException("Scrap");
-		}
+
 		ScrapAndScrapQuestions savedScrapAndScrapQuestions = scrapCommandService.insertScrapAndScrapQuestions(scrap,
 			scrapQuestions, requestingAccount, originalInterview);
 
@@ -73,10 +72,9 @@ public class ScrapService {
 
 	@Transactional
 	public UpdateScrapResponse updateScrapByRequestAndScrapId(UpdateScrapRequest updateScrapRequest, long scrapId,
-		String requestingAccountOfEmail) {
-		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
+		long requestingAccountId) {
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
-		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
+		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 
 		Scrap scrapToUpdate = scrapMapper.updateScrapRequestToScrap(updateScrapRequest);
 		scrap = scrapCommandService.updateScrap(scrapId, scrapToUpdate);
@@ -84,20 +82,18 @@ public class ScrapService {
 	}
 
 	@Transactional
-	public void deleteScrapByRequestAndScrapId(long scrapId, String requestingAccountOfEmail) {
-		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
+	public void deleteScrapByRequestAndScrapId(long scrapId, long requestingAccountId) {
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
-		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
+		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 
 		scrapQuestionCommandService.deleteAllScrapQuestionByScrapId(scrapId);
 		scrapCommandService.deleteScrapById(scrapId);
 	}
 
 	@Transactional(readOnly = true)
-	public ReadScrapDetailResponse readScrapDetailById(long scrapId, String requestingAccountOfEmail) {
-		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
+	public ReadScrapDetailResponse readScrapDetailById(long scrapId, long requestingAccountId) {
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
-		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
+		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 
 		Interview interview = interviewQueryService.findInterviewById(scrap.getInterviewId());
 
@@ -107,6 +103,7 @@ public class ScrapService {
 		return makeReadScrapResponse(scrap, interview, scrapQuestionsWithScrapAnswers);
 	}
 
+	@Transactional(readOnly = true)
 	public List<ReadScrapResponse> readScrapAll(long requestingAccountId, int page, int size) {
 		List<Scrap> scraps = scrapQueryService.findScrapAllByScrapWriterAccoundIdAndPageAndSize(requestingAccountId,
 			page, size);

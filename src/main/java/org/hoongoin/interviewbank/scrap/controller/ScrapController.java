@@ -34,34 +34,34 @@ public class ScrapController {
 
 	@PostMapping
 	public ResponseEntity<CreateScrapResponse> createScrap(@RequestBody CreateScrapRequest createScrapRequest) {
-		String requestingAccountOfEmail = getRequestingAccountOfEmail();
+		long requestingAccountId = getRequestingAccountId();
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
-			.body(scrapService.createScrapByCreateRequest(createScrapRequest, requestingAccountOfEmail));
+			.body(scrapService.createScrapByCreateRequest(createScrapRequest, requestingAccountId));
 	}
 
 	@PutMapping("/{scrap-id}")
 	public ResponseEntity<UpdateScrapResponse> updateScrap(@RequestBody UpdateScrapRequest updateScrapRequest,
 		@PathVariable("scrap-id") long scrapId) {
-		String requestingAccountOfEmail = getRequestingAccountOfEmail();
+		long requestingAccountId = getRequestingAccountId();
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
-			.body(scrapService.updateScrapByRequestAndScrapId(updateScrapRequest, scrapId, requestingAccountOfEmail));
+			.body(scrapService.updateScrapByRequestAndScrapId(updateScrapRequest, scrapId, requestingAccountId));
 	}
 
 	@DeleteMapping("/{scrap-id}")
 	public ResponseEntity<Object> deleteScrap(@PathVariable("scrap-id") long scrapId) {
-		String requestingAccountOfEmail = getRequestingAccountOfEmail();
-		scrapService.deleteScrapByRequestAndScrapId(scrapId, requestingAccountOfEmail);
+		long requestingAccountId = getRequestingAccountId();
+		scrapService.deleteScrapByRequestAndScrapId(scrapId, requestingAccountId);
 		return ResponseEntity.ok().body("Success");
 	}
 
 	@GetMapping("/{scrap-id}")
 	public ResponseEntity<ReadScrapDetailResponse> readScrap(@PathVariable("scrap-id") long scrapId) {
-		String requestingAccountOfEmail = getRequestingAccountOfEmail();
+		long requestingAccountId = getRequestingAccountId();
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
-			.body(scrapService.readScrapDetailById(scrapId, requestingAccountOfEmail));
+			.body(scrapService.readScrapDetailById(scrapId, requestingAccountId));
 	}
 
 	@GetMapping()
