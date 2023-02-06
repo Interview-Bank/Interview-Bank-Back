@@ -57,7 +57,7 @@ public class ScrapController {
 	}
 
 	@GetMapping("/{scrap-id}")
-	public ResponseEntity<ReadScrapDetailResponse> readScrap(@PathVariable("scrap-id") long scrapId) {
+	public ResponseEntity<ReadScrapDetailResponse> readScrapDetail(@PathVariable("scrap-id") long scrapId) {
 		long requestingAccountId = getRequestingAccountId();
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
