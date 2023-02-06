@@ -1,5 +1,8 @@
 package org.hoongoin.interviewbank.scrap.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hoongoin.interviewbank.common.entity.BaseEntity;
@@ -36,6 +40,9 @@ public class ScrapQuestionEntity extends BaseEntity {
 
 	@Column(nullable = false, length = 1000)
 	private String content;
+
+	@OneToMany(mappedBy = "scrapQuestionEntity")
+	List<ScrapAnswerEntity> scrapAnswerEntities = new ArrayList<>();
 
 	@Override
 	public String toString() {
