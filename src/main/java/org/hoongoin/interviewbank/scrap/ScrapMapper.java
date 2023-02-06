@@ -8,6 +8,7 @@ import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.service.domain.Interview;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapAnswerResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
@@ -107,4 +108,6 @@ public interface ScrapMapper {
 	@Mapping(target = "scrapAnswerResponseList", source = "scrapAnswers")
 	ScrapQuestionWithScrapAnswersResponse scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(
 		ScrapQuestionWithScrapAnswers scrapQuestionWithScrapAnswers);
+
+	ReadScrapResponse scrapToReadScrapResponse(Scrap scrap);
 }

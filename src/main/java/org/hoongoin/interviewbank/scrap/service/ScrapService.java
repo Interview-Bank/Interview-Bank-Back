@@ -17,6 +17,7 @@ import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.OriginalInterviewResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
@@ -93,7 +94,7 @@ public class ScrapService {
 	}
 
 	@Transactional(readOnly = true)
-	public ReadScrapDetailResponse readScrapById(long scrapId, String requestingAccountOfEmail) {
+	public ReadScrapDetailResponse readScrapDetailById(long scrapId, String requestingAccountOfEmail) {
 		Account requestingAccount = accountQueryService.findAccountByEmail(requestingAccountOfEmail);
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
 		checkScrapAuthority(scrap.getAccountId(), requestingAccount.getAccountId());
@@ -104,6 +105,17 @@ public class ScrapService {
 			.findAllScrapQuestionWithScrapAnswersByScrapId(scrapId);
 
 		return makeReadScrapResponse(scrap, interview, scrapQuestionsWithScrapAnswers);
+	}
+
+	public List<ReadScrapResponse> readScrapAll(long requestingAccountId, int page, int size) {
+		List<Scrap> scraps = scrapQueryService.findScrapAllByScrapWriterAccoundIdAndPageAndSize(requestingAccountId,
+			page, size);
+
+		List<ReadScrapResponse> readScrapResponses = new ArrayList<>();
+		scraps.forEach(scrap ->
+			{readScrapResponses.add(scrapMapper.scrapToReadScrapResponse(scrap));}
+		);
+		return readScrapResponses;
 	}
 
 	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId) {
@@ -133,7 +145,8 @@ public class ScrapService {
 		List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = new ArrayList<>();
 		scrapQuestionsWithScrapAnswers.forEach(
 			scrapQuestionWithScrapAnswers -> scrapQuestionWithScrapAnswersResponses.add(
-				scrapMapper.scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(scrapQuestionWithScrapAnswers))
+				scrapMapper.scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(
+					scrapQuestionWithScrapAnswers))
 		);
 		return new ReadScrapDetailResponse(scrapResponse, interviewResponse, scrapQuestionWithScrapAnswersResponses);
 	}

@@ -2,10 +2,13 @@ package org.hoongoin.interviewbank.scrap.controller;
 
 import static org.hoongoin.interviewbank.utils.SecurityUtil.*;
 
+import java.util.List;
+
 import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.service.ScrapService;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -57,6 +61,16 @@ public class ScrapController {
 		String requestingAccountOfEmail = getRequestingAccountOfEmail();
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
-			.body(scrapService.readScrapById(scrapId, requestingAccountOfEmail));
+			.body(scrapService.readScrapDetailById(scrapId, requestingAccountOfEmail));
+	}
+
+	@GetMapping()
+	public ResponseEntity<List<ReadScrapResponse>> readScrapAll(
+		@RequestParam(name = "page", defaultValue = "0") int page,
+		@RequestParam(name = "size", defaultValue = "10") int size) {
+		long requestingAccountId = getRequestingAccountId();
+		return ResponseEntity.ok()
+			.header(HttpHeaders.CONTENT_TYPE, "application/json")
+			.body(scrapService.readScrapAll(requestingAccountId, page, size));
 	}
 }
