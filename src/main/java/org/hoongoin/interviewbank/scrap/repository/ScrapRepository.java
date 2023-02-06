@@ -17,7 +17,7 @@ public interface ScrapRepository extends JpaRepository<ScrapEntity, Long> {
 		@Param("account_id") Long accountId);
 
 	@Query("SELECT scrap FROM ScrapEntity scrap "
-		+ "WHERE scrap.accountEntity.id = :account_id"
+		+ "WHERE scrap.accountEntity.id = :account_id "
 		+ "ORDER BY scrap.createdAt DESC")
 	List<ScrapEntity> findByAccountIdAndPageableOrderByCreatedAtDesc(@Param("account_id") long accountId,
 		Pageable pageable);
