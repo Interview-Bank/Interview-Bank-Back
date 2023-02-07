@@ -2,8 +2,8 @@ package org.hoongoin.interviewbank.account;
 
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
-import org.hoongoin.interviewbank.account.entity.AccountEntity;
-import org.hoongoin.interviewbank.account.service.domain.Account;
+import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
+import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

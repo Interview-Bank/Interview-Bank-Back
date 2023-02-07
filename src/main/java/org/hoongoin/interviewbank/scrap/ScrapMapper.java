@@ -2,10 +2,10 @@ package org.hoongoin.interviewbank.scrap;
 
 import java.util.ArrayList;
 
-import org.hoongoin.interviewbank.account.entity.AccountEntity;
-import org.hoongoin.interviewbank.account.service.domain.Account;
-import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
-import org.hoongoin.interviewbank.interview.service.domain.Interview;
+import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
+import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
+import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
@@ -14,13 +14,13 @@ import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScr
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
-import org.hoongoin.interviewbank.scrap.entity.ScrapAnswerEntity;
-import org.hoongoin.interviewbank.scrap.entity.ScrapEntity;
-import org.hoongoin.interviewbank.scrap.entity.ScrapQuestionEntity;
-import org.hoongoin.interviewbank.scrap.service.domain.Scrap;
-import org.hoongoin.interviewbank.scrap.service.domain.ScrapAnswer;
-import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestion;
-import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestionWithScrapAnswers;
+import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapAnswerEntity;
+import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
+import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapQuestionEntity;
+import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
+import org.hoongoin.interviewbank.scrap.application.entity.ScrapAnswer;
+import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestion;
+import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestionWithScrapAnswers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
