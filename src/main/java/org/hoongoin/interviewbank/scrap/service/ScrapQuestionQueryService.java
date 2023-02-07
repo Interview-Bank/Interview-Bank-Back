@@ -6,8 +6,6 @@ import java.util.List;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.entity.ScrapQuestionEntity;
 import org.hoongoin.interviewbank.scrap.repository.ScrapQuestionRepository;
-import org.hoongoin.interviewbank.scrap.service.domain.ScrapAnswer;
-import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestion;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestionWithScrapAnswers;
 import org.springframework.stereotype.Service;
 

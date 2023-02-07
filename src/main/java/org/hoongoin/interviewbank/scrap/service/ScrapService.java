@@ -21,7 +21,6 @@ import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionRespons
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
-import org.hoongoin.interviewbank.scrap.repository.ScrapAnswerRepository;
 import org.hoongoin.interviewbank.scrap.service.domain.Scrap;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapAndScrapQuestions;
 import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestion;
@@ -107,7 +106,7 @@ public class ScrapService {
 
 	@Transactional(readOnly = true)
 	public List<ReadScrapResponse> readScrapAll(long requestingAccountId, int page, int size) {
-		List<Scrap> scraps = scrapQueryService.findScrapAllByScrapWriterAccoundIdAndPageAndSize(requestingAccountId,
+		List<Scrap> scraps = scrapQueryService.findScrapAllByScrapWriterAccountIdAndPageAndSize(requestingAccountId,
 			page, size);
 
 		List<ReadScrapResponse> readScrapResponses = new ArrayList<>();
