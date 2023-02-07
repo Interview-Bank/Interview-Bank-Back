@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ScrapResponse {
+
 	private long scrapId;
 	private String title;
 }

@@ -45,10 +45,9 @@ public class ScrapCommandService {
 		return new ScrapAndScrapQuestions(savedScrap, savedScrapQuestions);
 	}
 
-	public boolean existsScrapByOriginalInterviewAndRequestingAccount(Interview originalInterview,
-		Account requestingAccount) {
-		return scrapRepository.existsByInterviewIdAndAccountId(originalInterview.getInterviewId(),
-			requestingAccount.getAccountId());
+	public boolean existsScrapByOriginalInterviewAndRequestingAccountId(Interview originalInterview,
+		long requestingAccountId) {
+		return scrapRepository.existsByInterviewIdAndAccountId(originalInterview.getInterviewId(), requestingAccountId);
 	}
 
 	public Scrap updateScrap(long scrapId, Scrap scrap) {

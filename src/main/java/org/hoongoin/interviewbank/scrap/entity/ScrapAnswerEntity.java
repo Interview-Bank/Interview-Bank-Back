@@ -31,7 +31,7 @@ public class ScrapAnswerEntity extends BaseEntity {
 	private long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "scrap_interview_id")
+	@JoinColumn(nullable = false, name = "scrap_question_id")
 	private ScrapQuestionEntity scrapQuestionEntity;
 
 

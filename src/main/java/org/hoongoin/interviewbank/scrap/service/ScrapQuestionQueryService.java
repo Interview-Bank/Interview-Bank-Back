@@ -6,7 +6,7 @@ import java.util.List;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.entity.ScrapQuestionEntity;
 import org.hoongoin.interviewbank.scrap.repository.ScrapQuestionRepository;
-import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestion;
+import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestionWithScrapAnswers;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -18,13 +18,17 @@ public class ScrapQuestionQueryService {
 	private final ScrapQuestionRepository scrapQuestionRepository;
 	private final ScrapMapper scrapMapper;
 
-	public List<ScrapQuestion> findAllScrapQuestionByScrapId(long scrapId) {
-		List<ScrapQuestionEntity> scrapQuestionEntities = scrapQuestionRepository.findAllByScrapId(scrapId);
+	public List<ScrapQuestionWithScrapAnswers> findAllScrapQuestionWithScrapAnswersByScrapId(long scrapId) {
+		List<ScrapQuestionEntity> scrapQuestionEntities = scrapQuestionRepository
+			.findAllWithScrapAnswerEntitiesByScrapId(scrapId);
 
-		List<ScrapQuestion> savedScrapQuestions = new ArrayList<>();
+		List<ScrapQuestionWithScrapAnswers> savedScrapQuestions = new ArrayList<>();
 		scrapQuestionEntities.forEach(scrapQuestionEntity -> {
-			savedScrapQuestions.add(scrapMapper.scrapQuestionEntityToScrapQuestion(scrapQuestionEntity));
+			savedScrapQuestions.add(
+				scrapMapper.scrapQuestionEntityWithScrapAnswerEntitiesToScrapQuestionWithScrapAnswers(
+					scrapQuestionEntity));
 		});
+
 		return savedScrapQuestions;
 	}
 

@@ -30,38 +30,38 @@ public class ScrapAnswerController {
 	@PostMapping()
 	public ResponseEntity<CreateScrapAnswerResponse> createScrapAnswer(@PathVariable("scrap-id") long scrapId,
 		@PathVariable("question-id") long scrapQuestionId) {
-		String requestingAccountOfEmail = getRequestingAccountOfEmail();
+		long requestingAccountId = getRequestingAccountId();
 
 		ScrapQuestionIdsDto scrapQuestionIdsDto = new ScrapQuestionIdsDto(scrapId, scrapQuestionId);
 
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
 			.body(scrapAnswerService.createScrapAnswerByScrapIdAndScrapQuestionId(scrapQuestionIdsDto,
-				requestingAccountOfEmail));
+				requestingAccountId));
 	}
 
 	@PutMapping("/{answer-id}")
 	public ResponseEntity<UpdateScrapAnswerResponse> updateScrapAnswer(@PathVariable("scrap-id") long scrapId,
 		@PathVariable("question-id") long scrapQuestionId, @PathVariable("answer-id") long scrapAnswerId,
 		@RequestBody UpdateScrapAnswerRequest updateScrapAnswerRequest) {
-		String requestingAccountOfEmail = getRequestingAccountOfEmail();
+		long requestingAccountId = getRequestingAccountId();
 
 		ScrapAnswerIdsDto scrapAnswerIdsDto = new ScrapAnswerIdsDto(scrapId, scrapQuestionId, scrapAnswerId);
 
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
 			.body(scrapAnswerService.updateScrapAnswerByRequestAndSIds(updateScrapAnswerRequest, scrapAnswerIdsDto,
-				requestingAccountOfEmail));
+				requestingAccountId));
 	}
 
 	@DeleteMapping("{answer-id}")
 	public ResponseEntity<Object> deleteScrapAnswer(@PathVariable("scrap-id") long scrapId,
 		@PathVariable("question-id") long scrapQuestionId, @PathVariable("answer-id") long scrapAnswerId) {
-		String requestingAccountOfEmail = getRequestingAccountOfEmail();
+		long requestingAccountId = getRequestingAccountId();
 
 		ScrapAnswerIdsDto scrapAnswerIdsDto = new ScrapAnswerIdsDto(scrapId, scrapQuestionId, scrapAnswerId);
 
-		scrapAnswerService.deleteScrapAnswerByIds(scrapAnswerIdsDto, requestingAccountOfEmail);
+		scrapAnswerService.deleteScrapAnswerByIds(scrapAnswerIdsDto, requestingAccountId);
 
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")

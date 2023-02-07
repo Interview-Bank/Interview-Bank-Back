@@ -13,5 +13,5 @@ public class CreateScrapResponse {
 
 	private OriginalInterviewResponse originalInterview;
 	private ScrapResponse scrap;
-	private List<ScrapQuestionResponse> scrapQuestion;
+	private List<ScrapQuestionResponse> scrapQuestions;
 }
