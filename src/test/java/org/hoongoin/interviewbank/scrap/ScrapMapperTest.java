@@ -2,12 +2,12 @@ package org.hoongoin.interviewbank.scrap;
 
 import static org.assertj.core.api.Assertions.*;
 
-import org.hoongoin.interviewbank.account.entity.AccountEntity;
-import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
-import org.hoongoin.interviewbank.scrap.entity.ScrapEntity;
-import org.hoongoin.interviewbank.scrap.entity.ScrapQuestionEntity;
-import org.hoongoin.interviewbank.scrap.service.domain.Scrap;
-import org.hoongoin.interviewbank.scrap.service.domain.ScrapQuestion;
+import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
+import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
+import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestion;
+import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
+import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapQuestionEntity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
