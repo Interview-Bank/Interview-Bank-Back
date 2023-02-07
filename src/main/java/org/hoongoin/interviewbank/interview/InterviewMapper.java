@@ -3,16 +3,16 @@ package org.hoongoin.interviewbank.interview;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hoongoin.interviewbank.account.service.domain.Account;
+import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
-import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
-import org.hoongoin.interviewbank.interview.entity.QuestionEntity;
-import org.hoongoin.interviewbank.interview.service.domain.Interview;
-import org.hoongoin.interviewbank.interview.service.domain.Question;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
+import org.hoongoin.interviewbank.interview.application.entity.Interview;
+import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

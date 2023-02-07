@@ -9,7 +9,7 @@ import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewR
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
-import org.hoongoin.interviewbank.interview.service.InterviewService;
+import org.hoongoin.interviewbank.interview.application.InterviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;

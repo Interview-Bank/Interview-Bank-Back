@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hoongoin.interviewbank.account.entity.AccountEntity;
-import org.hoongoin.interviewbank.account.repository.AccountRepository;
+import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
+import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
@@ -16,10 +16,10 @@ import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRe
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
-import org.hoongoin.interviewbank.interview.entity.InterviewEntity;
-import org.hoongoin.interviewbank.interview.entity.QuestionEntity;
-import org.hoongoin.interviewbank.interview.repository.InterviewRepository;
-import org.hoongoin.interviewbank.interview.repository.QuestionRepository;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
+import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
+import org.hoongoin.interviewbank.interview.infrastructure.repository.QuestionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
