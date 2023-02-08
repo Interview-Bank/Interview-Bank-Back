@@ -53,7 +53,8 @@ public class SecurityConfig {
 				registry.addMapping("/**")
 					.allowedOrigins("*")
 					.allowedMethods("*")
-					.allowedHeaders("*");
+					.allowedHeaders("*")
+					.exposedHeaders("*");
 			}
 		};
 	}
