@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.account;
 
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
+import org.hoongoin.interviewbank.account.controller.response.LoginResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.application.entity.Account;
@@ -16,7 +17,7 @@ public interface AccountMapper {
 			accountEntity.getDeletedAt(), accountEntity.getDeletedFlag());
 	}
 
-	@Mapping(target = "id", source = "account.accountId")
+	@Mapping(target = "id", source = "accountId")
 	AccountEntity accountToAccountEntity(Account account);
 
 	@Mapping(target = "accountId", ignore = true)
@@ -27,4 +28,6 @@ public interface AccountMapper {
 	Account registerRequestToAccount(RegisterRequest registerRequest);
 
 	RegisterResponse accountToRegisterResponse(Account account);
+
+	LoginResponse accountToLoginResponse(Account account);
 }
