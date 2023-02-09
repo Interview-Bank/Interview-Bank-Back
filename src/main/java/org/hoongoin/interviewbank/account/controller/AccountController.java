@@ -39,9 +39,10 @@ public class AccountController {
 	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
 		Account account = accountService.loginByLoginRequest(loginRequest);
 
-		Authentication authentication = new UsernamePasswordAuthenticationToken(new IbUserDetails(account.getEmail(),
-			account.getAccountId(), account.getPassword()),
-			account.getPassword(), null);
+		Authentication authentication = new UsernamePasswordAuthenticationToken(
+			new IbUserDetails(account.getEmail(), account.getAccountId(), account.getPassword()),
+			account.getPassword(),
+			null);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
