@@ -2,8 +2,10 @@ package org.hoongoin.interviewbank.account.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
+import org.hoongoin.interviewbank.account.controller.response.LoginResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.AccountService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
@@ -26,19 +28,23 @@ public class AccountController {
 
 	private final AccountService accountService;
 
+	private final AccountMapper accountMapper;
+
 	@PostMapping("/register")
 	public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
 		return ResponseEntity.ok().body(accountService.registerByRegisterRequest(registerRequest));
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
 		Account account = accountService.loginByLoginRequest(loginRequest);
+
 		Authentication authentication = new UsernamePasswordAuthenticationToken(new IbUserDetails(account.getEmail(),
 			account.getAccountId(), account.getPassword()),
 			account.getPassword(), null);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		return ResponseEntity.ok(null);
+
+		return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
 	}
 
 	@PostMapping("/logout")
