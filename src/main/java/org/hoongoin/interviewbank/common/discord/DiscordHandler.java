@@ -11,7 +11,7 @@ import discord4j.common.util.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Profile("dev")
+@Profile("local")
 @Slf4j
 public class DiscordHandler {
 
