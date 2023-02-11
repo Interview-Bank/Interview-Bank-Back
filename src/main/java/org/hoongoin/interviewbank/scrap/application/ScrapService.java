@@ -81,8 +81,8 @@ public class ScrapService {
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
 		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 
-		Scrap scrapToUpdate = scrapMapper.updateScrapRequestToScrap(updateScrapRequest);
-		scrap = scrapCommandService.updateScrap(scrapId, scrapToUpdate);
+		Scrap scrapToBeUpdated = scrapMapper.updateScrapRequestToScrap(updateScrapRequest);
+		scrap = scrapCommandService.updateScrap(scrapId, scrapToBeUpdated);
 		return scrapMapper.scrapToUpdateScrapResponse(scrap);
 	}
 
