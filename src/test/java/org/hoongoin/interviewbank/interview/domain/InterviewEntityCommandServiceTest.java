@@ -52,7 +52,10 @@ class InterviewEntityCommandServiceTest {
 
 		String title = "title";
 
-		Interview testInterview = new Interview(title, testAccountEntity.getId());
+		Interview testInterview = Interview.builder()
+			.title(title)
+			.accountId(testAccountEntity.getId())
+			.build();
 
 		//when
 		Long createdInterviewId = interviewCommandService.insertInterview(testInterview);
@@ -112,7 +115,7 @@ class InterviewEntityCommandServiceTest {
 
 		//when
 		Interview updatedInterview = interviewCommandService.updateInterview(
-			new Interview(updateInterviewRequest.getTitle()), savedInterviewEntity.getId());
+			Interview.builder().title(updateInterviewRequest.getTitle()).build(), savedInterviewEntity.getId());
 
 		//then
 		assertThat(updatedInterview.getTitle()).isEqualTo(newTitle);
