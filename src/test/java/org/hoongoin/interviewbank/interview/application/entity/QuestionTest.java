@@ -14,7 +14,7 @@ class QuestionTest {
 		String content = "a".repeat(100000);
 
 		//when
-		Question question = new Question(1L, 1L, content);
+		Question question = Question.builder().questionId(1L).interviewId(1L).content(content).build();
 
 		//when
 		assertThat(question.getContent()).isEqualTo(content);
@@ -27,7 +27,8 @@ class QuestionTest {
 		String content = "a".repeat(100001);
 
 		//when //then
-		assertThatThrownBy(() -> new Question(1L, 1L, content)).hasMessage("Question")
+		assertThatThrownBy(() -> Question.builder().questionId(1L).interviewId(1L).content(content).build())
+			.hasMessage("Question")
 			.isInstanceOf(IbValidationException.class);
 	}
 
@@ -37,7 +38,8 @@ class QuestionTest {
 		String content = "";
 
 		//when //then
-		assertThatThrownBy(() -> new Question(1L, 1L, content)).hasMessage("Question")
+		assertThatThrownBy(() -> Question.builder().questionId(1L).interviewId(1L).content(content).build())
+			.hasMessage("Question")
 			.isInstanceOf(IbValidationException.class);
 	}
 }
