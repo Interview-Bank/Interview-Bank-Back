@@ -39,11 +39,11 @@ public class Account {
 		if (nickname == null) {
 			throw new IbValidationException("nickname null");
 		}
-		if (nickname.getBytes(StandardCharsets.UTF_8).length < 4) {
-			throw new IbValidationException("nickname less than 4 bytes");
+		if (nickname.length() < 1) {
+			throw new IbValidationException("nickname length less than 1");
 		}
-		if (nickname.getBytes(StandardCharsets.UTF_8).length > 30) {
-			throw new IbValidationException("nickname larger than 30 bytes");
+		if (nickname.length() > 16) {
+			throw new IbValidationException("nickname length larger than 16");
 		}
 		this.nickname = nickname;
 	}
