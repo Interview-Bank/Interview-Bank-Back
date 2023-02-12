@@ -1,6 +1,5 @@
 package org.hoongoin.interviewbank.account.application.entity;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 import org.hoongoin.interviewbank.exception.IbValidationException;
