@@ -3,7 +3,6 @@ package org.hoongoin.interviewbank.interview.application.entity;
 import static org.assertj.core.api.Assertions.*;
 
 import org.hoongoin.interviewbank.exception.IbValidationException;
-import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.junit.jupiter.api.Test;
 
 class QuestionTest {
