@@ -41,6 +41,10 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 	@Column(nullable = false, length = 61)
 	private String password;
 
+	public void modifyEntity(String password){
+		this.password = password;
+	}
+
 	@Override
 	public String toString() {
 		return "AccountEntity{" +

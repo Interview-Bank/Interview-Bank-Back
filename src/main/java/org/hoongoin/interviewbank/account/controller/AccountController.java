@@ -3,6 +3,8 @@ package org.hoongoin.interviewbank.account.controller;
 import javax.servlet.http.HttpSession;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
+import org.hoongoin.interviewbank.account.controller.request.ResetPasswordRequest;
+import org.hoongoin.interviewbank.account.controller.request.SendEmailRequest;
 import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.response.LoginResponse;
@@ -10,10 +12,12 @@ import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.AccountService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.config.IbUserDetails;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +55,24 @@ public class AccountController {
 	@PostMapping("/logout")
 	public ResponseEntity<Object> logout(HttpSession session) {
 		session.invalidate();
+		return ResponseEntity.ok(null);
+	}
+
+	@PostMapping("/reset-password/email")
+	public ResponseEntity<Object> sendEmailToResetPassword(@RequestBody SendEmailRequest sendEmailRequest) {
+		accountService.sendEmailToResetPassword(sendEmailRequest);
+		return ResponseEntity.ok(null);
+	}
+
+	@GetMapping("/reset-password/token-validation")
+	public ResponseEntity<Boolean> resetPasswordTokenValid(@Param(value = "token") String token) {
+		return ResponseEntity.ok(accountService.validateToken(token));
+	}
+
+	@PostMapping("/reset-password")
+	public ResponseEntity<Object> resetPassword(@Param(value = "token") String token,
+		@RequestBody ResetPasswordRequest resetPasswordRequest) {
+		accountService.resetPasswordByTokenAndRequest(token, resetPasswordRequest);
 		return ResponseEntity.ok(null);
 	}
 }
