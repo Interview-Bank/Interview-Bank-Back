@@ -27,7 +27,7 @@ public class DiscordHandler {
 	public void send(Exception exception, HttpServletRequest request) {
 		try {
 			String prefixMessage = MessageFactory.createHttpMessage(request);
-			String bodyMessage = exception.getMessage();
+			String bodyMessage = MessageFactory.createStackTraceMessage(exception);
 			this.sendMessageToDiscord(prefixMessage + "\n" + bodyMessage);
 		} catch (Exception messageException) {
 			log.error(messageException.getMessage(), messageException);
