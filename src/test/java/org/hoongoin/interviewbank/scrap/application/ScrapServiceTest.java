@@ -30,7 +30,7 @@ class ScrapServiceTest {
 	private ScrapMapper scrapMapper;
 
 	@Test
-	public void updateScrapByRequestAndScrapId_Success() {
+	void updateScrapByRequestAndScrapId_Success() {
 		//given
 		long scrapId = 1;
 		long requestingAccountId = 1;
