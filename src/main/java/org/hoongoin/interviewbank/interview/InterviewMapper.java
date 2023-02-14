@@ -25,8 +25,11 @@ public interface InterviewMapper {
 	}
 
 	default Question questionEntityToQuestion(QuestionEntity questionEntity) {
-		return new Question(questionEntity.getId(), questionEntity.getInterviewEntity().getId(),
-			questionEntity.getContent());
+		return Question.builder()
+			.questionId(questionEntity.getId())
+			.interviewId(questionEntity.getInterviewEntity().getId())
+			.content(questionEntity.getContent())
+			.build();
 	}
 
 	default FindInterviewResponse questionListAndInterviewToFindInterviewResponse(List<Question> questions,
@@ -51,7 +54,12 @@ public interface InterviewMapper {
 		List<Question> questions = new ArrayList<>();
 		updateInterviewRequest.getQuestions()
 			.forEach(
-				question -> questions.add(new Question(question.getQuestionId(), interviewId, question.getContent())));
+				question -> questions.add(Question.builder()
+					.questionId(question.getQuestionId())
+					.interviewId(interviewId)
+					.content(question.getContent())
+					.build())
+			);
 		return questions;
 	}
 
@@ -70,7 +78,12 @@ public interface InterviewMapper {
 
 		createInterviewAndQuestionsRequest.getQuestionsRequest()
 			.getQuestions()
-			.forEach(question -> questions.add(new Question(interviewId, question.getContent())));
+			.forEach(question -> questions.add(
+				Question.builder()
+					.interviewId(interviewId)
+					.content(question.getContent())
+					.build())
+			);
 
 		return questions;
 	}

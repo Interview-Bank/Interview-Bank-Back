@@ -22,7 +22,7 @@ public class AccountService {
 	private final AccountMapper accountMapper;
 	private final BCryptPasswordEncoder passwordEncoder;
 
-	public RegisterResponse registerByRegisterRequest(RegisterRequest registerRequest){
+	public RegisterResponse registerByRegisterRequest(RegisterRequest registerRequest) {
 		Account account = accountMapper.registerRequestToAccount(registerRequest);
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		account = accountCommandService.insertAccount(account);

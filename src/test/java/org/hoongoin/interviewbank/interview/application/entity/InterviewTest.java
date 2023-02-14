@@ -3,7 +3,6 @@ package org.hoongoin.interviewbank.interview.application.entity;
 import static org.assertj.core.api.Assertions.*;
 
 import org.hoongoin.interviewbank.exception.IbValidationException;
-import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.junit.jupiter.api.Test;
 
 class InterviewTest {
@@ -15,8 +14,8 @@ class InterviewTest {
 		String koreanTitle = "훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈 기.";
 
 		//when //then
-		assertThat(new Interview(englishTitle).getTitle()).isEqualTo(englishTitle);
-		assertThat(new Interview(koreanTitle).getTitle()).isEqualTo(koreanTitle);
+		assertThat(Interview.builder().title(englishTitle).build().getTitle()).isEqualTo(englishTitle);
+		assertThat(Interview.builder().title(koreanTitle).build().getTitle()).isEqualTo(koreanTitle);
 
 	}
 
@@ -26,7 +25,7 @@ class InterviewTest {
 		String title = "h";
 
 		//when //then
-		assertThat(new Interview(title, 1L).getTitle()).isEqualTo(title);
+		assertThat(Interview.builder().title(title).accountId(1L).build().getTitle()).isEqualTo(title);
 
 	}
 
@@ -37,14 +36,12 @@ class InterviewTest {
 		String koreanTitle = "훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈기훈";
 
 		//when //then
-		assertThatThrownBy(() -> new Interview(englishTitle))
+		assertThatThrownBy(() -> Interview.builder().title(englishTitle).build())
 			.isInstanceOf(IbValidationException.class)
 			.hasMessage("title");
-		assertThatThrownBy(() -> new Interview(englishTitle))
+		assertThatThrownBy(() -> Interview.builder().title(koreanTitle).build())
 			.isInstanceOf(IbValidationException.class)
 			.hasMessage("title");
 
 	}
-
-
 }
