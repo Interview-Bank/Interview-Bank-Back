@@ -29,12 +29,12 @@ public class AccountService {
 	private final AccountQueryService accountQueryService;
 	private final AccountMapper accountMapper;
 	private final BCryptPasswordEncoder passwordEncoder;
-	private final ResetPasswordTokenProvider resetPasswordTokenProvider;
+	private final PasswordResetTokenProvider passwordResetTokenProvider;
 	private final PasswordResetTokenCommand passwordResetTokenCommand;
 	private final PasswordResetTokenQuery passwordResetTokenQuery;
 	private final MailService mailService;
 
-	public RegisterResponse registerByRegisterRequest(RegisterRequest registerRequest){
+	public RegisterResponse registerByRegisterRequest(RegisterRequest registerRequest) {
 		Account account = accountMapper.registerRequestToAccount(registerRequest);
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		account = accountCommandService.insertAccount(account);
@@ -49,11 +49,10 @@ public class AccountService {
 		return account;
 	}
 
-	public void sendEmailToResetPassword(SendEmailRequest sendEmailRequest) {
+	public void createPasswordResetTokenAndSendEmailByRequest(SendEmailRequest sendEmailRequest) {
 		Account account = accountQueryService.findAccountByEmail(sendEmailRequest.getEmail());
 
-		String hashedToken = resetPasswordTokenProvider.createToken();
-		System.out.println(hashedToken);
+		String hashedToken = passwordResetTokenProvider.createToken();
 		passwordResetTokenCommand.saveToken(account.getAccountId(), sendEmailRequest.getEmail(), hashedToken);
 
 		mailService.sendMailTo(sendEmailRequest.getEmail(), hashedToken);
@@ -68,7 +67,7 @@ public class AccountService {
 		PasswordResetToken passwordResetToken = passwordResetTokenQuery.findResetTokenByToken(token);
 		long requestingAccountId = passwordResetToken.getAccountId();
 
-		if(!Objects.equals(resetPasswordRequest.getNewPassword(), resetPasswordRequest.getNewPasswordCheck())){
+		if (!Objects.equals(resetPasswordRequest.getNewPassword(), resetPasswordRequest.getNewPasswordCheck())) {
 			throw new IbPasswordNotMatchException("");
 		}
 

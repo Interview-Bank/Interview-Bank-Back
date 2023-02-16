@@ -20,7 +20,7 @@ public class MailService {
 	private String email;
 
 	@Async
-	public void sendMailTo(String toEmail, String hashedToken){
+	public void sendMailTo(String toEmail, String hashedToken) {
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 		simpleMailMessage.setFrom(email);
 		simpleMailMessage.setTo(toEmail);

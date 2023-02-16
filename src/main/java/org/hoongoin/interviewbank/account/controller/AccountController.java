@@ -58,9 +58,9 @@ public class AccountController {
 		return ResponseEntity.ok(null);
 	}
 
-	@PostMapping("/reset-password/email")
+	@PostMapping("/reset-password/send-email")
 	public ResponseEntity<Object> sendEmailToResetPassword(@RequestBody SendEmailRequest sendEmailRequest) {
-		accountService.sendEmailToResetPassword(sendEmailRequest);
+		accountService.createPasswordResetTokenAndSendEmailByRequest(sendEmailRequest);
 		return ResponseEntity.ok(null);
 	}
 

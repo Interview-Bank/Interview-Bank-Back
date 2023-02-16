@@ -11,20 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ResetPasswordTokenProvider {
+public class PasswordResetTokenProvider {
 
 	private final MessageDigest messageDigest;
 	private final Encoder base64Encoder;
 
 	@Autowired
-	private ResetPasswordTokenProvider() throws NoSuchAlgorithmException {
+	private PasswordResetTokenProvider() throws NoSuchAlgorithmException {
 		this.messageDigest = MessageDigest.getInstance("SHA-256");
 		this.base64Encoder = Base64.getEncoder();
 	}
 
 	public String createToken() {
 		UUID uuid = UUID.randomUUID();
-		String token =  uuid.toString();
+		String token = uuid.toString();
 		return hashToken(token);
 	}
 
