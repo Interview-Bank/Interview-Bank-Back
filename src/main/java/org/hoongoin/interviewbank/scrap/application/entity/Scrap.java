@@ -35,5 +35,6 @@ public class Scrap {
 		if (title.getBytes(StandardCharsets.UTF_8).length > 128) {
 			throw new IbValidationException("Title over 128 byte");
 		}
+		this.title = title;
 	}
 }
