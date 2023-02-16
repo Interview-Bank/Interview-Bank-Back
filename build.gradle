@@ -44,7 +44,7 @@ dependencies {
 	implementation 'org.springframework.session:spring-session-core'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.session:spring-session-data-redis'
-
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 	compileOnly 'org.projectlombok:lombok'
 
@@ -72,12 +72,15 @@ querydsl {
 	jpa = true
 	querydslSourcesDir = querydslDir
 }
+
 sourceSets {
 	main.java.srcDir querydslDir
 }
+
 configurations {
 	querydsl.extendsFrom compileClasspath
 }
+
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
