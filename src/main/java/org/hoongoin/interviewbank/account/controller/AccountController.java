@@ -12,7 +12,6 @@ import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.AccountService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.config.IbUserDetails;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -65,12 +65,12 @@ public class AccountController {
 	}
 
 	@GetMapping("/reset-password/token-validation")
-	public ResponseEntity<Boolean> resetPasswordTokenValid(@Param(value = "token") String token) {
+	public ResponseEntity<Boolean> resetPasswordTokenValid(@RequestParam(value = "token") String token) {
 		return ResponseEntity.ok(accountService.validateToken(token));
 	}
 
 	@PostMapping("/reset-password")
-	public ResponseEntity<Object> resetPassword(@Param(value = "token") String token,
+	public ResponseEntity<Object> resetPassword(@RequestParam(value = "token") String token,
 		@RequestBody ResetPasswordRequest resetPasswordRequest) {
 		accountService.resetPasswordByTokenAndRequest(token, resetPasswordRequest);
 		return ResponseEntity.ok(null);
