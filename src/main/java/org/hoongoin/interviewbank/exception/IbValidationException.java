@@ -7,6 +7,6 @@ public class IbValidationException extends RuntimeException{
 
 	public IbValidationException(String message){
 		super(message);
-		log.error(message + "validation exception");
+		log.info(message + "validation exception");
 	}
 }

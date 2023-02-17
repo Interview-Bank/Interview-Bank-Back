@@ -8,7 +8,7 @@ services:
     build: ../
     restart: always
     env_file:
-      - common.env
+      - ../common.env
     ports:
       - "8084:8084"
     depends_on:
