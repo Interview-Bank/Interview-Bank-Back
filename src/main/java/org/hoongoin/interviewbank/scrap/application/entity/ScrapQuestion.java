@@ -33,5 +33,6 @@ public class ScrapQuestion {
 		if (content.getBytes(StandardCharsets.UTF_8).length > 100000) {
 			throw new IbValidationException("Scrap Question length over 100000 byte");
 		}
+		this.content = content;
 	}
 }
