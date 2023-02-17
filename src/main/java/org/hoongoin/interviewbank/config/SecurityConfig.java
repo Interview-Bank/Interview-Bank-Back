@@ -11,6 +11,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import io.swagger.models.HttpMethod;
 import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
@@ -27,6 +28,9 @@ public class SecurityConfig {
 			.antMatchers("/account/").permitAll()
 			.antMatchers("/scraps/").authenticated()
 			.antMatchers("/").permitAll()
+			.antMatchers(HttpMethod.POST.name(), "/interview").authenticated()
+			.antMatchers(HttpMethod.PUT.name(), "/interview/{interview_id}").authenticated()
+			.antMatchers(HttpMethod.DELETE.name(), "/interview/{interview_id}").authenticated()
 			.and()
 			.formLogin().disable().csrf().disable().cors()
 			.and()
