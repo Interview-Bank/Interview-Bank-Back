@@ -40,7 +40,8 @@ public class InterviewService {
 	@Transactional
 	public UpdateInterviewResponse updateInterviewResponseByRequestAndInterviewId(
 		UpdateInterviewRequest updateInterviewRequest, long interviewId) {
-		Interview interview = interviewCommandService.updateInterview(new Interview(updateInterviewRequest.getTitle()),
+		Interview interview = interviewCommandService.updateInterview(
+			Interview.builder().title(updateInterviewRequest.getTitle()).build(),
 			interviewId);
 
 		List<Question> newQuestions = interviewMapper.updateInterviewRequestToQuestions(updateInterviewRequest,
@@ -68,9 +69,10 @@ public class InterviewService {
 	@Transactional
 	public CreateInterviewAndQuestionsResponse createInterviewAndQuestionsByRequest(
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest, long accountId) {
-		long createdInterviewId = interviewCommandService.insertInterview(
-			new Interview(createInterviewAndQuestionsRequest.getTitle(),
-				accountId));
+		long createdInterviewId = interviewCommandService.insertInterview(Interview.builder()
+			.title(createInterviewAndQuestionsRequest.getTitle())
+			.accountId(accountId)
+			.build());
 
 		Interview createdInterview = interviewQueryService.findInterviewById(createdInterviewId);
 

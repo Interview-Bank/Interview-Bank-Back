@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
-import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

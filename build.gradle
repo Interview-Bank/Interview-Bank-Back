@@ -23,6 +23,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 	jcenter()
 }
 
@@ -45,6 +46,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.session:spring-session-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'com.discord4j:discord4j-core:3.2.3'
 
 	compileOnly 'org.projectlombok:lombok'
 

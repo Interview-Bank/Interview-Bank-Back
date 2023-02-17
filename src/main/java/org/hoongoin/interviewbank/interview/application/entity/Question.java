@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.hoongoin.interviewbank.exception.IbValidationException;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,14 +14,7 @@ import lombok.ToString;
 @ToString
 public class Question {
 
-	public Question(long interviewId, String content) {
-		this(null, interviewId, content);
-	}
-
-	public Question(Long questionId, long interviewId, String content) {
-		this(questionId, interviewId, content, null, null, null, null);
-	}
-
+	@Builder
 	public Question(Long questionId, long interviewId, String content, LocalDateTime createdAt,
 		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag) {
 		this.setQuestionId(questionId);

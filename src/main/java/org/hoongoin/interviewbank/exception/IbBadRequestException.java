@@ -7,6 +7,6 @@ public class IbBadRequestException extends RuntimeException {
 
 	public IbBadRequestException(String message) {
 		super(message);
-		log.error(message + "validation exception");
+		log.info(message + "validation exception");
 	}
 }
