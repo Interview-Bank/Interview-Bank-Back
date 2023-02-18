@@ -34,3 +34,7 @@ spring:
 
   mail:
     username: test
+
+discord:
+  token: test-token
+  channelId: 1234
