@@ -6,6 +6,7 @@ import org.hoongoin.interviewbank.common.discord.DiscordCreator;
 import org.hoongoin.interviewbank.exception.handler.GlobalControllerAdvice;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
 
 @TestConfiguration
 public class TestMockConfig {
@@ -18,5 +19,10 @@ public class TestMockConfig {
 	@Bean
 	public GlobalControllerAdvice globalControllerAdvice() {
 		return mock(GlobalControllerAdvice.class);
+	}
+
+	@Bean
+	public JavaMailSender javaMailSender() {
+		return mock(JavaMailSender.class);
 	}
 }
