@@ -8,8 +8,9 @@
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} -- %msg%n"/>
     <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){green} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
     <property name="CONSOLE_LOG_CHARSET" value="${CONSOLE_LOG_CHARSET:-default}"/>
+    <property name="PROFILE_NAME" value="${PROFILE_NAME}" />
 
-    <springProfile name="!local">
+    <springProfile name="!${PROFILE_NAME}">
         <appender name="CONSOLE_LOG" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
                 <pattern>${CONSOLE_LOG_PATTERN}</pattern>
@@ -18,7 +19,7 @@
         </appender>
     </springProfile>
 
-    <springProfile name="local">
+    <springProfile name="${PROFILE_NAME}">
         <appender name="FILE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <filter class="ch.qos.logback.classic.filter.LevelFilter">
                 <level>info</level>
@@ -36,7 +37,7 @@
         </appender>
     </springProfile>
 
-    <springProfile name="local">
+    <springProfile name="${PROFILE_NAME}">
         <appender name="ERROR_FILE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <filter class="ch.qos.logback.classic.filter.LevelFilter">
                 <level>error</level>
@@ -60,13 +61,13 @@
         </appender>
     </springProfile>
 
-    <springProfile name="!local">
+    <springProfile name="!${PROFILE_NAME}">
         <root level="info">
             <appender-ref ref="CONSOLE_LOG"/>
         </root>
     </springProfile>
 
-    <springProfile name="local">
+    <springProfile name="${PROFILE_NAME}">
         <root level="info">
             <appender-ref ref="FILE_LOG"/>
             <appender-ref ref="ERROR_FILE_LOG"/>
