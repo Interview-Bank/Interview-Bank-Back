@@ -11,11 +11,10 @@ import discord4j.common.util.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Profile("local")
 @Slf4j
 public class DiscordHandler {
 
-	@Value("${discord.channelId}")
+	@Value("${discord.channel-id}")
 	private Long channelId;
 
 	private final DiscordCreator discordCreator;
