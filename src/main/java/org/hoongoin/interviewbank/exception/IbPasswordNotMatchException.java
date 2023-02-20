@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 public class IbPasswordNotMatchException extends RuntimeException{
 
 	public IbPasswordNotMatchException(String email) {
-		super(email + "password not match");
-		log.info(email + "password not match");
+		super(email + " Password Not Match");
+		log.info(email + " Password Not Match");
 	}
 }
