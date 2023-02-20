@@ -129,7 +129,7 @@ public class InterviewService {
 
 	private void validateQuestionsSize(int questionSize) {
 		if (questionSize > 1000 || questionSize < 1) {
-			throw new IbValidationException("Question size");
+			throw new IbValidationException("Question Size");
 		}
 	}
 }

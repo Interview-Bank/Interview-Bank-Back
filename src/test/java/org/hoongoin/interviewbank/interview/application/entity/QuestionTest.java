@@ -27,7 +27,7 @@ class QuestionTest {
 
 		//when //then
 		assertThatThrownBy(() -> Question.builder().questionId(1L).interviewId(1L).content(content).build())
-			.hasMessage("Question")
+			.hasMessage("Question Validation Failed")
 			.isInstanceOf(IbValidationException.class);
 	}
 
@@ -38,7 +38,7 @@ class QuestionTest {
 
 		//when //then
 		assertThatThrownBy(() -> Question.builder().questionId(1L).interviewId(1L).content(content).build())
-			.hasMessage("Question")
+			.hasMessage("Question Validation Failed")
 			.isInstanceOf(IbValidationException.class);
 	}
 }

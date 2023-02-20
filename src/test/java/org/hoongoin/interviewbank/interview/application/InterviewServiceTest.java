@@ -94,7 +94,7 @@ class InterviewServiceTest {
 		//when //then
 		assertThatThrownBy(
 			() -> interviewService.createInterviewAndQuestionsByRequest(createInterviewAndQuestionsRequest,
-				testAccountEntity.getId())).hasMessage("Question size").isInstanceOf(IbValidationException.class);
+				testAccountEntity.getId())).hasMessage("Question Size Validation Failed").isInstanceOf(IbValidationException.class);
 	}
 
 	@Test
