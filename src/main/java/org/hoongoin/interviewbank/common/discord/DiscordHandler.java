@@ -10,9 +10,8 @@ import org.springframework.stereotype.Component;
 import discord4j.common.util.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 
-@Component
-@Profile("local")
 @Slf4j
+@Component
 public class DiscordHandler {
 
 	@Value("${discord.channelId}")
