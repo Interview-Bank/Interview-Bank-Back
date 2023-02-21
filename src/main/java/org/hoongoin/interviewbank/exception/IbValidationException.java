@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 public class IbValidationException extends RuntimeException{
 
 	public IbValidationException(String message){
-		super(message);
-		log.info(message + "validation exception");
+		super(message + " Validation Failed");
+		log.info(message + " Validation Failed");
 	}
 }

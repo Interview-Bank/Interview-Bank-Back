@@ -7,6 +7,6 @@ public class IbUnauthorizedException extends RuntimeException{
 
 	public IbUnauthorizedException(String message){
 		super(message);
-		log.info(message + "Unauthorized exception");
+		log.info(message + " Unauthorized");
 	}
 }
