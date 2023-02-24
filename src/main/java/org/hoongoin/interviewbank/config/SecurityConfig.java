@@ -6,12 +6,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-
-import io.swagger.models.HttpMethod;
+import org.springframework.http.HttpMethod;
 import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
@@ -22,15 +17,14 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.addFilterBefore(corsFilter(), ChannelProcessingFilter.class);
 		http.authorizeRequests()
 			.antMatchers("/account/logout").authenticated()
 			.antMatchers("/account/").permitAll()
 			.antMatchers("/scraps/").authenticated()
 			.antMatchers("/").permitAll()
-			.antMatchers(HttpMethod.POST.name(), "/interview").authenticated()
-			.antMatchers(HttpMethod.PUT.name(), "/interview/{interview_id}").authenticated()
-			.antMatchers(HttpMethod.DELETE.name(), "/interview/{interview_id}").authenticated()
+			.antMatchers(HttpMethod.POST, "/interview").authenticated()
+			.antMatchers(HttpMethod.PUT, "/interview/{interview_id}").authenticated()
+			.antMatchers(HttpMethod.DELETE, "/interview/{interview_id}").authenticated()
 			.and()
 			.formLogin().disable().csrf().disable().cors()
 			.and()
@@ -45,19 +39,5 @@ public class SecurityConfig {
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	public CorsFilter corsFilter() {
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowCredentials(true);
-		config.addAllowedOrigin("http://localhost:3000");
-		config.addAllowedHeader("*");
-		config.addAllowedMethod("*");
-		config.addAllowedOriginPattern("*");
-		config.addExposedHeader("*");
-		source.registerCorsConfiguration("/", config);
-		return new CorsFilter(source);
 	}
 }
