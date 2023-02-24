@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
-import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
@@ -110,21 +109,17 @@ public class InterviewService {
 	public FindInterviewPageResponse findInterviewPageByPageAndSize(int page, int size) {
 		List<Interview> interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
 
-		Account account = findAccountByInterviews(interviews);
-
 		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
 
 		interviews.forEach(interview -> findInterviewPageResponseInterview.add(
-			interviewMapper.interviewAndNicknameToFindInterviewPageResponseInterview(interview, account)));
+			interviewMapper.interviewAndNicknameToFindInterviewPageResponseInterview(interview,
+				findAccountByInterview(interview))));
 
 		return new FindInterviewPageResponse(findInterviewPageResponseInterview);
 	}
 
-	private Account findAccountByInterviews(List<Interview> interviews) {
-		if (interviews.isEmpty()) {
-			throw new IbEntityNotFoundException("Account");
-		}
-		return accountQueryService.findAccountByAccountId(interviews.get(0).getAccountId());
+	private Account findAccountByInterview(Interview interview) {
+		return accountQueryService.findAccountByAccountId(interview.getAccountId());
 	}
 
 	private void validateQuestionsSize(int questionSize) {
