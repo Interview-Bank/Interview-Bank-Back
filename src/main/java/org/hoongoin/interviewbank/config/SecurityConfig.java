@@ -4,13 +4,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.http.HttpMethod;
 import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
@@ -23,10 +23,15 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers("/account/logout").authenticated()
-			.antMatchers("/account/**").permitAll()
-			.antMatchers("/scraps/**").authenticated()
-			.antMatchers("/**").permitAll()
-			.and().formLogin().disable().csrf().disable()
+			.antMatchers("/account/").permitAll()
+			.antMatchers("/scraps/").authenticated()
+			.antMatchers("/").permitAll()
+			.antMatchers(HttpMethod.POST, "/interview").authenticated()
+			.antMatchers(HttpMethod.PUT, "/interview/{interview_id}").authenticated()
+			.antMatchers(HttpMethod.DELETE, "/interview/{interview_id}").authenticated()
+			.and()
+			.formLogin().disable().csrf().disable().cors()
+			.and()
 			.exceptionHandling()
 			.authenticationEntryPoint(authenticationEntryPoint)
 			.and()
@@ -36,26 +41,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SessionRegistry sessionRegistry() {
-		return new SessionRegistryImpl();
-	}
-
-	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-					.allowedOrigins("*")
-					.allowedMethods("*")
-					.allowedHeaders("*")
-					.exposedHeaders("*");
-			}
-		};
 	}
 }

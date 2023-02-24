@@ -12,7 +12,6 @@ import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewR
 import org.hoongoin.interviewbank.interview.application.InterviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +31,6 @@ public class InterviewController {
 
 	private final InterviewService interviewService;
 
-	@Secured("ROLE_USER")
 	@PutMapping("/{interview-id}")
 	public ResponseEntity<UpdateInterviewResponse> updateInterview(
 		@RequestBody UpdateInterviewRequest updateInterviewRequest, @PathVariable("interview-id") long interviewId) {
@@ -40,7 +38,6 @@ public class InterviewController {
 			interviewService.updateInterviewResponseByRequestAndInterviewId(updateInterviewRequest, interviewId));
 	}
 
-	@Secured("ROLE_USER")
 	@DeleteMapping("/{interview-id}")
 	public ResponseEntity<DeleteInterviewResponse> deleteInterview(@PathVariable("interview-id") long interviewId) {
 		return ResponseEntity.ok(interviewService.deleteInterviewById(interviewId));
@@ -51,7 +48,6 @@ public class InterviewController {
 		return ResponseEntity.ok(interviewService.findInterviewById(interviewId));
 	}
 
-	@Secured("ROLE_USER")
 	@PostMapping
 	public ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestions(
 		@RequestBody CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest) {

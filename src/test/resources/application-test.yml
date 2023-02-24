@@ -31,3 +31,10 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+  mail:
+    username: test
+
+discord:
+  token: test-token
+  channelId: 1234

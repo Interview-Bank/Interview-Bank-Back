@@ -1,6 +1,5 @@
 package org.hoongoin.interviewbank.scrap.application;
 
-import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
@@ -28,7 +27,6 @@ public class ScrapAnswerService {
 	private final ScrapQuestionQueryService scrapQuestionQueryService;
 	private final ScrapAnswerCommandService scrapAnswerCommandService;
 	private final ScrapAnswerQueryService scrapAnswerQueryService;
-	private final AccountQueryService accountQueryService;
 	private final ScrapMapper scrapMapper;
 
 	public CreateScrapAnswerResponse createScrapAnswerByScrapIdAndScrapQuestionId(

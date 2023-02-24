@@ -3,7 +3,6 @@ package org.hoongoin.interviewbank.interview.application.entity;
 import static org.assertj.core.api.Assertions.*;
 
 import org.hoongoin.interviewbank.exception.IbValidationException;
-import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.junit.jupiter.api.Test;
 
 class QuestionTest {
@@ -14,7 +13,7 @@ class QuestionTest {
 		String content = "a".repeat(100000);
 
 		//when
-		Question question = new Question(1L, 1L, content);
+		Question question = Question.builder().questionId(1L).interviewId(1L).content(content).build();
 
 		//when
 		assertThat(question.getContent()).isEqualTo(content);
@@ -27,7 +26,8 @@ class QuestionTest {
 		String content = "a".repeat(100001);
 
 		//when //then
-		assertThatThrownBy(() -> new Question(1L, 1L, content)).hasMessage("Question")
+		assertThatThrownBy(() -> Question.builder().questionId(1L).interviewId(1L).content(content).build())
+			.hasMessage("Question Validation Failed")
 			.isInstanceOf(IbValidationException.class);
 	}
 
@@ -37,7 +37,8 @@ class QuestionTest {
 		String content = "";
 
 		//when //then
-		assertThatThrownBy(() -> new Question(1L, 1L, content)).hasMessage("Question")
+		assertThatThrownBy(() -> Question.builder().questionId(1L).interviewId(1L).content(content).build())
+			.hasMessage("Question Validation Failed")
 			.isInstanceOf(IbValidationException.class);
 	}
 }
