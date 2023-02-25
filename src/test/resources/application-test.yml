@@ -24,9 +24,11 @@ spring:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testes;MODE=MySQL;
     username: interview_bank
+
   sql:
     init:
-      mode: always
+      mode: never
+      schema-locations: schema-test.sql
 
   mvc:
     pathmatch:
