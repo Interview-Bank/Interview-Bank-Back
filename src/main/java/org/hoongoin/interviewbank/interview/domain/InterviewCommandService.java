@@ -37,7 +37,10 @@ public class InterviewCommandService {
 	}
 
 	public long deleteInterview(long interviewId) {
-		interviewRepository.deleteById(interviewId);
+		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
+			.orElseThrow(() -> new IbEntityNotFoundException("InterviewEntity"));
+
+		interviewEntity.deleteEntityByFlag();
 		return interviewId;
 	}
 
