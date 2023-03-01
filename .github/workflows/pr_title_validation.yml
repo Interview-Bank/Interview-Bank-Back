@@ -1,0 +1,19 @@
+name: PR Title Validation
+
+on:
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  title-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR Title
+        run: |
+          title=$(jq -r '.pull_request.title' $GITHUB_EVENT_PATH)
+          if [[ "$title" =~ ^(\[Feat\]|\[Refactor\]|\[Fix\]|\[Test\]|\[Chore\]|\[Setting\]|\[Docs\]) ]]; then
+            echo "PR Title is valid."
+          else
+            echo "PR Title is invalid."
+            exit 1
+          fi
