@@ -35,12 +35,13 @@ public class InterviewController {
 	public ResponseEntity<UpdateInterviewResponse> updateInterview(
 		@RequestBody UpdateInterviewRequest updateInterviewRequest, @PathVariable("interview-id") long interviewId) {
 		return ResponseEntity.ok(
-			interviewService.updateInterviewResponseByRequestAndInterviewId(updateInterviewRequest, interviewId));
+			interviewService.updateInterviewResponseByRequestAndInterviewId(updateInterviewRequest, interviewId,
+				getRequestingAccountId()));
 	}
 
 	@DeleteMapping("/{interview-id}")
 	public ResponseEntity<DeleteInterviewResponse> deleteInterview(@PathVariable("interview-id") long interviewId) {
-		return ResponseEntity.ok(interviewService.deleteInterviewById(interviewId));
+		return ResponseEntity.ok(interviewService.deleteInterviewById(interviewId, getRequestingAccountId()));
 	}
 
 	@GetMapping("/{interview-id}")

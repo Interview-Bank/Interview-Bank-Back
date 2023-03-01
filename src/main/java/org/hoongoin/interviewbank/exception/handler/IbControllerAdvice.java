@@ -3,10 +3,12 @@ package org.hoongoin.interviewbank.exception.handler;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hoongoin.interviewbank.common.discord.DiscordHandler;
+import org.hoongoin.interviewbank.exception.IbAccountNotMatchException;
 import org.hoongoin.interviewbank.exception.IbBadRequestException;
 import org.hoongoin.interviewbank.exception.IbEntityExistsException;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.exception.IbPasswordNotMatchException;
+import org.hoongoin.interviewbank.exception.IbSoftDeleteException;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +25,8 @@ public class IbControllerAdvice {
 
 	private final DiscordHandler discordHandler;
 
-	@ExceptionHandler(IbBadRequestException.class)
-	public ResponseEntity<Object> handleIbBadRequestException(IbBadRequestException exception, HttpServletRequest request){
+	@ExceptionHandler({IbBadRequestException.class, IbAccountNotMatchException.class, IbSoftDeleteException.class})
+	public ResponseEntity<Object> handleBadRequestException(Exception exception, HttpServletRequest request){
 		discordHandler.send(exception, request);
 		return ResponseEntity
 			.status(IbErrorCode.BAD_REQUEST.getHttpStatus())

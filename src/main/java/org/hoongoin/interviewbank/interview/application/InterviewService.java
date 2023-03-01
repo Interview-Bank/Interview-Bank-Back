@@ -38,10 +38,9 @@ public class InterviewService {
 
 	@Transactional
 	public UpdateInterviewResponse updateInterviewResponseByRequestAndInterviewId(
-		UpdateInterviewRequest updateInterviewRequest, long interviewId) {
+		UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId) {
 		Interview interview = interviewCommandService.updateInterview(
-			Interview.builder().title(updateInterviewRequest.getTitle()).build(),
-			interviewId);
+			Interview.builder().title(updateInterviewRequest.getTitle()).build(), interviewId, accountId);
 
 		List<Question> newQuestions = interviewMapper.updateInterviewRequestToQuestions(updateInterviewRequest,
 			interviewId);
@@ -57,8 +56,8 @@ public class InterviewService {
 	}
 
 	@Transactional
-	public DeleteInterviewResponse deleteInterviewById(long interviewId) {
-		long deletedInterviewId = interviewCommandService.deleteInterview(interviewId);
+	public DeleteInterviewResponse deleteInterviewById(long interviewId, long accountId) {
+		long deletedInterviewId = interviewCommandService.deleteInterview(interviewId, accountId);
 
 		List<Long> deletedQuestionIds = questionCommandService.deleteQuestionsByInterviewId(interviewId);
 

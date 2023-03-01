@@ -3,6 +3,7 @@ package org.hoongoin.interviewbank.interview.domain;
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
+import org.hoongoin.interviewbank.exception.IbAccountNotMatchException;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;;
 
@@ -36,21 +37,31 @@ public class InterviewCommandService {
 		return savedInterviewEntity.getId();
 	}
 
-	public long deleteInterview(long interviewId) {
+	public long deleteInterview(long interviewId, long accountId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("InterviewEntity"));
+
+		isMatchInterviewAndAccount(accountId, interviewEntity);
 
 		interviewEntity.deleteEntityByFlag();
 		return interviewId;
 	}
 
-	public Interview updateInterview(Interview interview, long interviewId) {
+	public Interview updateInterview(Interview interview, long interviewId, long accountId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("InterviewEntity"));
+
+		isMatchInterviewAndAccount(accountId, interviewEntity);
 
 		interviewEntity.modifyEntity(interview.getTitle());
 
 		return interviewMapper.interviewEntityToInterview(interviewEntity,
 			accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()));
+	}
+
+	private void isMatchInterviewAndAccount(long accountId, InterviewEntity interviewEntity) {
+		if (interviewEntity.getAccountEntity().getId() != accountId) {
+			throw new IbAccountNotMatchException("Interview");
+		}
 	}
 }
