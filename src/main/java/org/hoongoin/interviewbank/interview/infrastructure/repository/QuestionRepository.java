@@ -13,5 +13,6 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
 	@Query("SELECT question FROM QuestionEntity question WHERE question.interviewEntity.id = :interview_id")
 	List<QuestionEntity> findAllByInterviewId(@Param("interview_id") Long interviewId);
 
+	@Query("SELECT question FROM QuestionEntity question WHERE question.deletedFlag = FALSE ")
 	List<QuestionEntity> findQuestionEntitiesByInterviewEntity(@Param("interviewEntity") InterviewEntity interviewEntity);
 }

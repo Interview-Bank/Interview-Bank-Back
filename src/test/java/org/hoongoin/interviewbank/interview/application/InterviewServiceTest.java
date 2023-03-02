@@ -10,10 +10,13 @@ import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.exception.IbValidationException;
+import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
-import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
+import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
+import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
+import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +29,7 @@ class InterviewServiceTest {
 	private AccountRepository accountRepository;
 
 	@Autowired
-	private InterviewRepository interviewRepository;
+	private QuestionQueryService questionQueryService;
 
 	@Autowired
 	private InterviewService interviewService;
@@ -121,6 +124,73 @@ class InterviewServiceTest {
 
 		//then
 		assertThat(createInterviewAndQuestionsResponse.getQuestions()).hasSize(1000);
+	}
+
+	@Test
+	void findInterviewPageByPageAndSize_Success_InterviewSoftDeleteSize() {
+		//given
+		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+
+		String title = "title";
+
+		List<QuestionsRequest.Question> questions = new ArrayList<>();
+
+		for (int i = 0; i < 1000; i++) {
+			questions.add(new QuestionsRequest.Question("content"));
+		}
+
+		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
+
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
+			title, questionsRequest);
+
+		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
+			createInterviewAndQuestionsRequest, testAccountEntity.getId());
+
+		Long interviewId = createInterviewAndQuestionsResponse.getInterviewId();
+
+		interviewService.deleteInterviewById(interviewId, testAccountEntity.getId());
+
+		//when
+		FindInterviewPageResponse interviewPageByPageAndSize = interviewService.findInterviewPageByPageAndSize(0, 1);
+
+		//then
+		assertThat(interviewPageByPageAndSize.getInterviews()).isEmpty();
+	}
+
+	@Test
+	void findInterviewPageByPageAndSize_Success_QuestionSoftDeleteSize() {
+		//given
+		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+
+		String title = "title";
+
+		List<QuestionsRequest.Question> questions = new ArrayList<>();
+
+		for (int i = 0; i < 1000; i++) {
+			questions.add(new QuestionsRequest.Question("content"));
+		}
+
+		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
+
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
+			title, questionsRequest);
+
+		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
+			createInterviewAndQuestionsRequest, testAccountEntity.getId());
+
+		Long interviewId = createInterviewAndQuestionsResponse.getInterviewId();
+
+		DeleteInterviewResponse deleteInterviewResponse = interviewService.deleteInterviewById(interviewId,
+			testAccountEntity.getId());
+
+		//when
+		List<Question> deletedQuestions = questionQueryService.findQuestionsByInterviewId(
+			deleteInterviewResponse.getInterviewId());
+
+		//then
+		assertThat(deletedQuestions).isEmpty();
+
 	}
 
 	private AccountEntity createTestAccountEntity() {

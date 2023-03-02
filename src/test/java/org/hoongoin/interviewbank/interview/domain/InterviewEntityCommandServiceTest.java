@@ -10,6 +10,7 @@ import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
+import org.hoongoin.interviewbank.exception.IbAccountNotMatchException;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
@@ -115,10 +116,67 @@ class InterviewEntityCommandServiceTest {
 
 		//when
 		Interview updatedInterview = interviewCommandService.updateInterview(
-			Interview.builder().title(updateInterviewRequest.getTitle()).build(), savedInterviewEntity.getId());
+			Interview.builder().title(updateInterviewRequest.getTitle()).build(), savedInterviewEntity.getId(),
+			testAccountEntity.getId());
 
 		//then
 		assertThat(updatedInterview.getTitle()).isEqualTo(newTitle);
+	}
+
+	@Test
+	void updateInterviwe_Fail_AccountNotMatch() {
+		//given
+		AccountEntity testAccountEntity = accountRepository.saveAndFlush(createTestAccountEntity());
+
+		String title = "title";
+		String newTitle = "newTitle";
+
+		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(title, testAccountEntity.getId());
+		InterviewEntity interviewEntity = InterviewEntity.builder()
+			.title(createInterviewRequest.getTitle())
+			.accountEntity(testAccountEntity)
+			.build();
+		InterviewEntity savedInterviewEntity = interviewRepository.saveAndFlush(interviewEntity);
+
+		QuestionEntity question1 = QuestionEntity.builder()
+			.interviewEntity(savedInterviewEntity)
+			.content("content1")
+			.build();
+		QuestionEntity question2 = QuestionEntity.builder()
+			.interviewEntity(savedInterviewEntity)
+			.content("content2")
+			.build();
+
+		List<QuestionEntity> questions = new ArrayList<>();
+
+		questions.add(question1);
+		questions.add(question2);
+
+		questionRepository.saveAllAndFlush(questions);
+
+		List<QuestionEntity> questionEntities = questionRepository.findQuestionEntitiesByInterviewEntity(
+			savedInterviewEntity);
+
+		UpdateInterviewRequest.Question updatedQuestion1 = new UpdateInterviewRequest.Question("newContent1",
+			questionEntities.get(0).getId());
+		UpdateInterviewRequest.Question updatedQuestion2 = new UpdateInterviewRequest.Question("newContent2",
+			questionEntities.get(1).getId());
+
+		List<UpdateInterviewRequest.Question> updatedQuestions = new ArrayList<>();
+
+		updatedQuestions.add(updatedQuestion1);
+		updatedQuestions.add(updatedQuestion2);
+
+		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle);
+
+		Interview testInterview = Interview.builder().title(updateInterviewRequest.getTitle()).build();
+
+		//when //then
+		assertThatThrownBy(() -> interviewCommandService.updateInterview(testInterview, savedInterviewEntity.getId(),
+			testAccountEntity.getId() + 1))
+			.isInstanceOf(IbAccountNotMatchException.class)
+			.hasMessageContaining("Interview");
+
 	}
 
 	private AccountEntity createTestAccountEntity() {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
+import org.hoongoin.interviewbank.exception.IbSoftDeleteException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
@@ -27,6 +28,10 @@ public class InterviewQueryService {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> new IbEntityNotFoundException("Interview"));
 
+		if (Boolean.TRUE.equals(interviewEntity.getDeletedFlag())) {
+			throw new IbSoftDeleteException("Interview");
+		}
+
 		return interviewMapper.interviewEntityToInterview(interviewEntity,
 			accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()));
 	}
@@ -38,9 +43,12 @@ public class InterviewQueryService {
 		List<Interview> interviews = new ArrayList<>();
 
 		interviewEntityPage.forEach(
-			interviewEntity -> interviews.add(interviewMapper.interviewEntityToInterview(interviewEntity,
-				accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()))));
-
+			interviewEntity -> {
+				if (Boolean.FALSE.equals(interviewEntity.getDeletedFlag())) {
+					interviews.add(interviewMapper.interviewEntityToInterview(interviewEntity,
+						accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity())));
+				}
+			});
 		return interviews;
 	}
 }
