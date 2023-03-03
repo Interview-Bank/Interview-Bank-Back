@@ -43,3 +43,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+  swagger:
+    server:
+      url: http://localhost:8084
