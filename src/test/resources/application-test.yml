@@ -37,6 +37,10 @@ spring:
   mail:
     username: test
 
+  swagger:
+    server:
+      url: http://localhost:8084
+
 discord:
   token: test-token
   channelId: 1234
