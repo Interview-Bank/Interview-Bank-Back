@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -22,15 +22,43 @@ public class InterviewApiAuthentication {
 
     @WithAnonymousUser
     @Test
-    void createInterviewAndQuestions_Fail_Unauthenticated() throws Exception{
+    void createInterviewAndQuestions_Fail_Unauthorized() throws Exception {
         mockMvc.perform(post("/interview"))
                 .andExpect(status().isUnauthorized());
     }
 
     @IbWithMockUser
     @Test
-    void createInterviewAndQuestions_Success() throws Exception{
+    void createInterviewAndQuestions_Success() throws Exception {
         mockMvc.perform(post("/interview"))
+                .andExpect(status().isOk());
+    }
+
+    @WithAnonymousUser
+    @Test
+    void updateInterview_Fail_Unauthorized() throws Exception {
+        mockMvc.perform(put("/interview/10"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @IbWithMockUser
+    @Test
+    void updateInterview_Success() throws Exception {
+        mockMvc.perform(put("/interview/10"))
+                .andExpect(status().isOk());
+    }
+
+    @WithAnonymousUser
+    @Test
+    void deleteInterview_Fail_Unauthorized() throws Exception {
+        mockMvc.perform(delete("/interview/10"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @IbWithMockUser
+    @Test
+    void deleteInterview_Success() throws Exception {
+        mockMvc.perform(delete("/interview/10"))
                 .andExpect(status().isOk());
     }
 }
