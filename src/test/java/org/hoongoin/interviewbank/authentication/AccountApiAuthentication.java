@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest(classes = {TestRedisConfig.class, TestMockConfig.class})
-public class AccountApiAuthentication {
+class AccountApiAuthentication {
 
     @Autowired
     private MockMvc mockMvc;

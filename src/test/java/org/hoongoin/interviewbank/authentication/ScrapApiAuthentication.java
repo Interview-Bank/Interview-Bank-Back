@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest(classes = {TestRedisConfig.class, TestMockConfig.class})
-public class ScrapApiAuthentication {
+class ScrapApiAuthentication {
 
     @Autowired
     private MockMvc mockMvc;
