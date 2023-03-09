@@ -29,39 +29,39 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class InterviewController {
 
-	private final InterviewService interviewService;
+    private final InterviewService interviewService;
 
-	@PutMapping("/{interview-id}")
-	public ResponseEntity<UpdateInterviewResponse> updateInterview(
-		@RequestBody UpdateInterviewRequest updateInterviewRequest, @PathVariable("interview-id") long interviewId) {
-		return ResponseEntity.ok(
-			interviewService.updateInterviewResponseByRequestAndInterviewId(updateInterviewRequest, interviewId,
-				getRequestingAccountId()));
-	}
+    @PostMapping
+    public ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestions(
+            @RequestBody CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest) {
+        CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
+                createInterviewAndQuestionsRequest, getRequestingAccountId());
 
-	@DeleteMapping("/{interview-id}")
-	public ResponseEntity<DeleteInterviewResponse> deleteInterview(@PathVariable("interview-id") long interviewId) {
-		return ResponseEntity.ok(interviewService.deleteInterviewById(interviewId, getRequestingAccountId()));
-	}
+        return ResponseEntity.status(HttpStatus.CREATED).body(createInterviewAndQuestionsResponse);
+    }
 
-	@GetMapping("/{interview-id}")
-	public ResponseEntity<FindInterviewResponse> findInterview(@PathVariable("interview-id") long interviewId) {
-		return ResponseEntity.ok(interviewService.findInterviewById(interviewId));
-	}
+    @GetMapping
+    public ResponseEntity<FindInterviewPageResponse> findInterviewPage(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        return ResponseEntity.ok(interviewService.findInterviewPageByPageAndSize(page, size));
+    }
 
-	@PostMapping
-	public ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestions(
-		@RequestBody CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest) {
-		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
-			createInterviewAndQuestionsRequest, getRequestingAccountId());
+    @GetMapping("/{interview-id}")
+    public ResponseEntity<FindInterviewResponse> findInterview(@PathVariable("interview-id") long interviewId) {
+        return ResponseEntity.ok(interviewService.findInterviewById(interviewId));
+    }
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(createInterviewAndQuestionsResponse);
-	}
+    @PutMapping("/{interview-id}")
+    public ResponseEntity<UpdateInterviewResponse> updateInterview(
+            @RequestBody UpdateInterviewRequest updateInterviewRequest, @PathVariable("interview-id") long interviewId) {
+        return ResponseEntity.ok(
+                interviewService.updateInterviewResponseByRequestAndInterviewId(updateInterviewRequest, interviewId,
+                        getRequestingAccountId()));
+    }
 
-	@GetMapping
-	public ResponseEntity<FindInterviewPageResponse> findInterviewPage(
-		@RequestParam(name = "page", defaultValue = "0") int page,
-		@RequestParam(name = "size", defaultValue = "10") int size) {
-		return ResponseEntity.ok(interviewService.findInterviewPageByPageAndSize(page, size));
-	}
+    @DeleteMapping("/{interview-id}")
+    public ResponseEntity<DeleteInterviewResponse> deleteInterview(@PathVariable("interview-id") long interviewId) {
+        return ResponseEntity.ok(interviewService.deleteInterviewById(interviewId, getRequestingAccountId()));
+    }
 }
