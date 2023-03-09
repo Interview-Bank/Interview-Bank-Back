@@ -36,6 +36,13 @@ class InterviewApiAuthentication {
 
     @WithAnonymousUser
     @Test
+    void findInterviewPage_Success() throws Exception {
+        mockMvc.perform(get("/interview"))
+                .andExpect(status().isOk());
+    }
+
+    @WithAnonymousUser
+    @Test
     void updateInterview_Fail_Unauthorized() throws Exception {
         mockMvc.perform(put("/interview/10"))
                 .andExpect(status().isUnauthorized());
@@ -59,6 +66,13 @@ class InterviewApiAuthentication {
     @Test
     void deleteInterview_Success() throws Exception {
         mockMvc.perform(delete("/interview/10"))
+                .andExpect(status().isOk());
+    }
+
+    @WithAnonymousUser
+    @Test
+    void getInterview_Success() throws Exception {
+        mockMvc.perform(get("/interview/10"))
                 .andExpect(status().isOk());
     }
 }

@@ -33,4 +33,39 @@ class AccountApiAuthentication {
         mockMvc.perform(post("/account/logout"))
                 .andExpect(status().isOk());
     }
+
+    @WithAnonymousUser
+    @Test
+    void register_Success() throws Exception{
+        mockMvc.perform(post("/account/register"))
+                .andExpect(status().isOk());
+    }
+
+    @WithAnonymousUser
+    @Test
+    void login_Success() throws Exception{
+        mockMvc.perform(post("/account/login"))
+                .andExpect(status().isOk());
+    }
+
+    @WithAnonymousUser
+    @Test
+    void sendEmailToResetPassword_Success() throws Exception{
+        mockMvc.perform(post("/account/reset-password/send-email"))
+                .andExpect(status().isOk());
+    }
+
+    @WithAnonymousUser
+    @Test
+    void resetPasswordTokenValid_Success() throws Exception{
+        mockMvc.perform(post("/account/reset-password/token-validation"))
+                .andExpect(status().isOk());
+    }
+
+    @WithAnonymousUser
+    @Test
+    void resetPassword_Success() throws Exception{
+        mockMvc.perform(post("/account/reset-password"))
+                .andExpect(status().isOk());
+    }
 }

@@ -13,67 +13,52 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @AutoConfigureMockMvc
 @SpringBootTest(classes = {TestRedisConfig.class, TestMockConfig.class})
-class ScrapApiAuthentication {
+public class ScrapAnswerApiAuthentication {
 
     @Autowired
     private MockMvc mockMvc;
 
     @WithAnonymousUser
     @Test
-    void createScrap_Fail_Unauthorized() throws Exception{
-        mockMvc.perform(post("/scraps"))
+    void createScrapAnswer_Fail_Unauthorized() throws Exception{
+        mockMvc.perform(post("/scraps/12/questions/4/answers"))
                 .andExpect(status().isUnauthorized());
     }
 
     @IbWithMockUser
     @Test
-    void createScrap_Success() throws Exception{
-        mockMvc.perform(post("/scraps"))
+    void createScrapAnswer_Success() throws Exception{
+        mockMvc.perform(post("/scraps/12/questions/4/answers"))
                 .andExpect(status().isOk());
     }
 
     @WithAnonymousUser
     @Test
-    void updateScrap_Fail_Unauthorized() throws Exception{
-        mockMvc.perform(put("/scraps/3"))
+    void updateScrapAnswer_Fail_Unauthorized() throws Exception{
+        mockMvc.perform(put("/scraps/12/questions/4/answers"))
                 .andExpect(status().isUnauthorized());
     }
 
     @IbWithMockUser
     @Test
-    void updateScrap_Success() throws Exception{
-        mockMvc.perform(put("/scraps/3"))
+    void updateScrapAnswer_Success() throws Exception{
+        mockMvc.perform(put("/scraps/12/questions/4/answers"))
                 .andExpect(status().isOk());
     }
 
     @WithAnonymousUser
     @Test
-    void deleteScrap_Fail_Unauthorized() throws Exception{
-        mockMvc.perform(delete("/scraps/3"))
+    void deleteScrapAnswer_Fail_Unauthorized() throws Exception{
+        mockMvc.perform(delete("/scraps/12/questions/4/answers"))
                 .andExpect(status().isUnauthorized());
     }
 
     @IbWithMockUser
     @Test
-    void deleteScrap_Success() throws Exception{
-        mockMvc.perform(delete("/scraps/3"))
-                .andExpect(status().isOk());
-    }
-
-    @WithAnonymousUser
-    @Test
-    void readScrapDetail_Fail_Unauthorized() throws Exception{
-        mockMvc.perform(get("/scraps/3"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @IbWithMockUser
-    @Test
-    void readScrapDetail_Success() throws Exception{
-        mockMvc.perform(get("/scraps/3"))
+    void deleteScrapAnswer_Success() throws Exception{
+        mockMvc.perform(delete("/scraps/12/questions/4/answers"))
                 .andExpect(status().isOk());
     }
 }
