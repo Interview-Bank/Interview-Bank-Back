@@ -13,7 +13,7 @@ public class IbWithMockUserSecurityContextFactory implements WithSecurityContext
 		final SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
 
 		final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-			new IbUserDetails("gnsrl76@naver.com", 1L, "hunki123"), null);
+			new IbUserDetails("gnsrl76@naver.com", 1L, "hunki123"), null, null);
 
 		securityContext.setAuthentication(authenticationToken);
 		return securityContext;

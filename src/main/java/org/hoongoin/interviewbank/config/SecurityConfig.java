@@ -19,8 +19,8 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers("/account/logout").authenticated()
-			.antMatchers("/account/").permitAll()
-			.antMatchers("/scraps/").authenticated()
+			.antMatchers("/account/**").permitAll()
+			.antMatchers("/scraps/**").authenticated()
 			.antMatchers("/").permitAll()
 			.antMatchers(HttpMethod.POST, "/interview").authenticated()
 			.antMatchers(HttpMethod.PUT, "/interview/{interview_id}").authenticated()
