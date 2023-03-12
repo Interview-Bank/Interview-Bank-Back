@@ -30,47 +30,47 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/scraps")
 public class ScrapController {
 
-	private final ScrapService scrapService;
+    private final ScrapService scrapService;
 
-	@PostMapping
-	public ResponseEntity<CreateScrapResponse> createScrap(@RequestBody CreateScrapRequest createScrapRequest) {
-		long requestingAccountId = getRequestingAccountId();
-		return ResponseEntity.ok()
-			.header(HttpHeaders.CONTENT_TYPE, "application/json")
-			.body(scrapService.createScrapByCreateRequest(createScrapRequest, requestingAccountId));
-	}
+    @PostMapping
+    public ResponseEntity<CreateScrapResponse> createScrap(@RequestBody CreateScrapRequest createScrapRequest) {
+        long requestingAccountId = getRequestingAccountId();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .body(scrapService.createScrapByCreateRequest(createScrapRequest, requestingAccountId));
+    }
 
-	@PutMapping("/{scrap-id}")
-	public ResponseEntity<UpdateScrapResponse> updateScrap(@RequestBody UpdateScrapRequest updateScrapRequest,
-		@PathVariable("scrap-id") long scrapId) {
-		long requestingAccountId = getRequestingAccountId();
-		return ResponseEntity.ok()
-			.header(HttpHeaders.CONTENT_TYPE, "application/json")
-			.body(scrapService.updateScrapByRequestAndScrapId(updateScrapRequest, scrapId, requestingAccountId));
-	}
+    @GetMapping
+    public ResponseEntity<List<ReadScrapResponse>> readScrapAll(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        long requestingAccountId = getRequestingAccountId();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .body(scrapService.readScrapAll(requestingAccountId, page, size));
+    }
 
-	@DeleteMapping("/{scrap-id}")
-	public ResponseEntity<Object> deleteScrap(@PathVariable("scrap-id") long scrapId) {
-		long requestingAccountId = getRequestingAccountId();
-		scrapService.deleteScrapByRequestAndScrapId(scrapId, requestingAccountId);
-		return ResponseEntity.ok().body("Success");
-	}
+    @GetMapping("/{scrap-id}")
+    public ResponseEntity<ReadScrapDetailResponse> readScrapDetail(@PathVariable("scrap-id") long scrapId) {
+        long requestingAccountId = getRequestingAccountId();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .body(scrapService.readScrapDetailById(scrapId, requestingAccountId));
+    }
 
-	@GetMapping("/{scrap-id}")
-	public ResponseEntity<ReadScrapDetailResponse> readScrapDetail(@PathVariable("scrap-id") long scrapId) {
-		long requestingAccountId = getRequestingAccountId();
-		return ResponseEntity.ok()
-			.header(HttpHeaders.CONTENT_TYPE, "application/json")
-			.body(scrapService.readScrapDetailById(scrapId, requestingAccountId));
-	}
+    @PutMapping("/{scrap-id}")
+    public ResponseEntity<UpdateScrapResponse> updateScrap(@RequestBody UpdateScrapRequest updateScrapRequest,
+                                                           @PathVariable("scrap-id") long scrapId) {
+        long requestingAccountId = getRequestingAccountId();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .body(scrapService.updateScrapByRequestAndScrapId(updateScrapRequest, scrapId, requestingAccountId));
+    }
 
-	@GetMapping()
-	public ResponseEntity<List<ReadScrapResponse>> readScrapAll(
-		@RequestParam(name = "page", defaultValue = "0") int page,
-		@RequestParam(name = "size", defaultValue = "10") int size) {
-		long requestingAccountId = getRequestingAccountId();
-		return ResponseEntity.ok()
-			.header(HttpHeaders.CONTENT_TYPE, "application/json")
-			.body(scrapService.readScrapAll(requestingAccountId, page, size));
-	}
+    @DeleteMapping("/{scrap-id}")
+    public ResponseEntity<Object> deleteScrap(@PathVariable("scrap-id") long scrapId) {
+        long requestingAccountId = getRequestingAccountId();
+        scrapService.deleteScrapByRequestAndScrapId(scrapId, requestingAccountId);
+        return ResponseEntity.ok().body("Success");
+    }
 }

@@ -30,49 +30,49 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/account")
 public class AccountController {
 
-	private final AccountService accountService;
+    private final AccountService accountService;
 
-	private final AccountMapper accountMapper;
+    private final AccountMapper accountMapper;
 
-	@PostMapping("/register")
-	public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
-		return ResponseEntity.ok().body(accountService.registerByRegisterRequest(registerRequest));
-	}
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
+        return ResponseEntity.ok().body(accountService.registerByRegisterRequest(registerRequest));
+    }
 
-	@PostMapping("/login")
-	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-		Account account = accountService.loginByLoginRequest(loginRequest);
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        Account account = accountService.loginByLoginRequest(loginRequest);
 
-		Authentication authentication = new UsernamePasswordAuthenticationToken(
-			new IbUserDetails(account.getEmail(), account.getAccountId(), account.getPassword()),
-			account.getPassword(),
-			null);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                new IbUserDetails(account.getEmail(), account.getAccountId(), account.getPassword()),
+                account.getPassword(),
+                null);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
-	}
+        return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
+    }
 
-	@PostMapping("/logout")
-	public ResponseEntity<Object> logout(HttpSession session) {
-		session.invalidate();
-		return ResponseEntity.ok(null);
-	}
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok(null);
+    }
 
-	@PostMapping("/reset-password/send-email")
-	public ResponseEntity<Object> sendEmailToResetPassword(@RequestBody SendEmailRequest sendEmailRequest) {
-		accountService.createPasswordResetTokenAndSendEmailByRequest(sendEmailRequest);
-		return ResponseEntity.ok(null);
-	}
+    @PostMapping("/reset-password/send-email")
+    public ResponseEntity<Object> sendEmailToResetPassword(@RequestBody SendEmailRequest sendEmailRequest) {
+        accountService.createPasswordResetTokenAndSendEmailByRequest(sendEmailRequest);
+        return ResponseEntity.ok(null);
+    }
 
-	@GetMapping("/reset-password/token-validation")
-	public ResponseEntity<Boolean> resetPasswordTokenValid(@RequestParam(value = "token") String token) {
-		return ResponseEntity.ok(accountService.validateToken(token));
-	}
+    @GetMapping("/reset-password/token-validation")
+    public ResponseEntity<Boolean> resetPasswordTokenValid(@RequestParam(value = "token") String token) {
+        return ResponseEntity.ok(accountService.validateToken(token));
+    }
 
-	@PostMapping("/reset-password")
-	public ResponseEntity<Object> resetPassword(@RequestParam(value = "token") String token,
-		@RequestBody ResetPasswordRequest resetPasswordRequest) {
-		accountService.resetPasswordByTokenAndRequest(token, resetPasswordRequest);
-		return ResponseEntity.ok(null);
-	}
+    @PostMapping("/reset-password")
+    public ResponseEntity<Object> resetPassword(@RequestParam(value = "token") String token,
+                                                @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        accountService.resetPasswordByTokenAndRequest(token, resetPasswordRequest);
+        return ResponseEntity.ok(null);
+    }
 }
