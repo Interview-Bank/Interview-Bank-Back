@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ public class GoogleOAuthService {
     @Value("${spring.oauth2.client.registration.google.profile-uri}")
     private String googleProfileUri;
     @Value("${spring.oauth2.client.registration.google.scope}")
-    private String scopes;
+    private List<String> scopes;
 
     public URI getGoogleLoginUrI() throws URISyntaxException {
         Map<String, Object> params = new HashMap<>();

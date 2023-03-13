@@ -52,7 +52,6 @@ public class AccountCommandService {
             accountEntity = AccountEntity.builder()
                     .nickname(googleUerInfo.getName())
                     .email(googleUerInfo.getEmail())
-                    .picture(googleUerInfo.getPicture())
                     .accountType(AccountType.GOOGLE)
                     .build();
             accountRepository.save(accountEntity);
@@ -69,7 +68,6 @@ public class AccountCommandService {
             accountEntity = AccountEntity.builder()
                     .nickname(naverUserInfoResponse.getName())
                     .email(naverUserInfoResponse.getEmail())
-                    .picture(naverUserInfoResponse.getProfileImage())
                     .accountType(AccountType.NAVER)
                     .build();
             accountRepository.save(accountEntity);

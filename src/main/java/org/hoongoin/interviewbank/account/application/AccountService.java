@@ -13,6 +13,7 @@ import org.hoongoin.interviewbank.account.domain.AccountCommandService;
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.domain.PasswordResetTokenCommand;
 import org.hoongoin.interviewbank.account.domain.PasswordResetTokenQuery;
+import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.entity.PasswordResetToken;
 import org.hoongoin.interviewbank.exception.IbPasswordNotMatchException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,6 +38,7 @@ public class AccountService {
 	public RegisterResponse registerByRegisterRequest(RegisterRequest registerRequest) {
 		Account account = accountMapper.registerRequestToAccount(registerRequest);
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
+		account.setAccountType(AccountType.EMAIL);
 		account = accountCommandService.insertAccount(account);
 		return accountMapper.accountToRegisterResponse(account);
 	}
