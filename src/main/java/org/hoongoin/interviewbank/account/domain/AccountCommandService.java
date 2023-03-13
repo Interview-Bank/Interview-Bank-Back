@@ -1,7 +1,9 @@
 package org.hoongoin.interviewbank.account.domain;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
+import org.hoongoin.interviewbank.account.application.GoogleUerInfoResponse;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
+import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbEntityExistsException;
@@ -34,5 +36,23 @@ public class AccountCommandService {
 
 		accountEntity.modifyEntity(password);
 		return accountMapper.accountEntityToAccount(accountEntity);
+	}
+
+	public Account saveGoogleUserIfNotExists(GoogleUerInfoResponse googleUerInfoResponse) {
+		Account account;
+		if(!accountRepository.existsByEmailAndAccountType(googleUerInfoResponse.getEmail(), AccountType.GOOGLE)){
+			AccountEntity accountEntity = AccountEntity.builder()
+					.nickname(googleUerInfoResponse.getName())
+					.email(googleUerInfoResponse.getEmail())
+					.picture(googleUerInfoResponse.getPicture())
+					.accountType(AccountType.GOOGLE)
+					.build();
+			accountRepository.save(accountEntity);
+			account = accountMapper.accountEntityToAccount(accountEntity);
+		}
+		else{
+			account = accountMapper.googleUerInfoResponseToAccount(googleUerInfoResponse);
+		}
+		return account;
 	}
 }

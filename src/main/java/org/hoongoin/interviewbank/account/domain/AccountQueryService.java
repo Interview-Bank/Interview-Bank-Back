@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.account.domain;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
+import org.hoongoin.interviewbank.account.application.GoogleUerInfoResponse;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.account.application.entity.Account;

@@ -1,32 +1,17 @@
 package org.hoongoin.interviewbank.account.infrastructure.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import lombok.*;
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
-
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "account")
 public class AccountEntity extends SoftDeletedBaseEntity {
-
-	public AccountEntity(long id, String nickname, String email, String password) {
-		this.id = id;
-		this.nickname = nickname;
-		this.email = email;
-		this.password = password;
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +25,13 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 
 	@Column(nullable = false, length = 61)
 	private String password;
+
+	@Enumerated(EnumType.STRING)
+	@Column
+	private AccountType accountType;
+
+	@Column
+	private String picture;
 
 	public void modifyEntity(String password){
 		this.password = password;

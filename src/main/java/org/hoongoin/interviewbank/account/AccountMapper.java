@@ -1,5 +1,6 @@
 package org.hoongoin.interviewbank.account;
 
+import org.hoongoin.interviewbank.account.application.GoogleUerInfoResponse;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.response.LoginResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
@@ -30,4 +31,7 @@ public interface AccountMapper {
 	RegisterResponse accountToRegisterResponse(Account account);
 
 	LoginResponse accountToLoginResponse(Account account);
+
+	@Mapping(target = "nickname", source = "name")
+    Account googleUerInfoResponseToAccount(GoogleUerInfoResponse googleUerInfoResponse);
 }
