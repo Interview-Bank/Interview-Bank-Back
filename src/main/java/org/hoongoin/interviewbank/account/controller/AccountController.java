@@ -28,43 +28,43 @@ import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
 @RequestMapping("/account")
 public class AccountController {
 
-    private final AccountService accountService;
+	private final AccountService accountService;
 
-    private final AccountMapper accountMapper;
+	private final AccountMapper accountMapper;
 
-    @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
-        return ResponseEntity.ok().body(accountService.registerByRegisterRequest(registerRequest));
-    }
+	@PostMapping("/register")
+	public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
+		return ResponseEntity.ok().body(accountService.registerByRegisterRequest(registerRequest));
+	}
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        Account account = accountService.loginByLoginRequest(loginRequest);
-        setAuthentication(account);
-        return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
-    }
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+		Account account = accountService.loginByLoginRequest(loginRequest);
+		setAuthentication(account);
+		return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
+	}
 
-    @PostMapping("/logout")
-    public ResponseEntity<Object> logout(HttpSession session) {
-        session.invalidate();
-        return ResponseEntity.ok(null);
-    }
+	@PostMapping("/logout")
+	public ResponseEntity<Object> logout(HttpSession session) {
+		session.invalidate();
+		return ResponseEntity.ok(null);
+	}
 
-    @PostMapping("/reset-password/send-email")
-    public ResponseEntity<Object> sendEmailToResetPassword(@RequestBody SendEmailRequest sendEmailRequest) {
-        accountService.createPasswordResetTokenAndSendEmailByRequest(sendEmailRequest);
-        return ResponseEntity.ok(null);
-    }
+	@PostMapping("/reset-password/send-email")
+	public ResponseEntity<Object> sendEmailToResetPassword(@RequestBody SendEmailRequest sendEmailRequest) {
+		accountService.createPasswordResetTokenAndSendEmailByRequest(sendEmailRequest);
+		return ResponseEntity.ok(null);
+	}
 
-    @GetMapping("/reset-password/token-validation")
-    public ResponseEntity<Boolean> resetPasswordTokenValid(@RequestParam(value = "token") String token) {
-        return ResponseEntity.ok(accountService.validateToken(token));
-    }
+	@GetMapping("/reset-password/token-validation")
+	public ResponseEntity<Boolean> resetPasswordTokenValid(@RequestParam(value = "token") String token) {
+		return ResponseEntity.ok(accountService.validateToken(token));
+	}
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<Object> resetPassword(@RequestParam(value = "token") String token,
-                                                @RequestBody ResetPasswordRequest resetPasswordRequest) {
-        accountService.resetPasswordByTokenAndRequest(token, resetPasswordRequest);
-        return ResponseEntity.ok(null);
-    }
+	@PostMapping("/reset-password")
+	public ResponseEntity<Object> resetPassword(@RequestParam(value = "token") String token,
+		@RequestBody ResetPasswordRequest resetPasswordRequest) {
+		accountService.resetPasswordByTokenAndRequest(token, resetPasswordRequest);
+		return ResponseEntity.ok(null);
+	}
 }

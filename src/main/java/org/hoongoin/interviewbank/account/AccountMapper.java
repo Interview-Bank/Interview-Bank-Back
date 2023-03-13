@@ -11,23 +11,23 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
 
-    default Account accountEntityToAccount(AccountEntity accountEntity) {
-        return new Account(accountEntity.getId(), accountEntity.getNickname(), accountEntity.getEmail(),
-                accountEntity.getPassword(), accountEntity.getCreatedAt(), accountEntity.getUpdatedAt(),
-                accountEntity.getDeletedAt(), accountEntity.getDeletedFlag(), accountEntity.getAccountType());
-    }
+	default Account accountEntityToAccount(AccountEntity accountEntity) {
+		return new Account(accountEntity.getId(), accountEntity.getNickname(), accountEntity.getEmail(),
+			accountEntity.getPassword(), accountEntity.getCreatedAt(), accountEntity.getUpdatedAt(),
+			accountEntity.getDeletedAt(), accountEntity.getDeletedFlag(), accountEntity.getAccountType());
+	}
 
-    @Mapping(target = "id", source = "accountId")
-    AccountEntity accountToAccountEntity(Account account);
+	@Mapping(target = "id", source = "accountId")
+	AccountEntity accountToAccountEntity(Account account);
 
-    @Mapping(target = "accountId", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "deletedAt", ignore = true)
-    @Mapping(target = "deletedFlag", ignore = true)
-    Account registerRequestToAccount(RegisterRequest registerRequest);
+	@Mapping(target = "accountId", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "updatedAt", ignore = true)
+	@Mapping(target = "deletedAt", ignore = true)
+	@Mapping(target = "deletedFlag", ignore = true)
+	Account registerRequestToAccount(RegisterRequest registerRequest);
 
-    RegisterResponse accountToRegisterResponse(Account account);
+	RegisterResponse accountToRegisterResponse(Account account);
 
-    LoginResponse accountToLoginResponse(Account account);
+	LoginResponse accountToLoginResponse(Account account);
 }

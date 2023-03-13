@@ -3,6 +3,7 @@ package org.hoongoin.interviewbank.account.infrastructure.entity;
 import javax.persistence.*;
 
 import lombok.*;
+
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
 
 @Entity
@@ -32,7 +33,7 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 	@Column
 	private String picture;
 
-	public void modifyEntity(String password){
+	public void modifyEntity(String password) {
 		this.password = password;
 	}
 

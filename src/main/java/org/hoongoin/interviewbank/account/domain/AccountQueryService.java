@@ -14,30 +14,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountQueryService {
 
-    private final AccountRepository accountRepository;
-    private final AccountMapper accountMapper;
+	private final AccountRepository accountRepository;
+	private final AccountMapper accountMapper;
 
-    public Account findAccountByEmail(String email) {
-        AccountEntity accountEntity = accountRepository.findByEmail(email)
-                .orElseThrow(() -> new IbEntityNotFoundException("Account"));
+	public Account findAccountByEmail(String email) {
+		AccountEntity accountEntity = accountRepository.findByEmail(email)
+			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 
-        isDeleted(accountEntity);
+		isDeleted(accountEntity);
 
-        return accountMapper.accountEntityToAccount(accountEntity);
-    }
+		return accountMapper.accountEntityToAccount(accountEntity);
+	}
 
-    public Account findAccountByAccountId(long accountId) {
-        AccountEntity accountEntity = accountRepository.findById(accountId)
-                .orElseThrow(() -> new IbEntityNotFoundException("Account"));
+	public Account findAccountByAccountId(long accountId) {
+		AccountEntity accountEntity = accountRepository.findById(accountId)
+			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 
-        isDeleted(accountEntity);
+		isDeleted(accountEntity);
 
-        return accountMapper.accountEntityToAccount(accountEntity);
-    }
+		return accountMapper.accountEntityToAccount(accountEntity);
+	}
 
-    private void isDeleted(AccountEntity accountEntity) {
-        if (Boolean.TRUE.equals(accountEntity.getDeletedFlag())) {
-            throw new IbSoftDeleteException("Account");
-        }
-    }
+	private void isDeleted(AccountEntity accountEntity) {
+		if (Boolean.TRUE.equals(accountEntity.getDeletedFlag())) {
+			throw new IbSoftDeleteException("Account");
+		}
+	}
 }

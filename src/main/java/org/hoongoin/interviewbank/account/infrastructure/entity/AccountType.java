@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum AccountType {
 
-    GOOGLE("google"),
-    NAVER("naver"),
-    KAKAO("kakao"),
-    EMAIL("email");
+	GOOGLE("google"),
+	NAVER("naver"),
+	KAKAO("kakao"),
+	EMAIL("email");
 
-    private final String accountType;
+	private final String accountType;
 }
