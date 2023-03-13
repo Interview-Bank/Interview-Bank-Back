@@ -1,4 +1,4 @@
-package org.hoongoin.interviewbank.account.application;
+package org.hoongoin.interviewbank.account.application.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,5 +11,4 @@ public class GoogleTokenResponse {
     private String refreshToken;
     private String scope;
     private String tokenType;
-    private String idToken;
 }

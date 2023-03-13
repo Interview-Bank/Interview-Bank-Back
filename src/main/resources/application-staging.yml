@@ -47,3 +47,22 @@ spring:
   swagger:
     server:
       url: https://bstaging.interviewbank.net
+
+  oauth2:
+    client:
+      registration:
+        google:
+          auth-uri: https://accounts.google.com/o/oauth2/v2/auth
+          token-uri: https://oauth2.googleapis.com/token
+          profile-uri: https://www.googleapis.com/auth/userinfo
+          redirect-uri: https://fstaging.interviewbank.net/oauth2/google/redirect
+        naver:
+          auth-uri: https://nid.naver.com/oauth2.0/authorize
+          token-uri: https://nid.naver.com/oauth2.0/token
+          profile-uri: https://openapi.naver.com/v1/nid/me
+          redirect-uri: https://fstaging.interviewbank.net/oauth2/naver/redirect
+        kakao:
+          auth-uri: https://kauth.kaka.com/oauth/authorize
+          token-uri: https://kauth.kaka.com/oauth/token
+          profile-uri: https://kapi.kakao.com/v2/user/me
+          redirect-uri: https://fstaging.interviewbank.net/oauth2/kakao/redirect
