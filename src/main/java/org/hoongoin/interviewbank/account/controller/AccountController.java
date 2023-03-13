@@ -40,9 +40,7 @@ public class AccountController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         Account account = accountService.loginByLoginRequest(loginRequest);
-
         setAuthentication(account);
-
         return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
     }
 
