@@ -17,7 +17,7 @@ public class ScrapQuestionWithScrapAnswers {
 	private LocalDateTime updatedAt;
 	private List<ScrapAnswer> scrapAnswers;
 
-	public void addScrapAnswer(ScrapAnswer scrapAnswer){
+	public void addScrapAnswer(ScrapAnswer scrapAnswer) {
 		this.scrapAnswers.add(scrapAnswer);
 	}
 }

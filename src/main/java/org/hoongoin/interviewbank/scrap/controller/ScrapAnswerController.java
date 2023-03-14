@@ -25,46 +25,46 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/scraps/{scrap-id}/questions/{question-id}/answers")
 public class ScrapAnswerController {
 
-    private final ScrapAnswerService scrapAnswerService;
+	private final ScrapAnswerService scrapAnswerService;
 
-    @PostMapping
-    public ResponseEntity<CreateScrapAnswerResponse> createScrapAnswer(@PathVariable("scrap-id") long scrapId,
-                                                                       @PathVariable("question-id") long scrapQuestionId) {
-        long requestingAccountId = getRequestingAccountId();
+	@PostMapping
+	public ResponseEntity<CreateScrapAnswerResponse> createScrapAnswer(@PathVariable("scrap-id") long scrapId,
+		@PathVariable("question-id") long scrapQuestionId) {
+		long requestingAccountId = getRequestingAccountId();
 
-        ScrapQuestionIdsDto scrapQuestionIdsDto = new ScrapQuestionIdsDto(scrapId, scrapQuestionId);
+		ScrapQuestionIdsDto scrapQuestionIdsDto = new ScrapQuestionIdsDto(scrapId, scrapQuestionId);
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, "application/json")
-                .body(scrapAnswerService.createScrapAnswerByScrapIdAndScrapQuestionId(scrapQuestionIdsDto,
-                        requestingAccountId));
-    }
+		return ResponseEntity.ok()
+			.header(HttpHeaders.CONTENT_TYPE, "application/json")
+			.body(scrapAnswerService.createScrapAnswerByScrapIdAndScrapQuestionId(scrapQuestionIdsDto,
+				requestingAccountId));
+	}
 
-    @PutMapping("/{answer-id}")
-    public ResponseEntity<UpdateScrapAnswerResponse> updateScrapAnswer(@PathVariable("scrap-id") long scrapId,
-                                                                       @PathVariable("question-id") long scrapQuestionId, @PathVariable("answer-id") long scrapAnswerId,
-                                                                       @RequestBody UpdateScrapAnswerRequest updateScrapAnswerRequest) {
-        long requestingAccountId = getRequestingAccountId();
+	@PutMapping("/{answer-id}")
+	public ResponseEntity<UpdateScrapAnswerResponse> updateScrapAnswer(@PathVariable("scrap-id") long scrapId,
+		@PathVariable("question-id") long scrapQuestionId, @PathVariable("answer-id") long scrapAnswerId,
+		@RequestBody UpdateScrapAnswerRequest updateScrapAnswerRequest) {
+		long requestingAccountId = getRequestingAccountId();
 
-        ScrapAnswerIdsDto scrapAnswerIdsDto = new ScrapAnswerIdsDto(scrapId, scrapQuestionId, scrapAnswerId);
+		ScrapAnswerIdsDto scrapAnswerIdsDto = new ScrapAnswerIdsDto(scrapId, scrapQuestionId, scrapAnswerId);
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, "application/json")
-                .body(scrapAnswerService.updateScrapAnswerByRequestAndSIds(updateScrapAnswerRequest, scrapAnswerIdsDto,
-                        requestingAccountId));
-    }
+		return ResponseEntity.ok()
+			.header(HttpHeaders.CONTENT_TYPE, "application/json")
+			.body(scrapAnswerService.updateScrapAnswerByRequestAndSIds(updateScrapAnswerRequest, scrapAnswerIdsDto,
+				requestingAccountId));
+	}
 
-    @DeleteMapping("{answer-id}")
-    public ResponseEntity<Object> deleteScrapAnswer(@PathVariable("scrap-id") long scrapId,
-                                                    @PathVariable("question-id") long scrapQuestionId, @PathVariable("answer-id") long scrapAnswerId) {
-        long requestingAccountId = getRequestingAccountId();
+	@DeleteMapping("{answer-id}")
+	public ResponseEntity<Object> deleteScrapAnswer(@PathVariable("scrap-id") long scrapId,
+		@PathVariable("question-id") long scrapQuestionId, @PathVariable("answer-id") long scrapAnswerId) {
+		long requestingAccountId = getRequestingAccountId();
 
-        ScrapAnswerIdsDto scrapAnswerIdsDto = new ScrapAnswerIdsDto(scrapId, scrapQuestionId, scrapAnswerId);
+		ScrapAnswerIdsDto scrapAnswerIdsDto = new ScrapAnswerIdsDto(scrapId, scrapQuestionId, scrapAnswerId);
 
-        scrapAnswerService.deleteScrapAnswerByIds(scrapAnswerIdsDto, requestingAccountId);
+		scrapAnswerService.deleteScrapAnswerByIds(scrapAnswerIdsDto, requestingAccountId);
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, "application/json")
-                .body("Success");
-    }
+		return ResponseEntity.ok()
+			.header(HttpHeaders.CONTENT_TYPE, "application/json")
+			.body("Success");
+	}
 }

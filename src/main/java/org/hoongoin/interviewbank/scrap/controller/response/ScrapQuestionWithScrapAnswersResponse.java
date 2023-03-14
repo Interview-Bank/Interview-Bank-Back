@@ -20,7 +20,7 @@ public class ScrapQuestionWithScrapAnswersResponse {
 	@Getter
 	@Setter
 	@AllArgsConstructor
-	public static class ScrapAnswerResponse{
+	public static class ScrapAnswerResponse {
 		private long scrapAnswerId;
 		private String content;
 	}

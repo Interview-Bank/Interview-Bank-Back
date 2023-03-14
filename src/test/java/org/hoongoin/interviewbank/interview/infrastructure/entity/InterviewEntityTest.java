@@ -34,7 +34,10 @@ class InterviewEntityTest {
 		AccountEntity savedAccountEntity = accountRepository.saveAndFlush(createTestAccountEntity());
 
 		//when
-		InterviewEntity interviewEntity = InterviewEntity.builder().title(title).accountEntity(savedAccountEntity).build();
+		InterviewEntity interviewEntity = InterviewEntity.builder()
+			.title(title)
+			.accountEntity(savedAccountEntity)
+			.build();
 		InterviewEntity savedInterviewEntity = interviewRepository.save(interviewEntity);
 
 		//then
@@ -49,7 +52,10 @@ class InterviewEntityTest {
 
 		AccountEntity savedAccountEntity = accountRepository.saveAndFlush(createTestAccountEntity());
 
-		InterviewEntity interviewEntity = InterviewEntity.builder().title(title).accountEntity(savedAccountEntity).build();
+		InterviewEntity interviewEntity = InterviewEntity.builder()
+			.title(title)
+			.accountEntity(savedAccountEntity)
+			.build();
 
 		//when //then
 		assertThatThrownBy(() -> interviewRepository.save(interviewEntity)).isInstanceOf(

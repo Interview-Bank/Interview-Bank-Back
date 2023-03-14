@@ -26,7 +26,7 @@ public class IbControllerAdvice {
 	private final DiscordHandler discordHandler;
 
 	@ExceptionHandler({IbBadRequestException.class, IbAccountNotMatchException.class, IbSoftDeleteException.class})
-	public ResponseEntity<Object> handleBadRequestException(Exception exception, HttpServletRequest request){
+	public ResponseEntity<Object> handleBadRequestException(Exception exception, HttpServletRequest request) {
 		discordHandler.send(exception, request);
 		return ResponseEntity
 			.status(IbErrorCode.BAD_REQUEST.getHttpStatus())
