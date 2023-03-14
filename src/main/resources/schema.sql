@@ -8,7 +8,7 @@ CREATE TABLE `account`
     `email`        VARCHAR(120)  NOT NULL,
     `nickname`     VARCHAR(20)   NOT NULL,
     `password`     VARCHAR(61)   NOT NULL,
-    `account_type` CHAR,
+    `account_type` CHAR(6),
     PRIMARY KEY (`id`)
 );
 
