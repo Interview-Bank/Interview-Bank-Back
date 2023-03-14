@@ -42,7 +42,7 @@ public class ScrapQuestionEntity extends BaseEntity {
 	private String content;
 
 	@OneToMany(mappedBy = "scrapQuestionEntity")
-	List<ScrapAnswerEntity> scrapAnswerEntities = new ArrayList<>();
+	List<ScrapAnswerEntity> scrapAnswerEntities;
 
 	@Override
 	public String toString() {

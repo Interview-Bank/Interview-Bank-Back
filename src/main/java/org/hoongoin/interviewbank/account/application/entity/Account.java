@@ -2,6 +2,7 @@ package org.hoongoin.interviewbank.account.application.entity;
 
 import java.time.LocalDateTime;
 
+import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 
 import lombok.Builder;
@@ -14,7 +15,7 @@ public class Account {
 
 	@Builder
 	public Account(long accountId, String nickname, String email, String password, LocalDateTime createdAt,
-		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag) {
+		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag, AccountType accountType) {
 		this.setAccountId(accountId);
 		this.setNickname(nickname);
 		this.setEmail(email);
@@ -23,6 +24,7 @@ public class Account {
 		this.setUpdatedAt(updatedAt);
 		this.setDeletedAt(deletedAt);
 		this.setDeletedFlag(deletedFlag);
+		this.setAccountType(accountType);
 	}
 
 	private Long accountId;
@@ -33,6 +35,7 @@ public class Account {
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;
 	private Boolean deletedFlag;
+	private AccountType accountType;
 
 	public void setNickname(String nickname) {
 		if (nickname == null) {
