@@ -30,9 +30,6 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType;
 
-	@Column
-	private String picture;
-
 	public void modifyEntity(String password) {
 		this.password = password;
 	}
