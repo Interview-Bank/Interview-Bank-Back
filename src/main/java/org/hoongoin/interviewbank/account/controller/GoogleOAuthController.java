@@ -1,7 +1,5 @@
 package org.hoongoin.interviewbank.account.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import lombok.RequiredArgsConstructor;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
 

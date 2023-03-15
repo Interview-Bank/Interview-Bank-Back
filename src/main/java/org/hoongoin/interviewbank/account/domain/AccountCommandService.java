@@ -1,7 +1,6 @@
 package org.hoongoin.interviewbank.account.domain;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
-import org.hoongoin.interviewbank.account.application.dto.GoogleUerInfo;
 import org.hoongoin.interviewbank.account.application.dto.KakaoUerInfoResponse;
 import org.hoongoin.interviewbank.account.application.dto.NaverUserInfoResponse;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
@@ -45,19 +44,15 @@ public class AccountCommandService {
 	}
 
 	@Transactional
-	public Account saveGoogleUserIfNotExists(GoogleUerInfo googleUerInfo) {
+	public Account insertIfNotExists(Account account) {
 		Optional<AccountEntity> optionalAccountEntity = accountRepository.findByEmailAndAccountType(
-			googleUerInfo.getEmail(), AccountType.GOOGLE);
-		AccountEntity accountEntity = optionalAccountEntity.get();
+			account.getEmail(), account.getAccountType());
 		if (optionalAccountEntity.isEmpty()) {
-			accountEntity = AccountEntity.builder()
-				.nickname(googleUerInfo.getName())
-				.email(googleUerInfo.getEmail())
-				.accountType(AccountType.GOOGLE)
-				.build();
+			AccountEntity accountEntity = accountMapper.accountToAccountEntity(account);
 			accountRepository.save(accountEntity);
+			account = accountMapper.accountEntityToAccount(accountEntity);
 		}
-		return accountMapper.accountEntityToAccount(accountEntity);
+		return account;
 	}
 
 	@Transactional

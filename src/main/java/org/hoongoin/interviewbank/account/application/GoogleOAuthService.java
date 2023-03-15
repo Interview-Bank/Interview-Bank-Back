@@ -1,16 +1,13 @@
 package org.hoongoin.interviewbank.account.application;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 
 import org.hoongoin.interviewbank.account.application.dto.*;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
+import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,63 +45,68 @@ public class GoogleOAuthService {
 	public URI getGoogleLoginUrI(String sessionId) {
 		Map<String, String> queryParams = new HashMap<>();
 		queryParams.put("client_id", googleClientId);
-		queryParams.put("redirect_uri", googleRedirectUri);
 		queryParams.put("response_type", "code");
-		queryParams.put("state", sessionId);
 		queryParams.put("scope", String.join("%20", scopes));
-
+		queryParams.put("redirect_uri", googleRedirectUri);
+		queryParams.put("state", sessionId);
+		queryParams.put("nonce", "0394852-3190485-2490358");  // TODO : used once random nonce 만들기
+		
 		String queryString = queryParams.entrySet().stream()
 			.map(entry -> entry.getKey() + "=" + entry.getValue())
 			.collect(Collectors.joining("&"));
 
 		String authUrl = googleAuthUri + "?" + queryString;
-		try{
+		try {
 			return new URI(authUrl);
-		}
-		catch (URISyntaxException e){
+		} catch (URISyntaxException e) {
 			throw new IbInternalServerException("URISyntaxException");
 		}
 	}
 
-	public Account googleLoginOrRegister(String authorizationCode, String state, String sessionId){
+	public Account googleLoginOrRegister(String authorizationCode, String state, String sessionId) {
 		if (!state.equals(sessionId)) {
 			throw new IbUnauthorizedException("Session Changed");
 		}
 
+		GoogleTokenResponse googleTokenResponse = exchangeCodeForAccessTokenAndIdToken(authorizationCode);
+
+		String jwtToken = googleTokenResponse.getIdToken();
+		Account account = getUserInfoIn(jwtToken);
+		return accountCommandService.insertIfNotExists(account);
+	}
+
+	private GoogleTokenResponse exchangeCodeForAccessTokenAndIdToken(String authorizationCode) {
 		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
 		GoogleTokenRequestParams requestParams = GoogleTokenRequestParams.builder()
+			.code(authorizationCode)
 			.clientId(googleClientId)
 			.clientSecret(googleClientSecret)
-			.code(authorizationCode)
 			.redirectUri(googleRedirectUri)
 			.grantType("authorization_code")
 			.build();
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<GoogleTokenRequestParams> httpRequestEntity = new HttpEntity<>(requestParams, headers);
-		ResponseEntity<String> tokenResponseJson = restTemplate.postForEntity(googleTokenUri, httpRequestEntity,
-			String.class);
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		GoogleTokenResponse googleTokenResponse = objectMapper.readValue(tokenResponseJson.getBody(),
-			new TypeReference<GoogleTokenResponse>() {
-			});
 
-		HttpHeaders getProfileHeaders = new HttpHeaders();
-		getProfileHeaders.set("Authorization", "Bearer " + googleTokenResponse.getAccessToken());
-		getProfileHeaders.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> entity = new HttpEntity<>(getProfileHeaders);
-		ResponseEntity<String> response = restTemplate.exchange(
-			googleProfileUri,
-			HttpMethod.GET,
-			entity,
-			String.class
-		);
-		GoogleUerInfo googleUerInfo = objectMapper.readValue(response.getBody(),
-			new TypeReference<GoogleUerInfo>() {
-			});
+		HttpEntity<GoogleTokenRequestParams> httpEntity = new HttpEntity<>(requestParams, headers);
 
-		return accountCommandService.saveGoogleUserIfNotExists(googleUerInfo);
+		ResponseEntity<GoogleTokenResponse> tokenResponseEntity = restTemplate.postForEntity(
+			googleTokenUri,
+			httpEntity,
+			GoogleTokenResponse.class);
+
+		if(!tokenResponseEntity.hasBody()){
+			throw new IbInternalServerException("Google OAuth Failed");
+		}
+		return tokenResponseEntity.getBody();
+	}
+
+	private Account getUserInfoIn(String jwtToken) {
+		Claims claims = Jwts.parser().parseClaimsJwt(jwtToken).getBody();
+		return Account.builder()
+			.email(claims.get("email", String.class))
+			.nickname(claims.get("name", String.class))
+			.accountType(AccountType.GOOGLE)
+			.build();
 	}
 }
