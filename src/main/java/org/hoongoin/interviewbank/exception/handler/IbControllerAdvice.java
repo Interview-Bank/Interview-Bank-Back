@@ -84,7 +84,7 @@ public class IbControllerAdvice {
 		HttpServletRequest request) {
 		discordHandler.send(exception, request);
 		return ResponseEntity
-			.status(IbErrorCode.BAD_REQUEST.getHttpStatus())
+			.status(IbErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus())
 			.body(exception.getMessage());
 	}
 
