@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.hoongoin.interviewbank.account.application.dto.*;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
+import org.hoongoin.interviewbank.exception.IbInternalServerException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -43,20 +44,27 @@ public class GoogleOAuthService {
 	@Value("${spring.oauth2.client.registration.google.scope}")
 	private List<String> scopes;
 
-	public URI getGoogleLoginUrI() throws URISyntaxException {
-		Map<String, Object> params = new HashMap<>();
-		params.put("client_id", googleClientId);
-		params.put("redirect_uri", googleRedirectUri);
-		params.put("response_type", "code");
-		params.put("state", "RAMDOM_STRING");
-		params.put("scope", scopes);
+	public URI getGoogleLoginUrI(String sessionId) {
+		Map<String, String> queryParams = new HashMap<>();
+		queryParams.put("client_id", googleClientId);
+		queryParams.put("redirect_uri", googleRedirectUri);
+		queryParams.put("response_type", "code");
+		queryParams.put("state", sessionId);
+		queryParams.put("scope", String.join(" ", scopes));
 
-		String paramStr = params.entrySet().stream()
-			.map(param -> param.getKey() + "=" + param.getValue())
+		String queryString = queryParams.entrySet().stream()
+			.map(entry -> entry.getKey() + "=" + entry.getValue())
 			.collect(Collectors.joining("&"));
 
-		String authUrl = googleAuthUri + "?" + paramStr;
-		return new URI(authUrl);
+		String authUrl = googleAuthUri + "?" + queryString;
+		try{
+			return new URI(authUrl);
+		}
+		catch (URISyntaxException e){
+			throw new IbInternalServerException("URISyntaxException");
+		}
+
+
 	}
 
 	public Account googleLoginOrRegister(String authorizationCode) throws JsonProcessingException {
