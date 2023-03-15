@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 public class IbInternalServerException extends RuntimeException {
 
 	public IbInternalServerException(String message) {
-		super(message + " Password Not Match");
-		log.info(message + " Password Not Match");
+		super(message + " Internal Server Exception");
+		log.info(message + " Internal Server Exception");
 	}
 }
