@@ -17,6 +17,8 @@ import java.net.URISyntaxException;
 
 import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
 
+import javax.servlet.http.HttpSession;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/oauth/google")
@@ -26,8 +28,8 @@ public class GoogleOAuthController {
 	private final AccountMapper accountMapper;
 
 	@GetMapping("/login")
-	public ResponseEntity<Object> getGoogleLoginUrl() throws URISyntaxException {
-		URI authUri = googleOAuthService.getGoogleLoginUrI();
+	public ResponseEntity<Object> getGoogleLoginUrl(HttpSession session){
+		URI authUri = googleOAuthService.getGoogleLoginUrI(session.getId());
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(authUri);
 		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
