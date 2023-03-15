@@ -70,8 +70,7 @@ public class GoogleOAuthService {
 
 		GoogleTokenResponse googleTokenResponse = exchangeCodeForAccessTokenAndIdToken(authorizationCode);
 
-		String jwtToken = googleTokenResponse.getIdToken();
-		Account account = getUserInfoIn(jwtToken);
+		Account account = getUserInfoIn(googleTokenResponse.getIdToken());
 		return accountCommandService.insertIfNotExists(account);
 	}
 
@@ -101,8 +100,8 @@ public class GoogleOAuthService {
 		return tokenResponseEntity.getBody();
 	}
 
-	private Account getUserInfoIn(String jwtToken) {
-		Claims claims = Jwts.parser().parseClaimsJwt(jwtToken).getBody();
+	private Account getUserInfoIn(String jwt) {
+		Claims claims = Jwts.parserBuilder().build().parseClaimsJwt(jwt).getBody();
 		return Account.builder()
 			.email(claims.get("email", String.class))
 			.nickname(claims.get("name", String.class))
