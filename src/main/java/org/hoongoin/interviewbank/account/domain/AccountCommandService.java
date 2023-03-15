@@ -2,7 +2,6 @@ package org.hoongoin.interviewbank.account.domain;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.application.dto.KakaoUerInfoResponse;
-import org.hoongoin.interviewbank.account.application.dto.NaverUserInfoResponse;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
@@ -53,22 +52,6 @@ public class AccountCommandService {
 			account = accountMapper.accountEntityToAccount(accountEntity);
 		}
 		return account;
-	}
-
-	@Transactional
-	public Account saveNaverUserInfoIfNotExists(NaverUserInfoResponse naverUserInfoResponse) {
-		Optional<AccountEntity> optionalAccountEntity = accountRepository.findByEmailAndAccountType(
-			naverUserInfoResponse.getEmail(), AccountType.NAVER);
-		AccountEntity accountEntity = optionalAccountEntity.get();
-		if (optionalAccountEntity.isEmpty()) {
-			accountEntity = AccountEntity.builder()
-				.nickname(naverUserInfoResponse.getName())
-				.email(naverUserInfoResponse.getEmail())
-				.accountType(AccountType.NAVER)
-				.build();
-			accountRepository.save(accountEntity);
-		}
-		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 
 	@Transactional
