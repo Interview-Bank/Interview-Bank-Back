@@ -5,6 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 datadir/
+logs/
 
 ### STS ###
 .apt_generated
@@ -39,4 +40,3 @@ build
 
 ### VS Code ###
 .vscode/
->>>>>>> c4c8366 (chore: initialize project)
