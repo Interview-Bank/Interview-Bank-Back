@@ -2,6 +2,7 @@ package org.hoongoin.interviewbank.config;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+
 import redis.embedded.RedisServer;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +16,10 @@ public class TestRedisConfig {
 
 	@PostConstruct
 	public void startRedis() {
-		try{
+		try {
 			redisServer = new RedisServer(port);
 			redisServer.start();
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 		}
 	}
 

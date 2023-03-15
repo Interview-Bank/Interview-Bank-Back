@@ -116,7 +116,9 @@ public class ScrapService {
 
 		List<ReadScrapResponse> readScrapResponses = new ArrayList<>();
 		scraps.forEach(scrap ->
-			{readScrapResponses.add(scrapMapper.scrapToReadScrapResponse(scrap));}
+			{
+				readScrapResponses.add(scrapMapper.scrapToReadScrapResponse(scrap));
+			}
 		);
 		return readScrapResponses;
 	}

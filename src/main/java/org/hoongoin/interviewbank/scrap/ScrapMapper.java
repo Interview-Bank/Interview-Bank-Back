@@ -86,7 +86,7 @@ public interface ScrapMapper {
 	UpdateScrapAnswerResponse scrapAnswerToUpdateScrapAnswerResponse(ScrapAnswer scrapAnswer);
 
 	default ScrapQuestionWithScrapAnswers scrapQuestionEntityWithScrapAnswerEntitiesToScrapQuestionWithScrapAnswers(
-		ScrapQuestionEntity scrapQuestionEntity){
+		ScrapQuestionEntity scrapQuestionEntity) {
 		ScrapQuestionWithScrapAnswers scrapQuestionWithScrapAnswers = ScrapQuestionWithScrapAnswers.builder()
 			.scrapQuestionId(scrapQuestionEntity.getId())
 			.scrapId(scrapQuestionEntity.getScrapEntity().getId())

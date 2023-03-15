@@ -183,7 +183,9 @@ class InterviewControllerTest {
 
 		//then
 		assertThat(interviewPage.getBody().getInterviews()).hasSize(1);
-		interviewPage.getBody().getInterviews().forEach(interview -> assertThat(interview.getNickname()).isEqualTo(testNickname));
+		interviewPage.getBody()
+			.getInterviews()
+			.forEach(interview -> assertThat(interview.getNickname()).isEqualTo(testNickname));
 
 	}
 }

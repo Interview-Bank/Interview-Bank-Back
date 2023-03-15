@@ -18,6 +18,6 @@ public class MessageFactory {
 	public static String createStackTraceMessage(Exception exception) {
 		var stackStream = new ByteArrayOutputStream();
 		exception.printStackTrace(new PrintStream(stackStream));
-		return stackStream.toString(StandardCharsets.UTF_8).substring(0,1500);
+		return stackStream.toString(StandardCharsets.UTF_8).substring(0, 1500);
 	}
 }

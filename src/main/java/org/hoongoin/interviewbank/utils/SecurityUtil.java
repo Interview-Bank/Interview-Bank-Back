@@ -19,11 +19,11 @@ public class SecurityUtil {
 		return userDetails.getAccountId();
 	}
 
-	public static void setAuthentication(Account account){
+	public static void setAuthentication(Account account) {
 		Authentication authentication = new UsernamePasswordAuthenticationToken(
-				new IbUserDetails(account.getEmail(), account.getAccountId(), account.getPassword()),
-				account.getPassword(),
-				null);
+			new IbUserDetails(account.getEmail(), account.getAccountId(), account.getPassword()),
+			account.getPassword(),
+			null);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 }

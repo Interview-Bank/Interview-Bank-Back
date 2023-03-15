@@ -17,62 +17,62 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = {TestRedisConfig.class, TestMockConfig.class})
 class InterviewApiAuthentication {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @WithAnonymousUser
-    @Test
-    void createInterviewAndQuestions_Fail_Unauthorized() throws Exception {
-        mockMvc.perform(post("/interview"))
-                .andExpect(status().isUnauthorized());
-    }
+	@WithAnonymousUser
+	@Test
+	void createInterviewAndQuestions_Fail_Unauthorized() throws Exception {
+		mockMvc.perform(post("/interview"))
+			.andExpect(status().isUnauthorized());
+	}
 
-    @IbWithMockUser
-    @Test
-    void createInterviewAndQuestions_Success() throws Exception {
-        mockMvc.perform(post("/interview"))
-                .andExpect(status().isOk());
-    }
+	@IbWithMockUser
+	@Test
+	void createInterviewAndQuestions_Success() throws Exception {
+		mockMvc.perform(post("/interview"))
+			.andExpect(status().isOk());
+	}
 
-    @WithAnonymousUser
-    @Test
-    void findInterviewPage_Success() throws Exception {
-        mockMvc.perform(get("/interview"))
-                .andExpect(status().isOk());
-    }
+	@WithAnonymousUser
+	@Test
+	void findInterviewPage_Success() throws Exception {
+		mockMvc.perform(get("/interview"))
+			.andExpect(status().isOk());
+	}
 
-    @WithAnonymousUser
-    @Test
-    void updateInterview_Fail_Unauthorized() throws Exception {
-        mockMvc.perform(put("/interview/10"))
-                .andExpect(status().isUnauthorized());
-    }
+	@WithAnonymousUser
+	@Test
+	void updateInterview_Fail_Unauthorized() throws Exception {
+		mockMvc.perform(put("/interview/10"))
+			.andExpect(status().isUnauthorized());
+	}
 
-    @IbWithMockUser
-    @Test
-    void updateInterview_Success() throws Exception {
-        mockMvc.perform(put("/interview/10"))
-                .andExpect(status().isOk());
-    }
+	@IbWithMockUser
+	@Test
+	void updateInterview_Success() throws Exception {
+		mockMvc.perform(put("/interview/10"))
+			.andExpect(status().isOk());
+	}
 
-    @WithAnonymousUser
-    @Test
-    void deleteInterview_Fail_Unauthorized() throws Exception {
-        mockMvc.perform(delete("/interview/10"))
-                .andExpect(status().isUnauthorized());
-    }
+	@WithAnonymousUser
+	@Test
+	void deleteInterview_Fail_Unauthorized() throws Exception {
+		mockMvc.perform(delete("/interview/10"))
+			.andExpect(status().isUnauthorized());
+	}
 
-    @IbWithMockUser
-    @Test
-    void deleteInterview_Success() throws Exception {
-        mockMvc.perform(delete("/interview/10"))
-                .andExpect(status().isOk());
-    }
+	@IbWithMockUser
+	@Test
+	void deleteInterview_Success() throws Exception {
+		mockMvc.perform(delete("/interview/10"))
+			.andExpect(status().isOk());
+	}
 
-    @WithAnonymousUser
-    @Test
-    void getInterview_Success() throws Exception {
-        mockMvc.perform(get("/interview/10"))
-                .andExpect(status().isOk());
-    }
+	@WithAnonymousUser
+	@Test
+	void getInterview_Success() throws Exception {
+		mockMvc.perform(get("/interview/10"))
+			.andExpect(status().isOk());
+	}
 }
