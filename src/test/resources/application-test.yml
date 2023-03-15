@@ -61,14 +61,12 @@ spring:
           client-secret: test
           scope: test
         kakao:
-          auth-uri: https://kauth.kaka.com/oauth/authorize
-          token-uri: https://kauth.kaka.com/oauth/token
+          auth-uri: https://kauth.kakao.com/oauth/authorize
+          token-uri: https://kauth.kakao.com/oauth/token
           profile-uri: https://kapi.kakao.com/v2/user/me
           redirect-uri: https://localhost:3000/oauth2/kakao/redirect
           client-id: test
           client-secret: test
-
-
 
 discord:
   token: test-token
