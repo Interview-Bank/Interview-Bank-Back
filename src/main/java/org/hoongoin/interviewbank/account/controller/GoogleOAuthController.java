@@ -28,7 +28,7 @@ public class GoogleOAuthController {
 	private final AccountMapper accountMapper;
 
 	@GetMapping("/login")
-	public ResponseEntity<Object> getGoogleLoginUrl(HttpSession session){
+	public ResponseEntity<Object> getGoogleLoginUrl(HttpSession session) {
 		URI authUri = googleOAuthService.getGoogleLoginUrI(session.getId());
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(authUri);
@@ -36,9 +36,9 @@ public class GoogleOAuthController {
 	}
 
 	@PostMapping("/login/redirect")
-	public ResponseEntity<Object> googleLoginOrRegister(
-		@RequestParam(name = "authorization-code") String authorizationCode) throws JsonProcessingException {
-		Account account = googleOAuthService.googleLoginOrRegister(authorizationCode);
+	public ResponseEntity<Object> googleLoginOrRegister(HttpSession session,
+		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state){
+		Account account = googleOAuthService.googleLoginOrRegister(authorizationCode, state, session.getId());
 		setAuthentication(account);
 		return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
 	}

@@ -12,6 +12,7 @@ import org.hoongoin.interviewbank.account.application.dto.*;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
+import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,11 @@ public class GoogleOAuthService {
 		}
 	}
 
-	public Account googleLoginOrRegister(String authorizationCode) throws JsonProcessingException {
+	public Account googleLoginOrRegister(String authorizationCode, String state, String sessionId){
+		if (!state.equals(sessionId)) {
+			throw new IbUnauthorizedException("Session Changed");
+		}
+
 		RestTemplate restTemplate = new RestTemplate();
 		GoogleTokenRequestParams requestParams = GoogleTokenRequestParams.builder()
 			.clientId(googleClientId)
