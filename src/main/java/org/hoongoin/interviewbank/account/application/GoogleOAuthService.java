@@ -50,7 +50,7 @@ public class GoogleOAuthService {
 		queryParams.put("redirect_uri", googleRedirectUri);
 		queryParams.put("response_type", "code");
 		queryParams.put("state", sessionId);
-		queryParams.put("scope", String.join(" ", scopes));
+		queryParams.put("scope", String.join("%20", scopes));
 
 		String queryString = queryParams.entrySet().stream()
 			.map(entry -> entry.getKey() + "=" + entry.getValue())
@@ -63,8 +63,6 @@ public class GoogleOAuthService {
 		catch (URISyntaxException e){
 			throw new IbInternalServerException("URISyntaxException");
 		}
-
-
 	}
 
 	public Account googleLoginOrRegister(String authorizationCode) throws JsonProcessingException {
