@@ -62,7 +62,7 @@ spring:
           profile-uri: https://openapi.naver.com/v1/nid/me
           redirect-uri: https://fstaging.interviewbank.net/oauth2/naver/redirect
         kakao:
-          auth-uri: https://kauth.kaka.com/oauth/authorize
-          token-uri: https://kauth.kaka.com/oauth/token
+          auth-uri: https://kauth.kakao.com/oauth/authorize
+          token-uri: https://kauth.kakao.com/oauth/token
           profile-uri: https://kapi.kakao.com/v2/user/me
           redirect-uri: https://fstaging.interviewbank.net/oauth2/kakao/redirect
