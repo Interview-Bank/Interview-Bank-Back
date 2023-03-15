@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
 import lombok.RequiredArgsConstructor;
 
@@ -74,7 +74,7 @@ public class GoogleOAuthService {
 		ResponseEntity<String> tokenResponseJson = restTemplate.postForEntity(googleTokenUri, httpRequestEntity,
 			String.class);
 		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		GoogleTokenResponse googleTokenResponse = objectMapper.readValue(tokenResponseJson.getBody(),
 			new TypeReference<GoogleTokenResponse>() {
@@ -83,14 +83,14 @@ public class GoogleOAuthService {
 		HttpHeaders getProfileHeaders = new HttpHeaders();
 		getProfileHeaders.set("Authorization", "Bearer " + googleTokenResponse.getAccessToken());
 		getProfileHeaders.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> entity = new HttpEntity<>(headers);
+		HttpEntity<String> entity = new HttpEntity<>(getProfileHeaders);
 		ResponseEntity<String> response = restTemplate.exchange(
 			googleProfileUri,
 			HttpMethod.GET,
 			entity,
 			String.class
 		);
-		GoogleUerInfo googleUerInfo = objectMapper.readValue(tokenResponseJson.getBody(),
+		GoogleUerInfo googleUerInfo = objectMapper.readValue(response.getBody(),
 			new TypeReference<GoogleUerInfo>() {
 			});
 
