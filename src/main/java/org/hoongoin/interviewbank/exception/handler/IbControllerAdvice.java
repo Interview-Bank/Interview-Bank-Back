@@ -30,7 +30,7 @@ public class IbControllerAdvice {
 		discordHandler.send(exception, request);
 		return ResponseEntity
 			.status(IbErrorCode.BAD_REQUEST.getHttpStatus())
-			.body(exception.getMessage());
+			.body("Bad Request");
 	}
 
 	@ExceptionHandler(IbEntityExistsException.class)
@@ -48,7 +48,7 @@ public class IbControllerAdvice {
 		discordHandler.send(exception, request);
 		return ResponseEntity
 			.status(IbErrorCode.NOT_FOUND.getHttpStatus())
-			.body(exception.getMessage());
+			.body("Not Found");
 	}
 
 	@ExceptionHandler(IbPasswordNotMatchException.class)
@@ -56,8 +56,8 @@ public class IbControllerAdvice {
 		HttpServletRequest request) {
 		discordHandler.send(exception, request);
 		return ResponseEntity
-			.status(IbErrorCode.BAD_REQUEST.getHttpStatus())
-			.body(exception.getMessage());
+			.status(IbErrorCode.NOT_FOUND.getHttpStatus())
+			.body("Not Found");
 	}
 
 	@ExceptionHandler(IbUnauthorizedException.class)
@@ -66,7 +66,7 @@ public class IbControllerAdvice {
 		discordHandler.send(exception, request);
 		return ResponseEntity
 			.status(IbErrorCode.UNAUTHORIZED.getHttpStatus())
-			.body(exception.getMessage());
+			.body("Unauthorized");
 	}
 
 	@ExceptionHandler(IbValidationException.class)
