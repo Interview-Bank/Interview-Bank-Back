@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import lombok.*;
 
+import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
 
 @Entity

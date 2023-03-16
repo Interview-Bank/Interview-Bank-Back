@@ -13,7 +13,7 @@ import org.hoongoin.interviewbank.account.domain.AccountCommandService;
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.domain.PasswordResetTokenCommand;
 import org.hoongoin.interviewbank.account.domain.PasswordResetTokenQuery;
-import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
+import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.entity.PasswordResetToken;
 import org.hoongoin.interviewbank.exception.IbPasswordNotMatchException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

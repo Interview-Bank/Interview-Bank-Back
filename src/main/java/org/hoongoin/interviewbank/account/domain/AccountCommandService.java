@@ -5,7 +5,7 @@ import org.hoongoin.interviewbank.account.application.dto.GoogleUerInfo;
 import org.hoongoin.interviewbank.account.application.dto.KakaoUerInfoResponse;
 import org.hoongoin.interviewbank.account.application.dto.NaverUserInfoResponse;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
-import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
+import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbEntityExistsException;
