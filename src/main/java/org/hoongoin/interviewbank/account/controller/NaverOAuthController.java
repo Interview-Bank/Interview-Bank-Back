@@ -1,21 +1,21 @@
 package org.hoongoin.interviewbank.account.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import lombok.RequiredArgsConstructor;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.application.NaverOAuthService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.exception.IbInternalServerException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
+
+import javax.servlet.http.HttpSession;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,18 +26,21 @@ public class NaverOAuthController {
 	private final AccountMapper accountMapper;
 
 	@GetMapping("/login")
-	public ResponseEntity<Object> getNaverLoginUrl() throws URISyntaxException {
-		URI authUri = naverOAuthService.getNaverLoginUri();
+	public ResponseEntity<Object> getNaverLoginUrl(HttpSession session) {
+		URI authUri = naverOAuthService.getNaverLoginUri(session.getId());
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(authUri);
 		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 	}
 
 	@PostMapping("/login/redirect")
-	public ResponseEntity<Object> googleLoginOrRegister(
-		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state)
-		throws JsonProcessingException {
-		Account account = naverOAuthService.naverLoginOrRegister(authorizationCode, state);
+	public ResponseEntity<Object> naverLoginOrRegister(HttpSession session,
+		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state,
+		@RequestParam(name = "error") String error, @RequestParam(name = "error_description") String errorDescription) {
+		if(!error.isEmpty()){
+			throw new IbInternalServerException(error + errorDescription);
+		}
+		Account account = naverOAuthService.naverLoginOrRegister(authorizationCode, state, session.getId());
 		setAuthentication(account);
 		return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
 	}

@@ -1,7 +1,5 @@
 package org.hoongoin.interviewbank.account.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import lombok.RequiredArgsConstructor;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
@@ -13,9 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
+
+import javax.servlet.http.HttpSession;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,17 +25,17 @@ public class GoogleOAuthController {
 	private final AccountMapper accountMapper;
 
 	@GetMapping("/login")
-	public ResponseEntity<Object> getGoogleLoginUrl() throws URISyntaxException {
-		URI authUri = googleOAuthService.getGoogleLoginUrI();
+	public ResponseEntity<Object> getGoogleLoginUrl(HttpSession session) {
+		URI authUri = googleOAuthService.getGoogleLoginUrI(session.getId());
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(authUri);
 		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 	}
 
 	@PostMapping("/login/redirect")
-	public ResponseEntity<Object> googleLoginOrRegister(
-		@RequestParam(name = "authorization-code") String authorizationCode) throws JsonProcessingException {
-		Account account = googleOAuthService.googleLoginOrRegister(authorizationCode);
+	public ResponseEntity<Object> googleLoginOrRegister(HttpSession session,
+		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state){
+		Account account = googleOAuthService.googleLoginOrRegister(authorizationCode, state, session.getId());
 		setAuthentication(account);
 		return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
 	}
