@@ -69,4 +69,13 @@ public class AccountCommandService {
 		}
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
+
+	public Account updateImageUrl(long requestedAccountId, String imageUrl) {
+		AccountEntity accountEntity = accountRepository.findById(requestedAccountId)
+			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+
+		accountEntity.setImageUrl(imageUrl);
+
+		return accountMapper.accountEntityToAccount(accountEntity);
+	}
 }

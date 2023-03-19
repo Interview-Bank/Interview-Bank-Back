@@ -14,7 +14,7 @@ public interface AccountMapper {
 	default Account accountEntityToAccount(AccountEntity accountEntity) {
 		return new Account(accountEntity.getId(), accountEntity.getNickname(), accountEntity.getEmail(),
 			accountEntity.getPassword(), accountEntity.getCreatedAt(), accountEntity.getUpdatedAt(),
-			accountEntity.getDeletedAt(), accountEntity.getDeletedFlag(), accountEntity.getAccountType());
+			accountEntity.getDeletedAt(), accountEntity.getDeletedFlag(), accountEntity.getAccountType(), accountEntity.getImageUrl());
 	}
 
 	@Mapping(target = "id", source = "accountId")

@@ -30,8 +30,15 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType;
 
+	@Column(length = 300)
+	private String imageUrl;
+
 	public void modifyEntity(String password) {
 		this.password = password;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	@Override
