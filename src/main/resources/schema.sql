@@ -9,7 +9,8 @@ CREATE TABLE `account`
     `nickname`     VARCHAR(20)   NOT NULL,
     `password`     VARCHAR(61)   NOT NULL,
     `account_type` CHAR(6),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `unique_account` (`account_type`, `email`)
 );
 
 CREATE TABLE `interview`
