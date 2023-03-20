@@ -10,7 +10,6 @@ import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.request.ResetPasswordRequest;
 import org.hoongoin.interviewbank.account.controller.request.SendEmailRequest;
-import org.hoongoin.interviewbank.account.controller.request.UploadProfileImageRequest;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.controller.response.UploadProfileImageResponse;
@@ -94,13 +93,13 @@ public class AccountService {
 	}
 
 	@Transactional
-	public UploadProfileImageResponse saveProfileImage(UploadProfileImageRequest uploadProfileImageRequest,
+	public UploadProfileImageResponse saveProfileImage(MultipartFile multipartFile,
 		long requestedAccountId) throws IOException {
-		byte[] fileBytes = convertMultiPartFileToFileBytes(uploadProfileImageRequest.getMultipartFile());
+		byte[] fileBytes = convertMultiPartFileToFileBytes(multipartFile);
 
 		String filename = UUID.randomUUID().toString();
 
-		saveFileToS3(uploadProfileImageRequest, fileBytes, filename);
+		saveFileToS3(multipartFile, fileBytes, filename);
 
 		String imageUrl = extractS3Url(filename);
 
@@ -113,11 +112,11 @@ public class AccountService {
 		return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + filename;
 	}
 
-	private void saveFileToS3(UploadProfileImageRequest uploadProfileImageRequest, byte[] fileBytes,
+	private void saveFileToS3(MultipartFile multipartFile, byte[] fileBytes,
 		String filename) {
 		ObjectMetadata metadata = new ObjectMetadata();
 		metadata.setContentLength(fileBytes.length);
-		metadata.setContentType(uploadProfileImageRequest.getMultipartFile().getContentType());
+		metadata.setContentType(multipartFile.getContentType());
 		amazonS3.putObject(new PutObjectRequest(bucket, filename, new ByteArrayInputStream(fileBytes), metadata));
 	}
 

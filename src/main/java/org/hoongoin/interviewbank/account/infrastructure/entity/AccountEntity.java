@@ -33,11 +33,11 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 	@Column(length = 300)
 	private String imageUrl;
 
-	public void modifyEntity(String password) {
+	public void resetPassword(String password) {
 		this.password = password;
 	}
 
-	public void setImageUrl(String imageUrl) {
+	public void uploadImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
 

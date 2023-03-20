@@ -9,7 +9,6 @@ import org.hoongoin.interviewbank.account.controller.request.ResetPasswordReques
 import org.hoongoin.interviewbank.account.controller.request.SendEmailRequest;
 import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
-import org.hoongoin.interviewbank.account.controller.request.UploadProfileImageRequest;
 import org.hoongoin.interviewbank.account.controller.response.LoginResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.AccountService;
@@ -78,8 +77,7 @@ public class AccountController {
 	public ResponseEntity<UploadProfileImageResponse> uploadProfileImage(
 		@RequestParam("file") MultipartFile file) throws
 		IOException {
-		UploadProfileImageRequest uploadProfileImageRequest = new UploadProfileImageRequest(file);
 		return ResponseEntity.ok()
-			.body(accountService.saveProfileImage(uploadProfileImageRequest, getRequestingAccountId()));
+			.body(accountService.saveProfileImage(file, getRequestingAccountId()));
 	}
 }

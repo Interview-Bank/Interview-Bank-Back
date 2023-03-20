@@ -38,7 +38,7 @@ public class AccountCommandService {
 		AccountEntity accountEntity = accountRepository.findById(requestingAccountId)
 			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 
-		accountEntity.modifyEntity(password);
+		accountEntity.resetPassword(password);
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 
@@ -74,7 +74,7 @@ public class AccountCommandService {
 		AccountEntity accountEntity = accountRepository.findById(requestedAccountId)
 			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 
-		accountEntity.setImageUrl(imageUrl);
+		accountEntity.uploadImageUrl(imageUrl);
 
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
