@@ -39,6 +39,37 @@ public class InterviewService {
 	private final JobCategoryQueryService jobCategoryQueryService;
 
 	@Transactional
+	public CreateInterviewAndQuestionsResponse createInterviewAndQuestionsByRequest(
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest, long accountId) {
+		Interview createdInterview = interviewCommandService.insertInterview(
+			Interview.builder()
+				.title(createInterviewAndQuestionsRequest.getTitle())
+				.primaryJobCategory(createInterviewAndQuestionsRequest.getPrimaryJobCategory())
+				.secondaryJobCategory(createInterviewAndQuestionsRequest.getSecondaryJobCategory())
+				.accountId(accountId)
+				.build());
+
+		List<Question> questions = questionCommandService.insertQuestions(
+			interviewMapper.createInterviewAndQuestionsRequestToQuestions(createInterviewAndQuestionsRequest,
+				createdInterview.getInterviewId()), createdInterview.getInterviewId());
+
+		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
+
+		questions.forEach(question -> createInterviewAndQuestionsResponseQuiestions.add(
+			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getInterviewId())));
+
+		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = new CreateInterviewAndQuestionsResponse(
+			createdInterview.getTitle(), createdInterview.getInterviewId(),
+			createInterviewAndQuestionsRequest.getPrimaryJobCategory(),
+			createInterviewAndQuestionsRequest.getSecondaryJobCategory(), createInterviewAndQuestionsResponseQuiestions,
+			createdInterview.getCreatedAt());
+
+		validateQuestionsSize(createInterviewAndQuestionsResponse.getQuestions().size());
+
+		return createInterviewAndQuestionsResponse;
+	}
+
+	@Transactional
 	public UpdateInterviewResponse updateInterviewResponseByRequestAndInterviewId(
 		UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId) {
 		Interview interview = interviewCommandService.updateInterview(
@@ -70,37 +101,6 @@ public class InterviewService {
 		List<Long> deletedQuestionIds = questionCommandService.deleteQuestionsByInterviewId(interviewId);
 
 		return new DeleteInterviewResponse(deletedInterviewId, deletedQuestionIds);
-	}
-
-	@Transactional
-	public CreateInterviewAndQuestionsResponse createInterviewAndQuestionsByRequest(
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest, long accountId) {
-		Interview createdInterview = interviewCommandService.insertInterview(
-			Interview.builder()
-				.title(createInterviewAndQuestionsRequest.getTitle())
-				.primaryJobCategory(createInterviewAndQuestionsRequest.getPrimaryJobCategory())
-				.secondaryJobCategory(createInterviewAndQuestionsRequest.getSecondaryJobCategory())
-				.accountId(accountId)
-				.build());
-
-		List<Question> questions = questionCommandService.insertQuestions(
-			interviewMapper.createInterviewAndQuestionsRequestToQuestions(createInterviewAndQuestionsRequest,
-				createdInterview.getInterviewId()), createdInterview.getInterviewId());
-
-		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
-
-		questions.forEach(question -> createInterviewAndQuestionsResponseQuiestions.add(
-			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getInterviewId())));
-
-		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = new CreateInterviewAndQuestionsResponse(
-			createdInterview.getTitle(), createdInterview.getInterviewId(),
-			createInterviewAndQuestionsRequest.getPrimaryJobCategory(),
-			createInterviewAndQuestionsRequest.getSecondaryJobCategory(), createInterviewAndQuestionsResponseQuiestions,
-			createdInterview.getCreatedAt());
-
-		validateQuestionsSize(createInterviewAndQuestionsResponse.getQuestions().size());
-
-		return createInterviewAndQuestionsResponse;
 	}
 
 	@Transactional(readOnly = true)
