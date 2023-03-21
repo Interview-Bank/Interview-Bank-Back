@@ -33,5 +33,6 @@ public interface InterviewRepository extends JpaRepository<InterviewEntity, Long
 	@Query("SELECT interview FROM InterviewEntity interview "
 		+ "WHERE interview.jobCategoryEntity.id = :job_category_id "
 		+ "ORDER BY interview.createdAt ASC")
-	Page<InterviewEntity> findAllByJobCategoryIdAndPageableOrderByCreateTimeAsc(Long jobCategoryId, Pageable pageable);
+	Page<InterviewEntity> findAllByJobCategoryIdAndPageableOrderByCreateTimeAsc(
+		@Param("job_category_id") long jobCategoryId, Pageable pageable);
 }
