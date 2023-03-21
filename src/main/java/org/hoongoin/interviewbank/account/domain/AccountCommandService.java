@@ -81,4 +81,13 @@ public class AccountCommandService {
 		accountEntity.editNickname(modifyNicknameRequest.getNickname());
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
+
+	public Account updateImageUrl(long requestedAccountId, String imageUrl) {
+		AccountEntity accountEntity = accountRepository.findById(requestedAccountId)
+			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+
+		accountEntity.uploadImageUrl(imageUrl);
+
+		return accountMapper.accountEntityToAccount(accountEntity);
+	}
 }
