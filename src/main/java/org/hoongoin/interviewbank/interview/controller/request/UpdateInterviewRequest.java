@@ -13,6 +13,8 @@ public class UpdateInterviewRequest {
 
 	private List<UpdateInterviewRequest.Question> questions;
 	private String title;
+	private String primaryJobCategory;
+	private String secondaryJobCategory;
 
 	@Getter
 	@Setter

@@ -18,6 +18,7 @@ import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.hoongoin.interviewbank.interview.domain.InterviewCommandService;
 import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
+import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
 import org.hoongoin.interviewbank.interview.domain.QuestionCommandService;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.springframework.stereotype.Service;
@@ -35,12 +36,18 @@ public class InterviewService {
 	private final QuestionCommandService questionCommandService;
 	private final QuestionQueryService questionQueryService;
 	private final AccountQueryService accountQueryService;
+	private final JobCategoryQueryService jobCategoryQueryService;
 
 	@Transactional
 	public UpdateInterviewResponse updateInterviewResponseByRequestAndInterviewId(
 		UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId) {
 		Interview interview = interviewCommandService.updateInterview(
-			Interview.builder().title(updateInterviewRequest.getTitle()).build(), interviewId, accountId);
+			Interview.builder()
+				.title(updateInterviewRequest.getTitle())
+				.primaryJobCategory(updateInterviewRequest.getPrimaryJobCategory())
+				.secondaryJobCategory(updateInterviewRequest.getSecondaryJobCategory())
+				.build(),
+			interviewId, accountId);
 
 		List<Question> newQuestions = interviewMapper.updateInterviewRequestToQuestions(updateInterviewRequest,
 			interviewId);
@@ -48,7 +55,8 @@ public class InterviewService {
 		List<Question> updatedQuestions = questionCommandService.updateQuestions(newQuestions);
 
 		UpdateInterviewResponse updateInterviewResponse = interviewMapper.questionsAndTitleToUpdateInterviewResponse(
-			updatedQuestions, interview.getTitle());
+			updatedQuestions, interview.getTitle(), updateInterviewRequest.getPrimaryJobCategory(),
+			updateInterviewRequest.getSecondaryJobCategory());
 
 		validateQuestionsSize(updateInterviewResponse.getQuestions().size());
 
@@ -67,16 +75,17 @@ public class InterviewService {
 	@Transactional
 	public CreateInterviewAndQuestionsResponse createInterviewAndQuestionsByRequest(
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest, long accountId) {
-		long createdInterviewId = interviewCommandService.insertInterview(Interview.builder()
-			.title(createInterviewAndQuestionsRequest.getTitle())
-			.accountId(accountId)
-			.build());
-
-		Interview createdInterview = interviewQueryService.findInterviewById(createdInterviewId);
+		Interview createdInterview = interviewCommandService.insertInterview(
+			Interview.builder()
+				.title(createInterviewAndQuestionsRequest.getTitle())
+				.primaryJobCategory(createInterviewAndQuestionsRequest.getPrimaryJobCategory())
+				.secondaryJobCategory(createInterviewAndQuestionsRequest.getSecondaryJobCategory())
+				.accountId(accountId)
+				.build());
 
 		List<Question> questions = questionCommandService.insertQuestions(
 			interviewMapper.createInterviewAndQuestionsRequestToQuestions(createInterviewAndQuestionsRequest,
-				createdInterviewId), createdInterviewId);
+				createdInterview.getInterviewId()), createdInterview.getInterviewId());
 
 		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
 
@@ -84,8 +93,10 @@ public class InterviewService {
 			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getInterviewId())));
 
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = new CreateInterviewAndQuestionsResponse(
-			createdInterview.getTitle(),
-			createdInterviewId, createInterviewAndQuestionsResponseQuiestions, createdInterview.getCreatedAt());
+			createdInterview.getTitle(), createdInterview.getInterviewId(),
+			createInterviewAndQuestionsRequest.getPrimaryJobCategory(),
+			createInterviewAndQuestionsRequest.getSecondaryJobCategory(), createInterviewAndQuestionsResponseQuiestions,
+			createdInterview.getCreatedAt());
 
 		validateQuestionsSize(createInterviewAndQuestionsResponse.getQuestions().size());
 
@@ -107,6 +118,27 @@ public class InterviewService {
 	@Transactional(readOnly = true)
 	public FindInterviewPageResponse findInterviewPageByPageAndSize(int page, int size) {
 		List<Interview> interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
+
+		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
+
+		interviews.forEach(interview -> findInterviewPageResponseInterview.add(
+			interviewMapper.interviewAndNicknameToFindInterviewPageResponseInterview(interview,
+				findAccountByInterview(interview))));
+
+		return new FindInterviewPageResponse(findInterviewPageResponseInterview);
+	}
+
+	public FindInterviewPageResponse searchInterview(String query, String primaryJobCategory, String secondaryJobCategory, int page,
+		int size) {
+		Long jobCategoryId = jobCategoryQueryService.findJobCategoryIdByJobCategoryName(primaryJobCategory,
+			secondaryJobCategory);
+
+		List<Interview> interviews;
+		if (jobCategoryId != null) {
+			interviews = interviewQueryService.findInterviewListByQueryAndJobCategoryIdAndPageAndSize(query, jobCategoryId, page, size);
+		} else {
+			interviews = interviewQueryService.findInterviewListByQueryAndPageAndSize(query, page, size);
+		}
 
 		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
 

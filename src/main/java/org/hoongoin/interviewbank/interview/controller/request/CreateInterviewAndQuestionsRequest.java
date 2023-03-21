@@ -10,5 +10,7 @@ import lombok.Setter;
 public class CreateInterviewAndQuestionsRequest {
 
 	private String title;
+	private String primaryJobCategory;
+	private String secondaryJobCategory;
 	private QuestionsRequest questionsRequest;
 }

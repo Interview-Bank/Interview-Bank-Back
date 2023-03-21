@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
@@ -59,13 +58,11 @@ class InterviewEntityCommandServiceTest {
 			.build();
 
 		//when
-		Long createdInterviewId = interviewCommandService.insertInterview(testInterview);
-		Optional<InterviewEntity> interview = interviewRepository.findById(createdInterviewId);
+		Interview interview = interviewCommandService.insertInterview(testInterview);
 
 		//then
-		assertThat(interview).isPresent();
-		assertThat(interview.get().getTitle()).isEqualTo(title);
-		assertThat(interview.get().getAccountEntity().getId()).isEqualTo(testAccountEntity.getId());
+		assertThat(interview.getTitle()).isEqualTo(title);
+		assertThat(interview.getAccountId()).isEqualTo(testAccountEntity.getId());
 	}
 
 	@Test
@@ -112,7 +109,7 @@ class InterviewEntityCommandServiceTest {
 		updatedQuestions.add(updatedQuestion1);
 		updatedQuestions.add(updatedQuestion2);
 
-		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle);
+		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle, null, null);
 
 		//when
 		Interview updatedInterview = interviewCommandService.updateInterview(
@@ -124,7 +121,7 @@ class InterviewEntityCommandServiceTest {
 	}
 
 	@Test
-	void updateInterviwe_Fail_AccountNotMatch() {
+	void updateInterview_Fail_AccountNotMatch() {
 		//given
 		AccountEntity testAccountEntity = accountRepository.saveAndFlush(createTestAccountEntity());
 
@@ -167,7 +164,7 @@ class InterviewEntityCommandServiceTest {
 		updatedQuestions.add(updatedQuestion1);
 		updatedQuestions.add(updatedQuestion2);
 
-		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle);
+		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle, null,null);
 
 		Interview testInterview = Interview.builder().title(updateInterviewRequest.getTitle()).build();
 

@@ -40,6 +40,27 @@ public class InterviewQueryService {
 		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByPageableOrderByCreateTimeAsc(
 			PageRequest.of(page, size));
 
+		return getInterviews(interviewEntityPage);
+	}
+
+	public List<Interview> findInterviewListByQueryAndJobCategoryIdAndPageAndSize(String query, Long jobCategoryId,
+		int page,
+		int size) {
+		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdAndPageableOrderByCreateTimeAsc(
+			query, jobCategoryId, PageRequest.of(page, size));
+
+		return getInterviews(interviewEntityPage);
+	}
+
+	public List<Interview> findInterviewListByQueryAndPageAndSize(String query, int page, int size) {
+		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndPageableOrderByCreateTimeAsc(
+			query, PageRequest.of(page, size));
+
+		return getInterviews(interviewEntityPage);
+	}
+
+
+	private List<Interview> getInterviews(Page<InterviewEntity> interviewEntityPage) {
 		List<Interview> interviews = new ArrayList<>();
 
 		interviewEntityPage.forEach(

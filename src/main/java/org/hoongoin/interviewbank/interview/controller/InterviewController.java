@@ -64,4 +64,15 @@ public class InterviewController {
 	public ResponseEntity<DeleteInterviewResponse> deleteInterview(@PathVariable("interview-id") long interviewId) {
 		return ResponseEntity.ok(interviewService.deleteInterviewById(interviewId, getRequestingAccountId()));
 	}
+
+	@GetMapping("/search")
+	public ResponseEntity<FindInterviewPageResponse> searchInterview(
+		@RequestParam(name = "query") String query,
+		@RequestParam(name = "primary-job-category") String primaryJobCategory,
+		@RequestParam(name = "secondary-job-category") String secondaryJobCategory,
+		@RequestParam(name = "page", defaultValue = "0") int page,
+		@RequestParam(name = "size", defaultValue = "10") int size) {
+		return ResponseEntity.ok(
+			interviewService.searchInterview(query, primaryJobCategory, secondaryJobCategory, page, size));
+	}
 }

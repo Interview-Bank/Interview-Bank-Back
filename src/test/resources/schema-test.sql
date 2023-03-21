@@ -12,6 +12,17 @@ CREATE TABLE account
     PRIMARY KEY (id)
 );
 
+CREATE TABLE `job_category` (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    name CHAR(16) NOT NULL,
+    parent_id BIGINT,
+    created_at DATETIME,
+    updated_at DATETIME,
+    PRIMARY KEY (id),
+    CONSTRAINT FOREIGN KEY (parent_id) REFERENCES job_category (id)
+);
+
+
 CREATE TABLE interview
 (
     id           BIGINT                NOT NULL AUTO_INCREMENT,
@@ -21,8 +32,10 @@ CREATE TABLE interview
     updated_at   TIMESTAMP(6),
     title        VARCHAR(128)          NOT NULL,
     account_id   BIGINT                NOT NULL,
+    job_category_id BIGINT,
     PRIMARY KEY (id),
-    CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES account (id)
+    CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES account (id),
+    CONSTRAINT FK_job_category_id FOREIGN KEY (job_category_id) REFERENCES `job_category` (id)
 );
 
 CREATE TABLE question
@@ -32,7 +45,7 @@ CREATE TABLE question
     deleted_at   TIMESTAMP(6),
     deleted_flag BOOLEAN DEFAULT FALSE NOT NULL,
     updated_at   TIMESTAMP(6),
-    content CLOB NOT NULL,
+    content      LONGTEXT              NOT NULL,
     interview_id BIGINT                NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_interview_id FOREIGN KEY (interview_id) REFERENCES interview (id)

@@ -60,7 +60,7 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, questionsRequest);
+			title, null, null, questionsRequest);
 
 		//when
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
@@ -92,7 +92,7 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, questionsRequest);
+			title, null, null, questionsRequest);
 
 		//when //then
 		assertThatThrownBy(
@@ -117,7 +117,7 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, questionsRequest);
+			title, null, null, questionsRequest);
 
 		//when
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
@@ -143,7 +143,7 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, questionsRequest);
+			title, null, null, questionsRequest);
 
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
@@ -175,7 +175,7 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, questionsRequest);
+			title, null, null, questionsRequest);
 
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());

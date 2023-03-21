@@ -16,7 +16,8 @@ public class Interview {
 
 	@Builder
 	public Interview(Long interviewId, String title, Long accountId, LocalDateTime createdAt,
-		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag) {
+		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag, String primaryJobCategory,
+		String secondaryJobCategory) {
 		this.setInterviewId(interviewId);
 		this.setTitle(title);
 		this.setAccountId(accountId);
@@ -24,6 +25,8 @@ public class Interview {
 		this.setUpdatedAt(updatedAt);
 		this.setDeletedAt(deletedAt);
 		this.setDeletedFlag(deletedFlag);
+		this.setPrimaryJobCategory(primaryJobCategory);
+		this.setSecondaryJobCategory(secondaryJobCategory);
 	}
 
 	private Long interviewId;
@@ -33,6 +36,8 @@ public class Interview {
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;
 	private Boolean deletedFlag;
+	private String primaryJobCategory;
+	private String secondaryJobCategory;
 
 	public void setTitle(String title) {
 		if (validateTitle(title)) {
