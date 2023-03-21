@@ -67,9 +67,9 @@ public class InterviewController {
 
 	@GetMapping("/search")
 	public ResponseEntity<FindInterviewPageResponse> searchInterview(
-		@RequestParam(name = "query") String query,
-		@RequestParam(name = "primary-job-category") String primaryJobCategory,
-		@RequestParam(name = "secondary-job-category") String secondaryJobCategory,
+		@RequestParam(name = "query", required = false) String query,
+		@RequestParam(name = "primary-job-category", required = false) String primaryJobCategory,
+		@RequestParam(name = "secondary-job-category", required = false) String secondaryJobCategory,
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size) {
 		return ResponseEntity.ok(
