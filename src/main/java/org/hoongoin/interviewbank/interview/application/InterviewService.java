@@ -134,14 +134,18 @@ public class InterviewService {
 			secondaryJobCategory);
 
 		List<Interview> interviews = null;
-		if (jobCategoryId != null && query!=null) {
-			interviews = interviewQueryService.findInterviewListByQueryAndJobCategoryIdAndPageAndSize(query, jobCategoryId, page, size);
-		} else if(jobCategoryId == null && query!= null){
-			interviews = interviewQueryService.findInterviewListByQueryAndPageAndSize(query, page, size);
-		} else if(jobCategoryId !=null && query == null){
-			interviews = interviewQueryService.findInterviewListByJobCategoryIdAndPageAndSize(jobCategoryId, page, size);
-		} else if(jobCategoryId == null && query == null){
-			interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
+		if (query != null) {
+			if (jobCategoryId != null) {
+				interviews = interviewQueryService.findInterviewListByQueryAndJobCategoryIdAndPageAndSize(query, jobCategoryId, page, size);
+			} else {
+				interviews = interviewQueryService.findInterviewListByQueryAndPageAndSize(query, page, size);
+			}
+		} else {
+			if (jobCategoryId != null) {
+				interviews = interviewQueryService.findInterviewListByJobCategoryIdAndPageAndSize(jobCategoryId, page, size);
+			} else {
+				interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
+			}
 		}
 
 		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
