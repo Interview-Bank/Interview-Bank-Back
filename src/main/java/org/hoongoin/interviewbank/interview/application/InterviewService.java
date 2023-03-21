@@ -133,11 +133,15 @@ public class InterviewService {
 		Long jobCategoryId = jobCategoryQueryService.findJobCategoryIdByJobCategoryName(primaryJobCategory,
 			secondaryJobCategory);
 
-		List<Interview> interviews;
-		if (jobCategoryId != null) {
+		List<Interview> interviews = null;
+		if (jobCategoryId != null && query!=null) {
 			interviews = interviewQueryService.findInterviewListByQueryAndJobCategoryIdAndPageAndSize(query, jobCategoryId, page, size);
-		} else {
+		} else if(jobCategoryId == null && query!= null){
 			interviews = interviewQueryService.findInterviewListByQueryAndPageAndSize(query, page, size);
+		} else if(jobCategoryId !=null && query == null){
+			interviews = interviewQueryService.findInterviewListByJobCategoryIdAndPageAndSize(jobCategoryId, page, size);
+		} else if(jobCategoryId == null && query == null){
+			interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
 		}
 
 		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();

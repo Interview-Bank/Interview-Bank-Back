@@ -59,6 +59,12 @@ public class InterviewQueryService {
 		return getInterviews(interviewEntityPage);
 	}
 
+	public List<Interview> findInterviewListByJobCategoryIdAndPageAndSize(Long jobCategoryId, int page, int size) {
+		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByJobCategoryIdAndPageableOrderByCreateTimeAsc(
+			jobCategoryId, PageRequest.of(page, size));
+
+		return getInterviews(interviewEntityPage);
+	}
 
 	private List<Interview> getInterviews(Page<InterviewEntity> interviewEntityPage) {
 		List<Interview> interviews = new ArrayList<>();

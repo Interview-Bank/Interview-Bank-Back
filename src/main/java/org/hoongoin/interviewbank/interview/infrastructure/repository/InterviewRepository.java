@@ -2,7 +2,6 @@ package org.hoongoin.interviewbank.interview.infrastructure.repository;
 
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,16 +15,23 @@ public interface InterviewRepository extends JpaRepository<InterviewEntity, Long
 	Page<InterviewEntity> findAllByPageableOrderByCreateTimeAsc(Pageable pageable);
 
 	@EntityGraph(attributePaths = {"accountEntity"})
-	@Query("SELECT interview FROM InterviewEntity interview " 
-		+ "WHERE interview.jobCategoryEntity.id = :job_category_id " 
-		+ "AND interview.title LIKE %:query%" 
-		+ " ORDER BY interview.createdAt ASC")
+	@Query("SELECT interview FROM InterviewEntity interview "
+		+ "WHERE interview.jobCategoryEntity.id = :job_category_id "
+		+ "AND interview.title LIKE %:query% "
+		+ "ORDER BY interview.createdAt ASC")
 	Page<InterviewEntity> findAllByTitleAndJobCategoryIdAndPageableOrderByCreateTimeAsc(@Param("query") String query,
-		@Param("job_category_id") long jobCategoryId, PageRequest of);
+		@Param("job_category_id") long jobCategoryId, Pageable pageable);
 
 	@EntityGraph(attributePaths = {"accountEntity"})
 	@Query("SELECT interview FROM InterviewEntity interview "
-		+ "WHERE interview.title LIKE %:query%"
-		+ " ORDER BY interview.createdAt ASC")
-	Page<InterviewEntity> findAllByTitleAndPageableOrderByCreateTimeAsc(@Param("query") String query, PageRequest of);
+		+ "WHERE interview.title LIKE %:query% "
+		+ "ORDER BY interview.createdAt ASC")
+	Page<InterviewEntity> findAllByTitleAndPageableOrderByCreateTimeAsc(@Param("query") String query,
+		Pageable pageable);
+
+	@EntityGraph(attributePaths = {"accountEntity"})
+	@Query("SELECT interview FROM InterviewEntity interview "
+		+ "WHERE interview.jobCategoryEntity.id = :job_category_id "
+		+ "ORDER BY interview.createdAt ASC")
+	Page<InterviewEntity> findAllByJobCategoryIdAndPageableOrderByCreateTimeAsc(Long jobCategoryId, Pageable pageable);
 }
