@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 public class GoogleTokenResponse {
 	private String accessToken;
 	private String expiresIn;
-	private String refreshToken;
+	private String idToken;
 	private String scope;
 	private String tokenType;
+	private String refreshToken;
 }

@@ -12,7 +12,8 @@ import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "account")
+@Table(name = "account", uniqueConstraints = {
+	@UniqueConstraint(name = "unique_account", columnNames = {"accountType", "email"})})
 public class AccountEntity extends SoftDeletedBaseEntity {
 
 	@Id
