@@ -37,6 +37,5 @@ public class ScrapAnswer {
 		if (!content.isEmpty() && content.getBytes(StandardCharsets.UTF_8).length > 100000) {
 			throw new IbValidationException("Scrap Answer content over 100000 byte");
 		}
-
 	}
 }
