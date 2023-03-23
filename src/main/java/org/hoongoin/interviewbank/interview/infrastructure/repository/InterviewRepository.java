@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface InterviewRepository extends JpaRepository<InterviewEntity, Long> {
 
 	@EntityGraph(attributePaths = {"accountEntity"})
-	@Query("SELECT interview FROM InterviewEntity interview ORDER BY interview.createdAt ASC")
-	Page<InterviewEntity> findAllByPageableOrderByCreateTimeAsc(Pageable pageable);
+	@Query("SELECT interview FROM InterviewEntity interview ORDER BY interview.createdAt DESC")
+	Page<InterviewEntity> findAllByPageableOrderByCreateTimeDesc(Pageable pageable);
 }
