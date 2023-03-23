@@ -17,7 +17,7 @@ public class AccountQueryService {
 	private final AccountRepository accountRepository;
 	private final AccountMapper accountMapper;
 
-	public Account findAccountByEmail(String email) {
+	public Account findAccountByEmail(String email) throws IbEntityNotFoundException, IbSoftDeleteException{
 		AccountEntity accountEntity = accountRepository.findByEmail(email)
 			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 
