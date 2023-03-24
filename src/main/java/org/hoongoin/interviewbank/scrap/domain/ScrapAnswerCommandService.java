@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 public class ScrapAnswerCommandService {
 
 	private final ScrapAnswerRepository scrapAnswerRepository;
-	private final ScrapQuestionRepository scrapQuestionRepository;
 	private final ScrapMapper scrapMapper;
 
 	public ScrapAnswer updateScrapAnswer(ScrapAnswer scrapAnswer) {
@@ -29,7 +28,7 @@ public class ScrapAnswerCommandService {
 
 		if (scrapQuestionEntity.getId() != scrapAnswer.getScrapQuestionId()
 			|| scrapEntity.getId() != scrapAnswer.getScrapId()) {
-			throw new IbBadRequestException("");
+			throw new IbBadRequestException("ScrapAnswer Id mismatch");
 		}
 
 		scrapAnswerEntity.modifyEntity(scrapAnswer.getContent());
