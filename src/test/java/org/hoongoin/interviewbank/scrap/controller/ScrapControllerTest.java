@@ -96,10 +96,18 @@ class ScrapControllerTest {
 
 		assertThat(createScrapResponse.getBody().getScrap().getTitle()).isEqualTo(interviewEntity.getTitle());
 
-		assertThat(createScrapResponse.getBody().getScrapQuestions().size()).isEqualTo(2);
-		assertThat(createScrapResponse.getBody().getScrapQuestions().get(0).getContent()).isEqualTo(
+		assertThat(createScrapResponse.getBody().getScrapQuestionAndScrapAnswerList().size()).isEqualTo(2);
+		assertThat(createScrapResponse.getBody()
+			.getScrapQuestionAndScrapAnswerList()
+			.get(0)
+			.getScrapQuestion()
+			.getContent()).isEqualTo(
 			questionEntity1.getContent());
-		assertThat(createScrapResponse.getBody().getScrapQuestions().get(1).getContent()).isEqualTo(
+		assertThat(createScrapResponse.getBody()
+			.getScrapQuestionAndScrapAnswerList()
+			.get(1)
+			.getScrapQuestion()
+			.getContent()).isEqualTo(
 			questionEntity2.getContent());
 	}
 
