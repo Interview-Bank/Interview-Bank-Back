@@ -34,7 +34,7 @@ public class ScrapAnswer {
 	private LocalDateTime updatedAt;
 
 	private void setContent(String content) {
-		if (content.getBytes(StandardCharsets.UTF_8).length > 100000) {
+		if (content!=null && content.getBytes(StandardCharsets.UTF_8).length > 100000) {
 			throw new IbValidationException("Scrap Answer content over 100000 byte");
 		}
 

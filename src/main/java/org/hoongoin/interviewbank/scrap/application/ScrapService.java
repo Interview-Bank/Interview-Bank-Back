@@ -11,12 +11,15 @@ import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
+import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestionAndScrapAnswer;
+import org.hoongoin.interviewbank.scrap.application.entity.ScrapWithScrapQuestionAndScrapAnswerList;
 import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.OriginalInterviewResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionAndScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
@@ -69,10 +72,10 @@ public class ScrapService {
 				ScrapQuestion.builder().scrapId(scrap.getScrapId()).content(question.getContent()).build());
 		}
 
-		ScrapAndScrapQuestions savedScrapAndScrapQuestions = scrapCommandService.insertScrapAndScrapQuestions(scrap,
-			scrapQuestions, requestingAccount, originalInterview);
+		ScrapWithScrapQuestionAndScrapAnswerList scrapWithScrapQuestionAndScrapAnswerList = scrapCommandService.insertScrapAndScrapQuestions(
+			scrap, scrapQuestions, requestingAccount, originalInterview);
 
-		return makeCreateScrapResponse(originalInterview, savedScrapAndScrapQuestions);
+		return makeCreateScrapResponse(originalInterview, scrapWithScrapQuestionAndScrapAnswerList);
 	}
 
 	@Transactional
@@ -130,15 +133,18 @@ public class ScrapService {
 	}
 
 	private CreateScrapResponse makeCreateScrapResponse(Interview interview,
-		ScrapAndScrapQuestions scrapAndScrapQuestions) {
+		ScrapWithScrapQuestionAndScrapAnswerList scrapWithScrapQuestionAndScrapAnswerList) {
 		OriginalInterviewResponse originalInterviewResponse = new OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());
-		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(scrapAndScrapQuestions.getScrap());
-		List<ScrapQuestionResponse> scrapQuestionResponseList = new ArrayList<>();
-		scrapAndScrapQuestions.getScrapQuestionList().forEach(
-			scrapQuestion -> scrapQuestionResponseList.add(
-				scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestion)));
-		return new CreateScrapResponse(originalInterviewResponse, scrapResponse, scrapQuestionResponseList);
+
+		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(scrapWithScrapQuestionAndScrapAnswerList.getScrap());
+
+		List<ScrapQuestionAndScrapAnswerResponse> scrapQuestionAndScrapAnswerResponseList = new ArrayList<>();
+		scrapWithScrapQuestionAndScrapAnswerList.getScrapQuestionAndScrapAnswerList().forEach(
+			scrapQuestionAndScrapAnswer -> scrapQuestionAndScrapAnswerResponseList.add(
+				new ScrapQuestionAndScrapAnswerResponse(scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestionAndScrapAnswer.getScrapQuestion()),
+					scrapMapper.scrapAnswerToScrapAnswerResponse(scrapQuestionAndScrapAnswer.getScrapAnswer()))));
+		return new CreateScrapResponse(originalInterviewResponse, scrapResponse, scrapQuestionAndScrapAnswerResponseList);
 	}
 
 	private ReadScrapDetailResponse makeReadScrapResponse(Scrap scrap, Interview interview,

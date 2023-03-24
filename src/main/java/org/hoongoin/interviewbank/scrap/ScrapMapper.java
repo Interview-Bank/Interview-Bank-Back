@@ -9,6 +9,7 @@ import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
@@ -110,4 +111,6 @@ public interface ScrapMapper {
 		ScrapQuestionWithScrapAnswers scrapQuestionWithScrapAnswers);
 
 	ReadScrapResponse scrapToReadScrapResponse(Scrap scrap);
+
+	ScrapAnswerResponse scrapAnswerToScrapAnswerResponse(ScrapAnswer scrapAnswer);
 }
