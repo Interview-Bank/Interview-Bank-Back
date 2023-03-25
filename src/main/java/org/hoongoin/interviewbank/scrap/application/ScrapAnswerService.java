@@ -1,6 +1,8 @@
 package org.hoongoin.interviewbank.scrap.application;
 
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
+import org.hoongoin.interviewbank.exception.IbAccountNotMatchException;
+import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapAnswerRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapAnswerResponse;
@@ -53,7 +55,7 @@ public class ScrapAnswerService {
 
 	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId) {
 		if (scrapWriterAccountId != requestingAccountId) {
-			throw new IbUnauthorizedException("Scrap");
+			throw new IbAccountNotMatchException("Scrap");
 		}
 	}
 }

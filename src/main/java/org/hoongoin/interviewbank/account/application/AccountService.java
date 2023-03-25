@@ -15,7 +15,9 @@ import org.hoongoin.interviewbank.account.domain.PasswordResetTokenCommand;
 import org.hoongoin.interviewbank.account.domain.PasswordResetTokenQuery;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.entity.PasswordResetToken;
-import org.hoongoin.interviewbank.exception.IbPasswordNotMatchException;
+import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
+import org.hoongoin.interviewbank.exception.IbLoginFailedException;
+import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,10 +46,17 @@ public class AccountService {
 	}
 
 	public Account loginByLoginRequest(LoginRequest loginRequest) {
-		Account account = accountQueryService.findAccountByEmail(loginRequest.getEmail());
-		if (!passwordEncoder.matches(loginRequest.getPassword(), account.getPassword())) {
-			throw new IbPasswordNotMatchException(account.getEmail());
+		Account account;
+		try {
+			account = accountQueryService.findAccountByEmail(loginRequest.getEmail());
+		} catch (IbEntityNotFoundException e) {
+			throw new IbLoginFailedException("Email or Password is not correct");
 		}
+
+		if (!passwordEncoder.matches(loginRequest.getPassword(), account.getPassword())) {
+			throw new IbLoginFailedException("Email or Password is not correct");
+		}
+
 		return account;
 	}
 
@@ -70,7 +79,7 @@ public class AccountService {
 		long requestingAccountId = passwordResetToken.getAccountId();
 
 		if (!Objects.equals(resetPasswordRequest.getNewPassword(), resetPasswordRequest.getNewPasswordCheck())) {
-			throw new IbPasswordNotMatchException("");
+			throw new IbValidationException("Password and Password Check is not same");
 		}
 
 		String encodedPassword = passwordEncoder.encode(resetPasswordRequest.getNewPasswordCheck());

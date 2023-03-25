@@ -8,7 +8,7 @@ import org.hoongoin.interviewbank.exception.IbBadRequestException;
 import org.hoongoin.interviewbank.exception.IbEntityExistsException;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
-import org.hoongoin.interviewbank.exception.IbPasswordNotMatchException;
+import org.hoongoin.interviewbank.exception.IbLoginFailedException;
 import org.hoongoin.interviewbank.exception.IbSoftDeleteException;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.exception.IbValidationException;
@@ -26,7 +26,7 @@ public class IbControllerAdvice {
 
 	private final DiscordHandler discordHandler;
 
-	@ExceptionHandler({IbBadRequestException.class, IbAccountNotMatchException.class, IbSoftDeleteException.class})
+	@ExceptionHandler({IbBadRequestException.class, IbAccountNotMatchException.class})
 	public ResponseEntity<Object> handleBadRequestException(Exception exception, HttpServletRequest request) {
 		discordHandler.send(exception, request);
 		return ResponseEntity
@@ -43,17 +43,8 @@ public class IbControllerAdvice {
 			.body(exception.getMessage());
 	}
 
-	@ExceptionHandler(IbEntityNotFoundException.class)
+	@ExceptionHandler({IbEntityNotFoundException.class, IbSoftDeleteException.class})
 	public ResponseEntity<Object> handleIbEntityNotFoundException(IbEntityNotFoundException exception,
-		HttpServletRequest request) {
-		discordHandler.send(exception, request);
-		return ResponseEntity
-			.status(IbErrorCode.NOT_FOUND.getHttpStatus())
-			.body("Not Found");
-	}
-
-	@ExceptionHandler(IbPasswordNotMatchException.class)
-	public ResponseEntity<Object> handleIbPasswordNotMatchException(IbPasswordNotMatchException exception,
 		HttpServletRequest request) {
 		discordHandler.send(exception, request);
 		return ResponseEntity
@@ -68,6 +59,15 @@ public class IbControllerAdvice {
 		return ResponseEntity
 			.status(IbErrorCode.UNAUTHORIZED.getHttpStatus())
 			.body("Unauthorized");
+	}
+
+	@ExceptionHandler(IbLoginFailedException.class)
+	public ResponseEntity<Object> handleLoginFailedException(IbLoginFailedException exception,
+		HttpServletRequest request) {
+		discordHandler.send(exception, request);
+		return ResponseEntity
+			.status(IbErrorCode.UNAUTHORIZED.getHttpStatus())
+			.body("Email or Password is not correct");
 	}
 
 	@ExceptionHandler(IbValidationException.class)
