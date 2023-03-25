@@ -1,15 +1,14 @@
 package org.hoongoin.interviewbank.scrap.application;
 
+import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.exception.IbAccountNotMatchException;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapAnswerRequest;
-import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapAnswer;
 import org.hoongoin.interviewbank.scrap.application.dto.ScrapAnswerIdsDto;
-import org.hoongoin.interviewbank.scrap.application.dto.ScrapQuestionIdsDto;
 import org.hoongoin.interviewbank.scrap.domain.ScrapAnswerCommandService;
 import org.hoongoin.interviewbank.scrap.domain.ScrapAnswerQueryService;
 import org.hoongoin.interviewbank.scrap.domain.ScrapQueryService;
@@ -29,20 +28,6 @@ public class ScrapAnswerService {
 	private final ScrapAnswerQueryService scrapAnswerQueryService;
 	private final ScrapMapper scrapMapper;
 
-	public CreateScrapAnswerResponse createScrapAnswerByScrapIdAndScrapQuestionId(
-		ScrapQuestionIdsDto scrapQuestionIdsDto, long requestingAccountId) {
-		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapQuestionIdsDto.getScrapId());
-		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
-
-		if (!scrapQuestionQueryService.existsScrapQuestionByScrapQuestionId(scrapQuestionIdsDto.getScrapQuestionId())) {
-			throw new IbEntityNotFoundException("ScrapQuestion");
-		}
-		ScrapAnswer scrapAnswer = scrapAnswerCommandService.createScrapAnswerByScrapQuestionId(
-			scrapQuestionIdsDto.getScrapQuestionId(),
-			ScrapAnswer.builder().scrapQuestionId(scrapQuestionIdsDto.getScrapQuestionId()).build());
-		return scrapMapper.scrapAnswerToCreateScrapAnswerResponse(scrapAnswer);
-	}
-
 	@Transactional
 	public UpdateScrapAnswerResponse updateScrapAnswerByRequestAndSIds(
 		UpdateScrapAnswerRequest updateScrapAnswerRequest, ScrapAnswerIdsDto scrapAnswerIdsDto,
@@ -50,8 +35,14 @@ public class ScrapAnswerService {
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapAnswerIdsDto.getScrapId());
 		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 
-		ScrapAnswer updatedScrapAnswer = scrapAnswerCommandService.updateScrapAnswer(scrapAnswerIdsDto,
-			new ScrapAnswer(updateScrapAnswerRequest.getContent()));
+		ScrapAnswer updatedScrapAnswer = scrapAnswerCommandService.updateScrapAnswer(
+			ScrapAnswer.builder()
+				.scrapAnswerId(scrapAnswerIdsDto.getScrapAnswerId())
+				.scrapQuestionId(scrapAnswerIdsDto.getScrapQuestionId())
+				.scrapId(scrapAnswerIdsDto.getScrapId())
+				.content(updateScrapAnswerRequest.getContent())
+				.build()
+		);
 		return scrapMapper.scrapAnswerToUpdateScrapAnswerResponse(updatedScrapAnswer);
 	}
 

@@ -66,11 +66,4 @@ public class ScrapController {
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
 			.body(scrapService.updateScrapByRequestAndScrapId(updateScrapRequest, scrapId, requestingAccountId));
 	}
-
-	@DeleteMapping("/{scrap-id}")
-	public ResponseEntity<Object> deleteScrap(@PathVariable("scrap-id") long scrapId) {
-		long requestingAccountId = getRequestingAccountId();
-		scrapService.deleteScrapByRequestAndScrapId(scrapId, requestingAccountId);
-		return ResponseEntity.ok().body("Success");
-	}
 }
