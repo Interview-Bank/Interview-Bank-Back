@@ -22,7 +22,7 @@ public class InterviewCommandService {
 
 	private final InterviewRepository interviewRepository;
 	private final AccountRepository accountRepository;
-	private final JobCategoryRepository jobCategoryRepository;
+	private final JobCategoryQueryService jobCategoryQueryService;
 	private final InterviewMapper interviewMapper;
 	private final AccountMapper accountMapper;
 
@@ -30,7 +30,8 @@ public class InterviewCommandService {
 		AccountEntity selectedAccountEntity = accountRepository.findById(interview.getAccountId())
 			.orElseThrow(() -> new IbEntityNotFoundException("AccountEntity"));
 
-		JobCategoryEntity jobCategoryEntity = findJobCategoryEntityByJobCategory(interview.getPrimaryJobCategory(),
+		JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityByJobCategory(
+			interview.getPrimaryJobCategory(),
 			interview.getSecondaryJobCategory());
 		InterviewEntity interviewEntity = InterviewEntity.builder()
 			.title(interview.getTitle())
@@ -60,30 +61,14 @@ public class InterviewCommandService {
 
 		isMatchInterviewAndAccount(accountId, interviewEntity);
 
-		JobCategoryEntity jobCategoryEntity = findJobCategoryEntityByJobCategory(interview.getPrimaryJobCategory(),
+		JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityByJobCategory(
+			interview.getPrimaryJobCategory(),
 			interview.getSecondaryJobCategory());
 		interviewEntity.modifyEntity(interview.getTitle());
 		interviewEntity.setJobCategoryEntity(jobCategoryEntity);
 
 		return interviewMapper.interviewEntityToInterview(interviewEntity,
 			accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()));
-	}
-
-	private JobCategoryEntity findJobCategoryEntityByJobCategory(String primaryCategory, String secondaryCategory) {
-		JobCategoryEntity jobCategoryEntity;
-		if (primaryCategory == null){
-			jobCategoryEntity = null;
-		}
-		else if (secondaryCategory == null) {
-			jobCategoryEntity = jobCategoryRepository.findByName(primaryCategory)
-				.orElseThrow(() -> new IbEntityNotFoundException("Job Category"));
-		}
-		else{
-			jobCategoryEntity = jobCategoryRepository.findByNameAndParentJobCategoryName(
-					secondaryCategory, primaryCategory)
-				.orElseThrow(() -> new IbEntityNotFoundException("Job Category"));
-		}
-		return jobCategoryEntity;
 	}
 
 	private void isMatchInterviewAndAccount(long accountId, InterviewEntity interviewEntity) {

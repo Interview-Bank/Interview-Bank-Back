@@ -44,8 +44,7 @@ public class InterviewQueryService {
 	}
 
 	public List<Interview> findInterviewListByQueryAndJobCategoryIdAndPageAndSize(String query, Long jobCategoryId,
-		int page,
-		int size) {
+		int page, int size) {
 		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdAndPageableOrderByCreateTimeAsc(
 			query, jobCategoryId, PageRequest.of(page, size));
 
