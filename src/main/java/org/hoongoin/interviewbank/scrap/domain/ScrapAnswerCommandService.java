@@ -9,7 +9,6 @@ import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapQuestionEntit
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapAnswerRepository;
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapQuestionRepository;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapAnswer;
-import org.hoongoin.interviewbank.scrap.application.dto.ScrapAnswerIdsDto;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -19,28 +18,17 @@ import lombok.RequiredArgsConstructor;
 public class ScrapAnswerCommandService {
 
 	private final ScrapAnswerRepository scrapAnswerRepository;
-	private final ScrapQuestionRepository scrapQuestionRepository;
 	private final ScrapMapper scrapMapper;
 
-	public ScrapAnswer createScrapAnswerByScrapQuestionId(long scrapQuestionId, ScrapAnswer scrapAnswer) {
-		ScrapQuestionEntity scrapQuestionEntity = scrapQuestionRepository.findById(scrapQuestionId)
-			.orElseThrow(() -> new IbEntityNotFoundException("ScrapQuestion"));
-
-		ScrapAnswerEntity scrapAnswerEntity = scrapMapper
-			.scrapAnswerAndScrapQuestionEntityToScrapAnswerEntity(scrapAnswer, scrapQuestionEntity);
-		scrapAnswerEntity = scrapAnswerRepository.save(scrapAnswerEntity);
-		return scrapMapper.scrapAnswerEntityToScrapAnswer(scrapAnswerEntity);
-	}
-
-	public ScrapAnswer updateScrapAnswer(ScrapAnswerIdsDto scrapAnswerIdsDto, ScrapAnswer scrapAnswer) {
-		ScrapAnswerEntity scrapAnswerEntity = scrapAnswerRepository.findById(scrapAnswerIdsDto.getScrapAnswerId())
+	public ScrapAnswer updateScrapAnswer(ScrapAnswer scrapAnswer) {
+		ScrapAnswerEntity scrapAnswerEntity = scrapAnswerRepository.findById(scrapAnswer.getScrapAnswerId())
 			.orElseThrow(() -> new IbEntityNotFoundException("ScrapAnswer"));
 		ScrapQuestionEntity scrapQuestionEntity = scrapAnswerEntity.getScrapQuestionEntity();
 		ScrapEntity scrapEntity = scrapQuestionEntity.getScrapEntity();
 
-		if (scrapQuestionEntity.getId() != scrapAnswerIdsDto.getScrapQuestionId()
-			|| scrapEntity.getId() != scrapAnswerIdsDto.getScrapId()) {
-			throw new IbBadRequestException("");
+		if (scrapQuestionEntity.getId() != scrapAnswer.getScrapQuestionId()
+			|| scrapEntity.getId() != scrapAnswer.getScrapId()) {
+			throw new IbBadRequestException("ScrapAnswer Id mismatch");
 		}
 
 		scrapAnswerEntity.modifyEntity(scrapAnswer.getContent());

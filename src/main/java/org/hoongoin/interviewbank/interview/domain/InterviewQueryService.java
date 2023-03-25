@@ -38,7 +38,7 @@ public class InterviewQueryService {
 	}
 
 	public List<Interview> findInterviewListByPageAndSize(int page, int size) {
-		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByPageableOrderByCreateTimeAsc(
+		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByPageableOrderByCreateTimeDesc(
 			PageRequest.of(page, size));
 
 		return getInterviews(interviewEntityPage);

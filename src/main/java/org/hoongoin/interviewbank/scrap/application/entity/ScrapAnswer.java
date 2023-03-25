@@ -18,10 +18,11 @@ public class ScrapAnswer {
 	}
 
 	@Builder
-	public ScrapAnswer(long scrapAnswerId, long scrapQuestionId, String content, LocalDateTime createdAt,
+	public ScrapAnswer(long scrapAnswerId, long scrapQuestionId, long scrapId, String content, LocalDateTime createdAt,
 		LocalDateTime updatedAt) {
 		this.setScrapAnswerId(scrapAnswerId);
 		this.setScrapQuestionId(scrapQuestionId);
+		this.setScrapId(scrapId);
 		this.setContent(content);
 		this.setCreatedAt(createdAt);
 		this.setUpdatedAt(updatedAt);
@@ -29,14 +30,15 @@ public class ScrapAnswer {
 
 	private long scrapAnswerId;
 	private long scrapQuestionId;
+	private long scrapId;
 	private String content;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
 	private void setContent(String content) {
-		if (content.getBytes(StandardCharsets.UTF_8).length > 100000) {
+		if (content!=null && content.getBytes(StandardCharsets.UTF_8).length > 100000) {
 			throw new IbValidationException("Scrap Answer content over 100000 byte");
 		}
-
+		this.content = content;
 	}
 }

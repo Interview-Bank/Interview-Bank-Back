@@ -7,8 +7,13 @@ import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
+import org.hoongoin.interviewbank.scrap.application.entity.ScrapAnswer;
+import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestionAndScrapAnswer;
+import org.hoongoin.interviewbank.scrap.application.entity.ScrapWithScrapQuestionAndScrapAnswerList;
+import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapAnswerEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapQuestionEntity;
+import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapAnswerRepository;
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapQuestionRepository;
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapRepository;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
@@ -24,14 +29,15 @@ public class ScrapCommandService {
 
 	private final ScrapRepository scrapRepository;
 	private final ScrapQuestionRepository scrapQuestionRepository;
+	private final ScrapAnswerRepository scrapAnswerRepository;
 	private final ScrapMapper scrapMapper;
 
-	public ScrapAndScrapQuestions insertScrapAndScrapQuestions(Scrap scrap, List<ScrapQuestion> scrapQuestions,
+	public ScrapWithScrapQuestionAndScrapAnswerList insertScrapAndScrapQuestions(Scrap scrap, List<ScrapQuestion> scrapQuestions,
 		Account account, Interview interview) {
 		ScrapEntity scrapEntity = scrapMapper.scrapToScrapEntity(scrap, account, interview);
 		scrapRepository.save(scrapEntity);
 
-		List<ScrapQuestion> savedScrapQuestions = new ArrayList<>();
+		List<ScrapQuestionAndScrapAnswer> scrapQuestionAndScrapAnswerList = new ArrayList<>();
 		for (ScrapQuestion scrapQuestion : scrapQuestions) {
 			ScrapQuestionEntity scrapQuestionEntity = ScrapQuestionEntity
 				.builder()
@@ -39,15 +45,17 @@ public class ScrapCommandService {
 				.content(scrapQuestion.getContent())
 				.build();
 			scrapQuestionEntity = scrapQuestionRepository.save(scrapQuestionEntity);
-			savedScrapQuestions.add(scrapMapper.scrapQuestionEntityToScrapQuestion(scrapQuestionEntity));
+			ScrapAnswerEntity  scrapAnswerEntity = ScrapAnswerEntity
+				.builder()
+				.scrapQuestionEntity(scrapQuestionEntity)
+				.build();
+			scrapAnswerRepository.save(scrapAnswerEntity);
+			scrapQuestionAndScrapAnswerList.add(new ScrapQuestionAndScrapAnswer(
+				scrapMapper.scrapQuestionEntityToScrapQuestion(scrapQuestionEntity),
+				scrapMapper.scrapAnswerEntityToScrapAnswer(scrapAnswerEntity)));
 		}
 		Scrap savedScrap = scrapMapper.scrapEntityToScrap(scrapEntity);
-		return new ScrapAndScrapQuestions(savedScrap, savedScrapQuestions);
-	}
-
-	public boolean existsScrapByOriginalInterviewAndRequestingAccountId(Interview originalInterview,
-		long requestingAccountId) {
-		return scrapRepository.existsByInterviewIdAndAccountId(originalInterview.getInterviewId(), requestingAccountId);
+		return new ScrapWithScrapQuestionAndScrapAnswerList(savedScrap, scrapQuestionAndScrapAnswerList);
 	}
 
 	public Scrap updateScrap(long scrapId, Scrap scrap) {
