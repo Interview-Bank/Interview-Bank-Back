@@ -1,4 +1,4 @@
-package org.hoongoin.interviewbank.inquiry.controller;
+package org.hoongoin.interviewbank.inquiry.controller.request;
 
 import lombok.Getter;
 

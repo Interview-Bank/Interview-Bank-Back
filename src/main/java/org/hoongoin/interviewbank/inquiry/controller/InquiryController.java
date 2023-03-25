@@ -1,8 +1,7 @@
 package org.hoongoin.interviewbank.inquiry.controller;
 
-import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
-import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.inquiry.application.InquiryService;
+import org.hoongoin.interviewbank.inquiry.controller.request.InquiryRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

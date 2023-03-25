@@ -1,9 +1,8 @@
 package org.hoongoin.interviewbank.inquiry.application;
 
-import org.hoongoin.interviewbank.inquiry.controller.InquiryRequest;
-import org.hoongoin.interviewbank.inquiry.controller.InquiryResponse;
+import org.hoongoin.interviewbank.inquiry.application.entity.Inquiry;
+import org.hoongoin.interviewbank.inquiry.controller.request.InquiryRequest;
 import org.hoongoin.interviewbank.inquiry.domain.InquiryCommandService;
-import org.hoongoin.interviewbank.interview.domain.InterviewCommandService;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;

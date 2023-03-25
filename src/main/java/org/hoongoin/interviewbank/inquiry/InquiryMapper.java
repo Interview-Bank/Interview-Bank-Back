@@ -1,7 +1,7 @@
 package org.hoongoin.interviewbank.inquiry;
 
-import org.hoongoin.interviewbank.inquiry.application.Inquiry;
-import org.hoongoin.interviewbank.inquiry.infrastructure.InquiryEntity;
+import org.hoongoin.interviewbank.inquiry.application.entity.Inquiry;
+import org.hoongoin.interviewbank.inquiry.infrastructure.entity.InquiryEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

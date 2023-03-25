@@ -1,4 +1,4 @@
-package org.hoongoin.interviewbank.inquiry.infrastructure;
+package org.hoongoin.interviewbank.inquiry.infrastructure.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

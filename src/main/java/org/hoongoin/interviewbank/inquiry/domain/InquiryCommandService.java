@@ -1,8 +1,8 @@
 package org.hoongoin.interviewbank.inquiry.domain;
 
 import org.hoongoin.interviewbank.inquiry.InquiryMapper;
-import org.hoongoin.interviewbank.inquiry.application.Inquiry;
-import org.hoongoin.interviewbank.inquiry.infrastructure.InquiryEntity;
+import org.hoongoin.interviewbank.inquiry.application.entity.Inquiry;
+import org.hoongoin.interviewbank.inquiry.infrastructure.entity.InquiryEntity;
 import org.hoongoin.interviewbank.inquiry.infrastructure.InquiryRepository;
 import org.springframework.stereotype.Service;
 
