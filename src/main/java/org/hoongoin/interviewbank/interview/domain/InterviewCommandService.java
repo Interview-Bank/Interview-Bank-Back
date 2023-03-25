@@ -70,11 +70,15 @@ public class InterviewCommandService {
 	}
 
 	private JobCategoryEntity findJobCategoryEntityByJobCategory(String primaryCategory, String secondaryCategory) {
-		JobCategoryEntity jobCategoryEntity = null;
-		if (primaryCategory != null && secondaryCategory == null) {
+		JobCategoryEntity jobCategoryEntity;
+		if (primaryCategory == null){
+			jobCategoryEntity = null;
+		}
+		else if (secondaryCategory == null) {
 			jobCategoryEntity = jobCategoryRepository.findByName(primaryCategory)
 				.orElseThrow(() -> new IbEntityNotFoundException("Job Category"));
-		} else if (primaryCategory != null) {
+		}
+		else{
 			jobCategoryEntity = jobCategoryRepository.findByNameAndParentJobCategoryName(
 					secondaryCategory, primaryCategory)
 				.orElseThrow(() -> new IbEntityNotFoundException("Job Category"));
