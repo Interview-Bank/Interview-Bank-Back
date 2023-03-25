@@ -11,7 +11,6 @@ import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntit
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
-import org.hoongoin.interviewbank.interview.infrastructure.repository.JobCategoryRepository;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;

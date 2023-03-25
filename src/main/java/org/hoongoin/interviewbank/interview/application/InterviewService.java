@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.interview.application;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
@@ -128,25 +129,12 @@ public class InterviewService {
 		return new FindInterviewPageResponse(findInterviewPageResponseInterview);
 	}
 
-	public FindInterviewPageResponse searchInterview(String query, String primaryJobCategory, String secondaryJobCategory, int page,
-		int size) {
+	public FindInterviewPageResponse searchInterview(String query, String primaryJobCategory,
+		String secondaryJobCategory, Date startDate, Date endDate, int page, int size) {
 		Long jobCategoryId = jobCategoryQueryService.findJobCategoryIdByJobCategoryName(primaryJobCategory,
 			secondaryJobCategory);
-
-		List<Interview> interviews = null;
-		if (query != null) {
-			if (jobCategoryId != null) {
-				interviews = interviewQueryService.findInterviewListByQueryAndJobCategoryIdAndPageAndSize(query, jobCategoryId, page, size);
-			} else {
-				interviews = interviewQueryService.findInterviewListByQueryAndPageAndSize(query, page, size);
-			}
-		} else {
-			if (jobCategoryId != null) {
-				interviews = interviewQueryService.findInterviewListByJobCategoryIdAndPageAndSize(jobCategoryId, page, size);
-			} else {
-				interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
-			}
-		}
+		List<Interview> interviews = interviewQueryService.searchInterview(query, jobCategoryId, startDate, endDate,
+			page, size);
 
 		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.interview.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
@@ -43,24 +44,10 @@ public class InterviewQueryService {
 		return getInterviews(interviewEntityPage);
 	}
 
-	public List<Interview> findInterviewListByQueryAndJobCategoryIdAndPageAndSize(String query, Long jobCategoryId,
-		int page, int size) {
-		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdAndPageableOrderByCreateTimeAsc(
-			query, jobCategoryId, PageRequest.of(page, size));
-
-		return getInterviews(interviewEntityPage);
-	}
-
-	public List<Interview> findInterviewListByQueryAndPageAndSize(String query, int page, int size) {
-		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndPageableOrderByCreateTimeAsc(
-			query, PageRequest.of(page, size));
-
-		return getInterviews(interviewEntityPage);
-	}
-
-	public List<Interview> findInterviewListByJobCategoryIdAndPageAndSize(Long jobCategoryId, int page, int size) {
-		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByJobCategoryIdAndPageableOrderByCreateTimeAsc(
-			jobCategoryId, PageRequest.of(page, size));
+	public List<Interview> searchInterview(String query, Long jobCategoryId, Date startDate, Date endDate, int page,
+		int size) {
+		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdAndStartDateAndEndDatePageableOrderByCreateTimeAsc(
+			query, jobCategoryId, startDate, endDate, PageRequest.of(page, size));
 
 		return getInterviews(interviewEntityPage);
 	}
@@ -77,4 +64,5 @@ public class InterviewQueryService {
 			});
 		return interviews;
 	}
+
 }
