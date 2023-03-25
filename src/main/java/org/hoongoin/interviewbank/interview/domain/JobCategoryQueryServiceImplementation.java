@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class JobCategoryQueryServiceImplementation {
+public class JobCategoryQueryServiceImplementation implements JobCategoryQueryService{
 
 	private final JobCategoryRepository jobCategoryRepository;
 

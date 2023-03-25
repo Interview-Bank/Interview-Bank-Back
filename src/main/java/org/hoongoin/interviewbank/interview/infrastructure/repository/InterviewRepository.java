@@ -18,10 +18,10 @@ public interface InterviewRepository extends JpaRepository<InterviewEntity, Long
 
 	@EntityGraph(attributePaths = {"accountEntity"})
 	@Query("SELECT interview FROM InterviewEntity interview "
-		+ "WHERE (interview.jobCategoryEntity.id = :job_category_id  OR :job_category_id IS NULL) "
-		+ "AND (interview.title LIKE %:query% OR :query IS NULL) "
-		+ "AND (interview.createdAt >= :start_date OR :start_date IS NULL) "
-		+ "AND (interview.createdAt <= :end_date OR :end_date IS NULL) "
+		+ "WHERE (:job_category_id IS NULL OR interview.jobCategoryEntity.id = :job_category_id ) "
+		+ "AND (:query IS NULL OR interview.title LIKE %:query%) "
+		+ "AND (:start_date IS NULL OR interview.createdAt >= TIMESTAMP(:start_date)) "
+		+ "AND (:end_date IS NULL OR interview.createdAt <= TIMESTAMP(:end_date)) "
 		+ "ORDER BY interview.createdAt DESC")
 	Page<InterviewEntity> findAllByTitleAndJobCategoryIdAndStartDateAndEndDatePageableOrderByCreateTimeAsc(
 		@Param("query") String query, @Param("job_category_id") Long jobCategoryId, @Param("start_date") Date startDate,
