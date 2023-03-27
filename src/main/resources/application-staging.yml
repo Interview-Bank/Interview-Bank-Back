@@ -66,3 +66,13 @@ spring:
           token-uri: https://kauth.kakao.com/oauth/token
           profile-uri: https://kapi.kakao.com/v2/user/me
           redirect-uri: https://fstaging.interviewbank.net/oauth2/kakao/redirect
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
