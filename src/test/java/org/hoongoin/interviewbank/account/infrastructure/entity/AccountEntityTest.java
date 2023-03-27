@@ -2,6 +2,7 @@ package org.hoongoin.interviewbank.account.infrastructure.entity;
 
 import static org.assertj.core.api.Assertions.*;
 
+import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

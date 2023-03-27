@@ -2,6 +2,8 @@ package org.hoongoin.interviewbank.interview.controller;
 
 import static org.hoongoin.interviewbank.utils.SecurityUtil.*;
 
+import java.util.Date;
+
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
@@ -10,6 +12,7 @@ import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPag
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
 import org.hoongoin.interviewbank.interview.application.InterviewService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -63,5 +66,18 @@ public class InterviewController {
 	@DeleteMapping("/{interview-id}")
 	public ResponseEntity<DeleteInterviewResponse> deleteInterview(@PathVariable("interview-id") long interviewId) {
 		return ResponseEntity.ok(interviewService.deleteInterviewById(interviewId, getRequestingAccountId()));
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<FindInterviewPageResponse> searchInterview(
+		@RequestParam(name = "query", required = false) String query,
+		@RequestParam(name = "primary-job-category", required = false) String primaryJobCategory,
+		@RequestParam(name = "secondary-job-category", required = false) String secondaryJobCategory,
+		@RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+		@RequestParam(name = "end-date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+		@RequestParam(name = "page", defaultValue = "0") int page,
+		@RequestParam(name = "size", defaultValue = "10") int size) {
+		return ResponseEntity.ok(
+			interviewService.searchInterview(query, primaryJobCategory, secondaryJobCategory, startDate, endDate, page, size));
 	}
 }

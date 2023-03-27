@@ -2,7 +2,6 @@ package org.hoongoin.interviewbank.account.application.entity;
 
 import java.time.LocalDateTime;
 
-import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 
 import lombok.Builder;

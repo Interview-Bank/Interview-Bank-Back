@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.hoongoin.interviewbank.account.application.dto.*;
 import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
-import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;

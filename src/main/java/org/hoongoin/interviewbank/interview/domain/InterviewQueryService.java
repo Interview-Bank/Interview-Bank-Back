@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.interview.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
@@ -40,6 +41,18 @@ public class InterviewQueryService {
 		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByPageableOrderByCreateTimeDesc(
 			PageRequest.of(page, size));
 
+		return getInterviews(interviewEntityPage);
+	}
+
+	public List<Interview> searchInterview(String query, Long jobCategoryId, Date startDate, Date endDate, int page,
+		int size) {
+		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdAndStartDateAndEndDatePageableOrderByCreateTimeAsc(
+			query, jobCategoryId, startDate, endDate, PageRequest.of(page, size));
+
+		return getInterviews(interviewEntityPage);
+	}
+
+	private List<Interview> getInterviews(Page<InterviewEntity> interviewEntityPage) {
 		List<Interview> interviews = new ArrayList<>();
 
 		interviewEntityPage.forEach(
@@ -51,4 +64,5 @@ public class InterviewQueryService {
 			});
 		return interviews;
 	}
+
 }

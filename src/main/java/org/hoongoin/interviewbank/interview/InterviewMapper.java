@@ -21,7 +21,7 @@ public interface InterviewMapper {
 	default Interview interviewEntityToInterview(InterviewEntity interviewEntity, Account account) {
 		return new Interview(interviewEntity.getId(), interviewEntity.getTitle(), account.getAccountId(),
 			interviewEntity.getCreatedAt(), interviewEntity.getUpdatedAt(), interviewEntity.getDeletedAt(),
-			interviewEntity.getDeletedFlag());
+			interviewEntity.getDeletedFlag(), null, null);
 	}
 
 	default Question questionEntityToQuestion(QuestionEntity questionEntity) {
@@ -63,13 +63,14 @@ public interface InterviewMapper {
 		return questions;
 	}
 
-	default UpdateInterviewResponse questionsAndTitleToUpdateInterviewResponse(List<Question> questions, String title) {
+	default UpdateInterviewResponse questionsAndTitleToUpdateInterviewResponse(List<Question> questions, String title,
+		String primaryJobCategory, String secondaryJobCategory) {
 		List<UpdateInterviewResponse.Question> updateInterviewResponseQuestions = new ArrayList<>();
 
 		questions.forEach(question -> updateInterviewResponseQuestions.add(
 			new UpdateInterviewResponse.Question(question.getQuestionId(), question.getContent(),
 				question.getUpdatedAt())));
-		return new UpdateInterviewResponse(title, updateInterviewResponseQuestions);
+		return new UpdateInterviewResponse(title, updateInterviewResponseQuestions, primaryJobCategory, secondaryJobCategory);
 	}
 
 	default List<Question> createInterviewAndQuestionsRequestToQuestions(

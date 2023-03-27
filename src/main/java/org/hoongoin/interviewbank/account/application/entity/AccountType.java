@@ -1,4 +1,4 @@
-package org.hoongoin.interviewbank.account.infrastructure.entity;
+package org.hoongoin.interviewbank.account.application.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
