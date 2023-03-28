@@ -71,8 +71,9 @@ services:
     image: prom/prometheus
     expose:
       - "9090"
+    user: "0:0"
     volumes:
-      - ../../staging-yml/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ../staging-yml/prometheus.yml:/etc/prometheus/prometheus.yml
       - ../prometheus:/prometheus
     networks:
       backend:
@@ -83,6 +84,7 @@ services:
     image: "grafana/grafana"
     expose:
       - "3000"
+    user: "0:0"
     volumes:
       - ../staging-yml/grafana.ini:/etc/grafana/grafana.ini
       - ../grafana:/var/lib/grafana
