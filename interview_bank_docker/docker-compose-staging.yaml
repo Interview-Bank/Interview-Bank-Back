@@ -59,13 +59,13 @@ services:
     expose:
       - "6379"
     command:
-     - redis-server
+      - redis-server
     volumes:
       - ../datadir/redis:/data
     networks:
       backend:
         aliases:
-        - redis.interviewbank
+          - redis.interviewbank
 
   prometheus:
     image: prom/prometheus
@@ -78,7 +78,7 @@ services:
     networks:
       backend:
         aliases:
-        - prometheus.interviewbank
+          - prometheus.interviewbank
 
   grafana:
     image: "grafana/grafana"
@@ -91,4 +91,4 @@ services:
     networks:
       backend:
         aliases:
-        - grafana.interviewbank
+          - grafana.interviewbank
