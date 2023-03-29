@@ -58,11 +58,4 @@ public class Account {
 		}
 		this.email = email;
 	}
-
-	public void setPassword(String password) {
-		if (password == null) {
-			throw new IbValidationException("password null");
-		}
-		this.password = password;
-	}
 }
