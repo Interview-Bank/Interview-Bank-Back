@@ -33,6 +33,8 @@ services:
       backend:
     depends_on:
       - app
+      - grafana
+      - prometheus
 
   db:
     image: mysql:8.0
@@ -57,10 +59,36 @@ services:
     expose:
       - "6379"
     command:
-     - redis-server
+      - redis-server
     volumes:
       - ../datadir/redis:/data
     networks:
       backend:
         aliases:
-        - redis.interviewbank
+          - redis.interviewbank
+
+  prometheus:
+    image: prom/prometheus
+    expose:
+      - "9090"
+    user: "0:0"
+    volumes:
+      - ../staging-yml/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ../prometheus:/prometheus
+    networks:
+      backend:
+        aliases:
+          - prometheus.interviewbank
+
+  grafana:
+    image: "grafana/grafana"
+    expose:
+      - "3000"
+    user: "0:0"
+    volumes:
+      - ../staging-yml/grafana.ini:/etc/grafana/grafana.ini
+      - ../grafana:/var/lib/grafana
+    networks:
+      backend:
+        aliases:
+          - grafana.interviewbank
