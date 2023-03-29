@@ -63,11 +63,7 @@ public class GoogleOAuthService {
 		}
 	}
 
-	public Account googleLoginOrRegister(String authorizationCode, String state, String sessionId) {
-		if (!state.equals(sessionId)) {
-			throw new IbUnauthorizedException("Session Changed");
-		}
-
+	public Account googleLoginOrRegister(String authorizationCode) {
 		GoogleTokenResponse googleTokenResponse = exchangeCodeForAccessTokenAndIdToken(authorizationCode);
 
 		Account account = getUserInfoIn(googleTokenResponse.getIdToken());
