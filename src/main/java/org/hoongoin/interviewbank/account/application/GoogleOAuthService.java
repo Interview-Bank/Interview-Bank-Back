@@ -1,9 +1,5 @@
 package org.hoongoin.interviewbank.account.application;
 
-import static org.springframework.security.config.Elements.JWT;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 
 import org.hoongoin.interviewbank.account.application.dto.*;
@@ -25,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 @RequiredArgsConstructor

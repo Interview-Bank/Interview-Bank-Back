@@ -6,9 +6,11 @@ import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.application.NaverOAuthService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
+import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.session.SessionRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -24,6 +26,7 @@ public class NaverOAuthController {
 
 	private final NaverOAuthService naverOAuthService;
 	private final AccountMapper accountMapper;
+	private final SessionRepository sessionRepository;
 
 	@GetMapping("/login")
 	public ResponseEntity<Object> getNaverLoginUrl(HttpSession session) {
@@ -40,7 +43,11 @@ public class NaverOAuthController {
 		if(!error.isEmpty()){
 			throw new IbInternalServerException(error + errorDescription);
 		}
-		Account account = naverOAuthService.naverLoginOrRegister(authorizationCode, state, session.getId());
+
+		if(sessionRepository.findById(state) == null) {
+			throw new IbUnauthorizedException("Invalid session id");
+		}
+		Account account = naverOAuthService.naverLoginOrRegister(authorizationCode, state);
 		setAuthentication(account);
 		return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));
 	}

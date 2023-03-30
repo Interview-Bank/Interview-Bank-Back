@@ -9,9 +9,9 @@ import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
-import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -62,11 +62,7 @@ public class NaverOAuthService {
 		}
 	}
 
-	public Account naverLoginOrRegister(String authorizationCode, String state, String sessionId) {
-		if (!state.equals(sessionId)) {
-			throw new IbUnauthorizedException("Session Changed");
-		}
-
+	public Account naverLoginOrRegister(String authorizationCode, String state) {
 		NaverTokenResponse naverTokenResponse = exchangeCodeForAccessToken(authorizationCode, state);
 		NaverProfileResponse naverProfileResponse = getNaverProfileResponse(naverTokenResponse.getAccessToken());
 		Account account = getAccount(naverProfileResponse);
@@ -75,6 +71,7 @@ public class NaverOAuthService {
 
 	private NaverTokenResponse exchangeCodeForAccessToken(String authorizationCode, String state) {
 		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -94,13 +91,14 @@ public class NaverOAuthService {
 			NaverTokenResponse.class);
 
 		if(!tokenResponseEntity.hasBody()){
-			throw new IbInternalServerException("Google OAuth Failed");
+			throw new IbInternalServerException("Naver OAuth Failed");
 		}
 		return tokenResponseEntity.getBody();
 	}
 
 	private NaverProfileResponse getNaverProfileResponse(String accessToken){
 		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("Authorization", "Bearer " + accessToken);
