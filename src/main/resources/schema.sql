@@ -13,6 +13,16 @@ CREATE TABLE `account`
     UNIQUE KEY `unique_account` (`account_type`, `email`)
 );
 
+CREATE TABLE `job_category` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `name` CHAR(16) NOT NULL,
+    `parent_id` BIGINT,
+    `created_at` DATETIME,
+    `updated_at` DATETIME,
+    PRIMARY KEY (`id`),
+    CONSTRAINT FOREIGN KEY (`parent_id`) REFERENCES job_category (`id`)
+);
+
 CREATE TABLE `interview`
 (
     `id`           BIGINT        NOT NULL AUTO_INCREMENT,
@@ -22,8 +32,10 @@ CREATE TABLE `interview`
     `updated_at`   DATETIME(6),
     `title`        VARCHAR(128)  NOT NULL,
     `account_id`   BIGINT        NOT NULL,
+    `job_category_id` BIGINT,
     PRIMARY KEY (`id`),
-    CONSTRAINT FOREIGN KEY (`account_id`) REFERENCES `account` (`id`)
+    CONSTRAINT FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
+    CONSTRAINT FOREIGN KEY (`job_category_id`) REFERENCES `job_category` (`id`)
 );
 
 CREATE TABLE `question`

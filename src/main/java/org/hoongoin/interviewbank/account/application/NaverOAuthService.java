@@ -1,16 +1,13 @@
 package org.hoongoin.interviewbank.account.application;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import lombok.RequiredArgsConstructor;
 
 import org.hoongoin.interviewbank.account.application.dto.NaverTokenRequestParams;
 import org.hoongoin.interviewbank.account.application.dto.NaverTokenResponse;
 import org.hoongoin.interviewbank.account.application.dto.NaverProfileResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
-import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;

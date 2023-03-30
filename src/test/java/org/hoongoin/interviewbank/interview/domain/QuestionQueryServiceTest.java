@@ -53,7 +53,7 @@ class QuestionQueryServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, questionsRequest);
+			title, null, null, questionsRequest);
 
 		interviewService.createInterviewAndQuestionsByRequest(createInterviewAndQuestionsRequest,
 			testAccountEntity.getId());

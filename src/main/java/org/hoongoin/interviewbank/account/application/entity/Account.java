@@ -2,7 +2,6 @@ package org.hoongoin.interviewbank.account.application.entity;
 
 import java.time.LocalDateTime;
 
-import org.hoongoin.interviewbank.account.infrastructure.entity.AccountType;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 
 import lombok.Builder;
@@ -58,12 +57,5 @@ public class Account {
 			throw new IbValidationException("email larger than 320 length");
 		}
 		this.email = email;
-	}
-
-	public void setPassword(String password) {
-		if (password == null) {
-			throw new IbValidationException("password null");
-		}
-		this.password = password;
 	}
 }

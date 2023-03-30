@@ -63,7 +63,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, questionsRequest);
+			testTitle, null, null, questionsRequest);
 
 		//when
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
@@ -116,7 +116,7 @@ class InterviewControllerTest {
 		questions.add(newQuestion1);
 		questions.add(newQuestion2);
 
-		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(questions, updatedTitle);
+		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(questions, updatedTitle, null, null);
 
 		//when
 		ResponseEntity<UpdateInterviewResponse> updateInterviewResponse = interviewController.updateInterview(
@@ -124,8 +124,7 @@ class InterviewControllerTest {
 
 		//then
 		assertThat(updateInterviewResponse.getBody().getTitle()).isEqualTo(updatedTitle);
-		assertThat(updateInterviewResponse.getBody().getQuestions())
-			.extracting("content")
+		assertThat(updateInterviewResponse.getBody().getQuestions()).extracting("content")
 			.containsExactlyInAnyOrder("newContent1", "newContent2");
 	}
 
@@ -143,7 +142,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, questionsRequest);
+			testTitle, null, null, questionsRequest);
 
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
 			createInterviewAndQuestionsRequest);
@@ -173,7 +172,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, questionsRequest);
+			testTitle, null, null, questionsRequest);
 
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
 			createInterviewAndQuestionsRequest);

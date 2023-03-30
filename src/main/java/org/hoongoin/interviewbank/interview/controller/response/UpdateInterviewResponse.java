@@ -14,6 +14,8 @@ public class UpdateInterviewResponse {
 
 	private String title;
 	private List<UpdateInterviewResponse.Question> questions;
+	private String primaryJobCategory;
+	private String secondaryJobCategory;
 
 	@Getter
 	public static class Question {

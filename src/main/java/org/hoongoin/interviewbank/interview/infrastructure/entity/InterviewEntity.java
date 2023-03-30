@@ -38,8 +38,16 @@ public class InterviewEntity extends SoftDeletedBaseEntity {
 	@JoinColumn(nullable = false, name = "account_id")
 	private AccountEntity accountEntity;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "job_category_id")
+	private JobCategoryEntity jobCategoryEntity;
+
 	public void modifyEntity(String title) {
 		this.title = title;
+	}
+
+	public void setJobCategoryEntity(JobCategoryEntity jobCategoryEntity) {
+		this.jobCategoryEntity = jobCategoryEntity;
 	}
 
 	@Override
