@@ -1,5 +1,7 @@
 package org.hoongoin.interviewbank.account.application;
 
+import static org.springframework.security.config.Elements.JWT;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -9,18 +11,24 @@ import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
-import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 @RequiredArgsConstructor
 @Service
@@ -63,19 +71,15 @@ public class GoogleOAuthService {
 		}
 	}
 
-	public Account googleLoginOrRegister(String authorizationCode, String state, String sessionId) {
-		if (!state.equals(sessionId)) {
-			throw new IbUnauthorizedException("Session Changed");
-		}
-
+	public Account googleLoginOrRegister(String authorizationCode) {
 		GoogleTokenResponse googleTokenResponse = exchangeCodeForAccessTokenAndIdToken(authorizationCode);
-
 		Account account = getUserInfoIn(googleTokenResponse.getIdToken());
 		return accountCommandService.insertIfNotExists(account);
 	}
 
 	private GoogleTokenResponse exchangeCodeForAccessTokenAndIdToken(String authorizationCode) {
 		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -100,11 +104,16 @@ public class GoogleOAuthService {
 		return tokenResponseEntity.getBody();
 	}
 
-	private Account getUserInfoIn(String jwt) {
-		Claims claims = Jwts.parserBuilder().build().parseClaimsJwt(jwt).getBody();
+	private Account getUserInfoIn(String jwt){
+		String[] jwtParts = jwt.split("\\.");
+		String claimsJson = new String(Base64.getDecoder().decode(jwtParts[1]));
+
+		Gson gson = new Gson();
+		GoogleJwtPayload googleJwtPayload = gson.fromJson(claimsJson, GoogleJwtPayload.class);
+
 		return Account.builder()
-			.email(claims.get("email", String.class))
-			.nickname(claims.get("name", String.class))
+			.email(googleJwtPayload.getEmail())
+			.nickname(googleJwtPayload.getName())
 			.accountType(AccountType.GOOGLE)
 			.build();
 	}
