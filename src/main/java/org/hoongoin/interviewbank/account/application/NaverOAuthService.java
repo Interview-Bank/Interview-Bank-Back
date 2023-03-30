@@ -9,7 +9,6 @@ import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
-import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -62,7 +61,7 @@ public class NaverOAuthService {
 		}
 	}
 
-	public Account naverLoginOrRegister(String authorizationCode) {
+	public Account naverLoginOrRegister(String authorizationCode, String state) {
 		NaverTokenResponse naverTokenResponse = exchangeCodeForAccessToken(authorizationCode, state);
 		NaverProfileResponse naverProfileResponse = getNaverProfileResponse(naverTokenResponse.getAccessToken());
 		Account account = getAccount(naverProfileResponse);
@@ -90,7 +89,7 @@ public class NaverOAuthService {
 			NaverTokenResponse.class);
 
 		if(!tokenResponseEntity.hasBody()){
-			throw new IbInternalServerException("Google OAuth Failed");
+			throw new IbInternalServerException("Naver OAuth Failed");
 		}
 		return tokenResponseEntity.getBody();
 	}
