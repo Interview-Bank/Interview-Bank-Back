@@ -62,11 +62,7 @@ public class NaverOAuthService {
 		}
 	}
 
-	public Account naverLoginOrRegister(String authorizationCode, String state, String sessionId) {
-		if (!state.equals(sessionId)) {
-			throw new IbUnauthorizedException("Session Changed");
-		}
-
+	public Account naverLoginOrRegister(String authorizationCode) {
 		NaverTokenResponse naverTokenResponse = exchangeCodeForAccessToken(authorizationCode, state);
 		NaverProfileResponse naverProfileResponse = getNaverProfileResponse(naverTokenResponse.getAccessToken());
 		Account account = getAccount(naverProfileResponse);
