@@ -73,7 +73,6 @@ public class GoogleOAuthService {
 
 	public Account googleLoginOrRegister(String authorizationCode) {
 		GoogleTokenResponse googleTokenResponse = exchangeCodeForAccessTokenAndIdToken(authorizationCode);
-		System.out.println(googleTokenResponse.toString());
 		Account account = getUserInfoIn(googleTokenResponse.getIdToken());
 		return accountCommandService.insertIfNotExists(account);
 	}
