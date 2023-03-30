@@ -11,6 +11,7 @@ import org.hoongoin.interviewbank.account.domain.AccountCommandService;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -70,6 +71,7 @@ public class NaverOAuthService {
 
 	private NaverTokenResponse exchangeCodeForAccessToken(String authorizationCode, String state) {
 		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -96,6 +98,7 @@ public class NaverOAuthService {
 
 	private NaverProfileResponse getNaverProfileResponse(String accessToken){
 		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("Authorization", "Bearer " + accessToken);
