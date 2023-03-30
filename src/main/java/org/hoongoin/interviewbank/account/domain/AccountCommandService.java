@@ -51,6 +51,9 @@ public class AccountCommandService {
 			accountRepository.save(accountEntity);
 			account = accountMapper.accountEntityToAccount(accountEntity);
 		}
+		else{
+			account = accountMapper.accountEntityToAccount(optionalAccountEntity.get());
+		}
 		return account;
 	}
 
