@@ -86,3 +86,14 @@ CREATE TABLE `scrap_answer`
     PRIMARY KEY (`id`),
     CONSTRAINT FOREIGN KEY (`scrap_question_id`) REFERENCES `scrap_question` (`id`)
 );
+
+CREATE TABLE `inquiry` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(128) NOT NULL,
+    `email` VARCHAR(120) NOT NULL,
+    `content` VARCHAR(100000) NOT NULL,
+    `attachedFileUrl` VARCHAR(255),
+    `isAnswered` BOOLEAN NOT NULL,
+    `created_at` DATETIME(6) NOT NULL,
+    `updated_at` DATETIME(6) NOT NULL
+);
