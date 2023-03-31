@@ -2,11 +2,13 @@ package org.hoongoin.interviewbank.inquiry.controller;
 
 import org.hoongoin.interviewbank.inquiry.application.InquiryService;
 import org.hoongoin.interviewbank.inquiry.controller.request.InquiryRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,8 +19,11 @@ public class InquiryController {
 
 	private final InquiryService inquiryService;
 
-	@PostMapping
-	public ResponseEntity<Object> createInquiry(@RequestBody InquiryRequest inquiryRequest) {
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Object> createInquiry(
+		@RequestPart("inquiryRequest") InquiryRequest inquiryRequest,
+		@RequestPart(value = "file", required = false) MultipartFile file) {
+		//TODO: file upload to S3
 		inquiryService.createInquiry(inquiryRequest);
 		return ResponseEntity.ok().body(null);
 	}

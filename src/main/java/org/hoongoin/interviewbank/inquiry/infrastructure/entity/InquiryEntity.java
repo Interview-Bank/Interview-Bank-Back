@@ -38,4 +38,7 @@ public class InquiryEntity extends BaseEntity {
 
 	@Column(nullable = true)
 	private String attachedFileUrl;
+
+	@Column(nullable = false)
+	private Boolean isAnswered;
 }

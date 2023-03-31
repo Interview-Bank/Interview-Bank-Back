@@ -19,6 +19,7 @@ public class InquiryService {
 				.content(inquiryRequest.getContent())
 				.title(inquiryRequest.getTitle())
 				.email(inquiryRequest.getEmail())
+				.isAnswered(false)
 				.build());
 	}
 }
