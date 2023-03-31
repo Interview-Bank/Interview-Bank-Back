@@ -52,6 +52,9 @@ public class Inquiry {
 		if (content == null || content.isEmpty()) {
 			throw new IbValidationException("Content is required");
 		}
+		if (content.length() > 100000) {
+			throw new IbValidationException("Content over length of 100000");
+		}
 		this.content = content;
 	}
 }
