@@ -35,8 +35,11 @@ public class Inquiry {
 		String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(email);
-		if(!m.matches()) {
+		if (!m.matches()) {
 			throw new IbValidationException("Email is not valid");
+		}
+		if (email.length() > 120) {
+			throw new IbValidationException("Email over length of 120");
 		}
 		this.email = email;
 	}
@@ -44,6 +47,9 @@ public class Inquiry {
 	private void setTitle(String title) {
 		if (title == null || title.isEmpty()) {
 			throw new IbValidationException("Title is required");
+		}
+		if (title.length() > 128) {
+			throw new IbValidationException("Title over length of 128");
 		}
 		this.title = title;
 	}
