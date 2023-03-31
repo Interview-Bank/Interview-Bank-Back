@@ -7,7 +7,7 @@ CREATE TABLE `account`
     `updated_at`   DATETIME(6),
     `email`        VARCHAR(120)  NOT NULL,
     `nickname`     VARCHAR(20)   NOT NULL,
-    `password`     VARCHAR(61)   NOT NULL,
+    `password`     VARCHAR(61),
     `account_type` CHAR(6),
     PRIMARY KEY (`id`),
     UNIQUE KEY `unique_account` (`account_type`, `email`)
