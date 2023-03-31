@@ -39,12 +39,13 @@ public class NaverOAuthController {
 	@PostMapping("/login/redirect")
 	public ResponseEntity<Object> naverLoginOrRegister(HttpSession session,
 		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state,
-		@RequestParam(name = "error") String error, @RequestParam(name = "error_description") String errorDescription) {
-		if(!error.isEmpty()){
+		@RequestParam(name = "error", required = false) String error,
+		@RequestParam(name = "error_description", required = false) String errorDescription) {
+		if (!error.isEmpty()) {
 			throw new IbInternalServerException(error + errorDescription);
 		}
 
-		if(sessionRepository.findById(state) == null) {
+		if (sessionRepository.findById(state) == null) {
 			throw new IbUnauthorizedException("Invalid session id");
 		}
 		Account account = naverOAuthService.naverLoginOrRegister(authorizationCode, state);
