@@ -41,7 +41,7 @@ public class NaverOAuthController {
 		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state,
 		@RequestParam(name = "error", required = false) String error,
 		@RequestParam(name = "error_description", required = false) String errorDescription) {
-		if (!error.isEmpty()) {
+		if (error != null) {
 			throw new IbInternalServerException(error + errorDescription);
 		}
 
