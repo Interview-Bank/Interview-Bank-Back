@@ -72,8 +72,12 @@ public class NaverOAuthService {
 
 	private NaverTokenResponse exchangeCodeForAccessToken(String authorizationCode, String state) {
 		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
+		restTemplate.getMessageConverters().add(converter);
+
 		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		NaverTokenRequestParams requestParams = NaverTokenRequestParams.builder()
 			.clientId(naverClientId)
@@ -98,7 +102,11 @@ public class NaverOAuthService {
 
 	private NaverProfileResponse getNaverProfileResponse(String accessToken){
 		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
+		restTemplate.getMessageConverters().add(converter);
+
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("Authorization", "Bearer " + accessToken);
