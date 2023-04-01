@@ -17,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,12 +71,9 @@ public class NaverOAuthService {
 
 	private NaverTokenResponse exchangeCodeForAccessToken(String authorizationCode, String state) {
 		RestTemplate restTemplate = new RestTemplate();
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
-		restTemplate.getMessageConverters().add(converter);
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		NaverTokenRequestParams requestParams = NaverTokenRequestParams.builder()
 			.clientId(naverClientId)
@@ -102,13 +98,9 @@ public class NaverOAuthService {
 
 	private NaverProfileResponse getNaverProfileResponse(String accessToken){
 		RestTemplate restTemplate = new RestTemplate();
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
-		restTemplate.getMessageConverters().add(converter);
-
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("Authorization", "Bearer " + accessToken);
 
 		HttpEntity<String> httpRequestEntity = new HttpEntity<>(headers);
