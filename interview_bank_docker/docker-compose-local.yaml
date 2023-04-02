@@ -11,6 +11,8 @@ services:
       - ../local.env
     ports:
       - "8084:8084"
+    volumes:
+      - ../logs:/app/logs
     depends_on:
       - db
       - redis
@@ -53,7 +55,7 @@ services:
     volumes:
       - ../db-backup:/backup
     env_file:
-      - ../local.env
+      - ../db-backup/backup.env
     depends_on:
       - db
     networks:
