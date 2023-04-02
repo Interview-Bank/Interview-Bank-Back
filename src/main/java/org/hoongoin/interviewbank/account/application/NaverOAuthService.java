@@ -16,6 +16,7 @@ import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -79,34 +80,23 @@ public class NaverOAuthService {
 
 		HttpHeaders headers = new HttpHeaders();
 
-		NaverTokenRequestParams requestParams = NaverTokenRequestParams.builder()
-			.clientId(naverClientId)
-			.clientSecret(naverClientSecret)
-			.code(authorizationCode)
-			.grantType("authorization_code")
-			.state(state)
-			.build();
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(naverTokenUri)
+			.queryParam("grant_type", "authorization_code")
+			.queryParam("client_id", naverClientId)
+			.queryParam("client_secret", naverClientSecret)
+			.queryParam("code", authorizationCode)
+			.queryParam("state", state);
 
-		HttpEntity<NaverTokenRequestParams> httpEntity = new HttpEntity<>(requestParams, headers);
+		HttpEntity<String> httpEntity = new HttpEntity<>(headers);
 
-
-		try{
-			ResponseEntity<NaverTokenResponse> tokenResponseEntity = restTemplate.postForEntity(
-				naverTokenUri,
-				httpEntity,
-				NaverTokenResponse.class);
-
-		}catch(Exception e){
-			log.error("Naver OAuth Failed", e);
-			discordHandler.send(e);
+		ResponseEntity<NaverTokenResponse> tokenResponseEntity = restTemplate.postForEntity(
+			uriBuilder.toUriString(),
+			httpEntity,
+			NaverTokenResponse.class);
+		if (!tokenResponseEntity.hasBody()) {
 			throw new IbInternalServerException("Naver OAuth Failed");
 		}
-
-		// if(!tokenResponseEntity.hasBody()){
-		// 	throw new IbInternalServerException("Naver OAuth Failed");
-		// }
-		// return tokenResponseEntity.getBody();
-		return new NaverTokenResponse();
+		return tokenResponseEntity.getBody();
 	}
 
 	private NaverProfileResponse getNaverProfileResponse(String accessToken){
