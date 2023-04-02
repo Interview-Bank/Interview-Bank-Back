@@ -60,12 +60,12 @@ public class AccountCommandService {
 	@Transactional
 	public Account saveKakaoUserIfNotExists(KakaoUerInfoResponse kakaoUserInfoResponse) {
 		Optional<AccountEntity> optionalAccountEntity = accountRepository.findByEmailAndAccountType(
-			kakaoUserInfoResponse.getKakaoAccount().getEmail(), AccountType.NAVER);
+			kakaoUserInfoResponse.getKakao_account().getEmail(), AccountType.NAVER);
 		AccountEntity accountEntity = optionalAccountEntity.get();
 		if (optionalAccountEntity.isEmpty()) {
 			accountEntity = AccountEntity.builder()
-				.nickname(kakaoUserInfoResponse.getKakaoAccount().getProfile().getNickname())
-				.email(kakaoUserInfoResponse.getKakaoAccount().getEmail())
+				.nickname(kakaoUserInfoResponse.getKakao_account().getProfile().getNickname())
+				.email(kakaoUserInfoResponse.getKakao_account().getEmail())
 				.accountType(AccountType.KAKAO)
 				.build();
 			accountRepository.save(accountEntity);
