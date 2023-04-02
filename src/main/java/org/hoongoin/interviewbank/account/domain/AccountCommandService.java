@@ -61,8 +61,10 @@ public class AccountCommandService {
 	public Account saveKakaoUserIfNotExists(KakaoUerInfoResponse kakaoUserInfoResponse) {
 		Optional<AccountEntity> optionalAccountEntity = accountRepository.findByEmailAndAccountType(
 			kakaoUserInfoResponse.getKakao_account().getEmail(), AccountType.NAVER);
-		AccountEntity accountEntity = optionalAccountEntity.get();
-		if (optionalAccountEntity.isEmpty()) {
+		AccountEntity accountEntity;
+		if (optionalAccountEntity.isPresent()) {
+			accountEntity = optionalAccountEntity.get();
+		} else {
 			accountEntity = AccountEntity.builder()
 				.nickname(kakaoUserInfoResponse.getKakao_account().getProfile().getNickname())
 				.email(kakaoUserInfoResponse.getKakao_account().getEmail())
