@@ -3,7 +3,6 @@ package org.hoongoin.interviewbank.account.application;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.hoongoin.interviewbank.account.application.dto.NaverTokenRequestParams;
 import org.hoongoin.interviewbank.account.application.dto.NaverTokenResponse;
 import org.hoongoin.interviewbank.account.application.dto.NaverProfileResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
@@ -15,6 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -24,6 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -67,36 +72,41 @@ public class NaverOAuthService {
 		}
 	}
 
-	public Account naverLoginOrRegister(String authorizationCode, String state) {
-		NaverTokenResponse naverTokenResponse = exchangeCodeForAccessToken(authorizationCode, state);
-		NaverProfileResponse naverProfileResponse = getNaverProfileResponse(naverTokenResponse.getAccessToken());
+	public Account naverLoginOrRegister(String authorizationCode, String state) throws JsonProcessingException {
+		String accessToken = exchangeCodeForAccessToken(authorizationCode, state);
+		NaverProfileResponse naverProfileResponse = getNaverProfileResponse(accessToken);
 		Account account = getAccount(naverProfileResponse);
 		return accountCommandService.insertIfNotExists(account);
 	}
 
-	private NaverTokenResponse exchangeCodeForAccessToken(String authorizationCode, String state) {
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
+	private String exchangeCodeForAccessToken(String authorizationCode, String state) throws
+		JsonProcessingException {
 		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(naverTokenUri)
-			.queryParam("grant_type", "authorization_code")
-			.queryParam("client_id", naverClientId)
-			.queryParam("client_secret", naverClientSecret)
-			.queryParam("code", authorizationCode)
-			.queryParam("state", state);
+		// HTTP Body 생성
+		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		body.add("grant_type", "authorization_code");
+		body.add("client_id", naverClientId);
+		body.add("client_secret", naverClientSecret);
+		body.add("code", authorizationCode);
+		body.add("state", state);
 
-		HttpEntity<String> httpEntity = new HttpEntity<>(headers);
+		// HTTP 요청 보내기
+		HttpEntity<MultiValueMap<String, String>> naverTokenRequest =
+			new HttpEntity<>(body, headers);
+		RestTemplate rt = new RestTemplate();
+		ResponseEntity<String> response = rt.exchange(
+			"https://nid.naver.com/oauth2.0/token",
+			HttpMethod.POST,
+			naverTokenRequest,
+			String.class
+		);
 
-		ResponseEntity<NaverTokenResponse> tokenResponseEntity = restTemplate.postForEntity(
-			uriBuilder.toUriString(),
-			httpEntity,
-			NaverTokenResponse.class);
-		if (!tokenResponseEntity.hasBody()) {
-			throw new IbInternalServerException("Naver OAuth Failed");
-		}
-		return tokenResponseEntity.getBody();
+		String responseBody = response.getBody();
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode jsonNode = objectMapper.readTree(responseBody);
+		return jsonNode.get("access_token").asText();
 	}
 
 	private NaverProfileResponse getNaverProfileResponse(String accessToken){

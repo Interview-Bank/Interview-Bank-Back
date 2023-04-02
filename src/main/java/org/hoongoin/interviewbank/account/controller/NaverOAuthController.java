@@ -19,6 +19,8 @@ import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
 
 import javax.servlet.http.HttpSession;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/oauth/naver")
@@ -40,7 +42,8 @@ public class NaverOAuthController {
 	public ResponseEntity<Object> naverLoginOrRegister(HttpSession session,
 		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state,
 		@RequestParam(name = "error", required = false) String error,
-		@RequestParam(name = "error_description", required = false) String errorDescription) {
+		@RequestParam(name = "error_description", required = false) String errorDescription) throws
+		JsonProcessingException {
 		if (error != null) {
 			throw new IbInternalServerException(error + errorDescription);
 		}
