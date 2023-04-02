@@ -1,5 +1,6 @@
 staging.env filter=git-crypt diff=git-crypt
 local.env filter=git-crypt diff=git-crypt
+db-backup/backup.env filter=git-crypt diff=git-crypt
 src/main/resources/application-secret.yml filter=git-crypt diff=git-crypt
 *.key filter=git-crypt diff=git-crypt
 staging-yml/* filter=git-crypt diff=git-crypt

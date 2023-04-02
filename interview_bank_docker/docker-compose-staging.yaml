@@ -11,6 +11,8 @@ services:
       - ../staging.env
     expose:
       - "8084"
+    volumes:
+      - ../logs:/app/logs
     depends_on:
       - db
       - redis
@@ -96,7 +98,7 @@ services:
   backup:
     build: ../db-backup
     env_file:
-      - ../staging.env
+      - ../db-backup/backup.env
     volumes:
       - ../db-backup:/backup
     depends_on:
