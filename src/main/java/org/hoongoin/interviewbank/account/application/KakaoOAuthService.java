@@ -1,10 +1,8 @@
 package org.hoongoin.interviewbank.account.application;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +12,8 @@ import org.hoongoin.interviewbank.account.domain.AccountCommandService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -55,41 +55,47 @@ public class KakaoOAuthService {
 	}
 
 	public Account kakaoLoginOrRegister(String authorizationCode) throws URISyntaxException, JsonProcessingException {
-		RestTemplate restTemplate = new RestTemplate();
-		KakaoTokenRequestParams requestParams = KakaoTokenRequestParams.builder()
-			.clientId(kakaoClientId)
-			.clientSecret(kakaoClientSecret)
-			.code(authorizationCode)
-			.redirectUri(kakaoRedirectUri)
-			.grantType("authorization_code")
-			.build();
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<KakaoTokenRequestParams> httpRequestEntity = new HttpEntity<>(requestParams, headers);
-		ResponseEntity<String> tokenResponseJson = restTemplate.postForEntity(kakaoTokenUri, httpRequestEntity,
-			String.class);
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		KakaoTokenResponse kakaoTokenResponse = objectMapper.readValue(tokenResponseJson.getBody(),
-			new TypeReference<KakaoTokenResponse>() {
-			});
+		String accessToken = exchangeCodeForAccessToken(authorizationCode);
+		KakaoUerInfoResponse kakaoUserInfoResponse = getKakaoProfileRespnose(accessToken);
+		return accountCommandService.saveKakaoUserIfNotExists(kakaoUserInfoResponse);
+	}
 
-		HttpHeaders getProfileHeaders = new HttpHeaders();
-		getProfileHeaders.set("Authorization", "Bearer " + kakaoTokenResponse.getAccessToken());
-		getProfileHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.set("charset", "utf-8");
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		ResponseEntity<String> response = restTemplate.exchange(
-			kakaoProfileUri,
-			HttpMethod.GET,
-			entity,
+	private String exchangeCodeForAccessToken(String authorizationCode) throws JsonProcessingException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		body.add("grant_type", "authorization_code");
+		body.add("client_id", kakaoClientId);
+		body.add("client_secret", kakaoClientSecret);
+		body.add("code", authorizationCode);
+		body.add("redirect_uri", kakaoRedirectUri);
+
+		HttpEntity<MultiValueMap<String, String>> naverTokenRequest =
+			new HttpEntity<>(body, headers);
+		RestTemplate rt = new RestTemplate();
+		ResponseEntity<String> response = rt.exchange(
+			kakaoTokenUri,
+			HttpMethod.POST,
+			naverTokenRequest,
 			String.class
 		);
-		KakaoUerInfoResponse kakaoUserInfoResponse = objectMapper.readValue(tokenResponseJson.getBody(),
-			new TypeReference<KakaoUerInfoResponse>() {
-			});
+		String responseBody = response.getBody();
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode jsonNode = objectMapper.readTree(responseBody);
+		return jsonNode.get("access_token").asText();
+	}
 
-		return accountCommandService.saveKakaoUserIfNotExists(kakaoUserInfoResponse);
+	private KakaoUerInfoResponse getKakaoProfileRespnose(String accessToken) {
+		RestTemplate restTemplate = new RestTemplate();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + accessToken);
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+		HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
+
+		return restTemplate.exchange(kakaoProfileUri, HttpMethod.POST, kakaoProfileRequest, KakaoUerInfoResponse.class)
+			.getBody();
 	}
 }
