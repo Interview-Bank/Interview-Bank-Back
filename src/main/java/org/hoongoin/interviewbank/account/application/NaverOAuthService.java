@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.account.application;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.hoongoin.interviewbank.account.application.dto.NaverTokenRequestParams;
 import org.hoongoin.interviewbank.account.application.dto.NaverTokenResponse;
@@ -8,6 +9,7 @@ import org.hoongoin.interviewbank.account.application.dto.NaverProfileResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
+import org.hoongoin.interviewbank.common.discord.DiscordHandler;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -17,17 +19,18 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class NaverOAuthService {
 
 	private final AccountCommandService accountCommandService;
+	private final DiscordHandler discordHandler;
 	@Value("${spring.oauth2.client.registration.naver.auth-uri}")
 	private String naverAuthUri;
 	@Value("${spring.oauth2.client.registration.naver.token-uri}")
@@ -86,15 +89,24 @@ public class NaverOAuthService {
 
 		HttpEntity<NaverTokenRequestParams> httpEntity = new HttpEntity<>(requestParams, headers);
 
-		ResponseEntity<NaverTokenResponse> tokenResponseEntity = restTemplate.postForEntity(
-			naverTokenUri,
-			httpEntity,
-			NaverTokenResponse.class);
 
-		if(!tokenResponseEntity.hasBody()){
+		try{
+			ResponseEntity<NaverTokenResponse> tokenResponseEntity = restTemplate.postForEntity(
+				naverTokenUri,
+				httpEntity,
+				NaverTokenResponse.class);
+
+		}catch(Exception e){
+			log.error("Naver OAuth Failed", e);
+			discordHandler.send(e);
 			throw new IbInternalServerException("Naver OAuth Failed");
 		}
-		return tokenResponseEntity.getBody();
+
+		// if(!tokenResponseEntity.hasBody()){
+		// 	throw new IbInternalServerException("Naver OAuth Failed");
+		// }
+		// return tokenResponseEntity.getBody();
+		return new NaverTokenResponse();
 	}
 
 	private NaverProfileResponse getNaverProfileResponse(String accessToken){

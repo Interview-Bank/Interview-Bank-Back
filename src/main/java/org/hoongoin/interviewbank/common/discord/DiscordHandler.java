@@ -33,6 +33,15 @@ public class DiscordHandler {
 		}
 	}
 
+	public void send(Exception exception){
+		try {
+			String bodyMessage = MessageFactory.createStackTraceMessage(exception);
+			this.sendMessageToDiscord(bodyMessage);
+		} catch (Exception messageException) {
+			log.error(messageException.getMessage(), messageException);
+		}
+	}
+
 	private void sendMessageToDiscord(String message) {
 		discordCreator.getDiscordClient().getChannelById(Snowflake.of(channelId))
 			.createMessage(message)
