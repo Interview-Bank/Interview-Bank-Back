@@ -41,8 +41,8 @@ services:
     container_name: mysql
     expose:
       - "3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: "1234"
+    env_file:
+      - ../staging.env
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
@@ -92,3 +92,14 @@ services:
       backend:
         aliases:
           - grafana.interviewbank
+
+  backup:
+    build: ../db-backup
+    env_file:
+      - ../staging.env
+    volumes:
+      - ../db-backup:/backup
+    depends_on:
+      - db
+    networks:
+      backend:
