@@ -48,7 +48,7 @@ public class AccountService {
 	public Account loginByLoginRequest(LoginRequest loginRequest) {
 		Account account;
 		try {
-			account = accountQueryService.findAccountByEmail(loginRequest.getEmail());
+			account = accountQueryService.findAccountByEmailAndAccountType(loginRequest.getEmail(), AccountType.EMAIL);
 		} catch (IbEntityNotFoundException e) {
 			throw new IbLoginFailedException("Email or Password is not correct");
 		}
@@ -61,7 +61,8 @@ public class AccountService {
 	}
 
 	public void createPasswordResetTokenAndSendEmailByRequest(SendEmailRequest sendEmailRequest) {
-		Account account = accountQueryService.findAccountByEmail(sendEmailRequest.getEmail());
+		Account account = accountQueryService.findAccountByEmailAndAccountType(sendEmailRequest.getEmail(),
+			AccountType.EMAIL);
 
 		String hashedToken = passwordResetTokenProvider.createToken();
 		passwordResetTokenCommand.saveToken(account.getAccountId(), sendEmailRequest.getEmail(), hashedToken);

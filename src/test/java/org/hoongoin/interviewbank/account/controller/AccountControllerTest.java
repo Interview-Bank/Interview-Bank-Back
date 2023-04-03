@@ -2,6 +2,7 @@ package org.hoongoin.interviewbank.account.controller;
 
 import static org.assertj.core.api.Assertions.*;
 
+import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.response.LoginResponse;
@@ -50,6 +51,7 @@ class AccountControllerTest {
 		AccountEntity accountEntity = AccountEntity.builder()
 			.email("test@example.com")
 			.nickname("test")
+			.accountType(AccountType.EMAIL)
 			.password(passwordEncoder.encode("test"))
 			.build();
 		accountEntity = accountRepository.saveAndFlush(accountEntity);
