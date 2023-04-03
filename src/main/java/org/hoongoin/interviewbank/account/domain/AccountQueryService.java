@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.account.domain;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
+import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.account.application.entity.Account;
@@ -17,8 +18,9 @@ public class AccountQueryService {
 	private final AccountRepository accountRepository;
 	private final AccountMapper accountMapper;
 
-	public Account findAccountByEmail(String email) throws IbEntityNotFoundException, IbSoftDeleteException{
-		AccountEntity accountEntity = accountRepository.findByEmail(email)
+	public Account findAccountByEmailAndAccountType(String email, AccountType accountType) throws
+		IbEntityNotFoundException, IbSoftDeleteException {
+		AccountEntity accountEntity = accountRepository.findByEmailAndAccountType(email, accountType)
 			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 
 		isDeleted(accountEntity);
