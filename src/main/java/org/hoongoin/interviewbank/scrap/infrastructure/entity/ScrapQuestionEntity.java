@@ -38,7 +38,7 @@ public class ScrapQuestionEntity extends BaseEntity {
 	@JoinColumn(nullable = false, name = "scrap_id")
 	private ScrapEntity scrapEntity;
 
-	@Column(nullable = false, length = 1000)
+	@Column(nullable = false, length = 65535)
 	private String content;
 
 	@OneToMany(mappedBy = "scrapQuestionEntity")

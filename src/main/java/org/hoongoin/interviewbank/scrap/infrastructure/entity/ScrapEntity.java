@@ -40,7 +40,7 @@ public class ScrapEntity extends BaseEntity {
 	@JoinColumn(nullable = false, name = "interview_id")
 	private InterviewEntity interviewEntity;
 
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false, length = 128)
 	private String title;
 
 	public void modifyEntity(String title) {

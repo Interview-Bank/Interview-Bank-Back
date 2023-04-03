@@ -34,7 +34,7 @@ public class ScrapAnswerEntity extends BaseEntity {
 	@JoinColumn(nullable = false, name = "scrap_question_id")
 	private ScrapQuestionEntity scrapQuestionEntity;
 
-	@Column(nullable = true, length = 1000)
+	@Column(nullable = true, length = 65535)
 	private String content;
 
 	public void modifyEntity(String content) {
