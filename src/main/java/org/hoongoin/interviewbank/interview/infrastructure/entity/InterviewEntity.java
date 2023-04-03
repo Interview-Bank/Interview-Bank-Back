@@ -2,6 +2,8 @@ package org.hoongoin.interviewbank.interview.infrastructure.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +14,9 @@ import javax.persistence.Table;
 
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
+import org.hoongoin.interviewbank.interview.application.dto.InterviewModifyDto;
+import org.hoongoin.interviewbank.interview.enums.CareerYear;
+import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -42,12 +47,17 @@ public class InterviewEntity extends SoftDeletedBaseEntity {
 	@JoinColumn(name = "job_category_id")
 	private JobCategoryEntity jobCategoryEntity;
 
-	public void modifyEntity(String title) {
-		this.title = title;
-	}
+	@Enumerated(EnumType.STRING)
+	private InterviewPeriod interviewPeriod;
 
-	public void setJobCategoryEntity(JobCategoryEntity jobCategoryEntity) {
-		this.jobCategoryEntity = jobCategoryEntity;
+	@Enumerated(EnumType.STRING)
+	private CareerYear careerYear;
+
+	public void modifyEntity(InterviewModifyDto interviewModifyDto) {
+		this.title = interviewModifyDto.getTitle();
+		this.interviewPeriod = interviewModifyDto.getInterviewPeriod();
+		this.careerYear = interviewModifyDto.getCareerYear();
+		this.jobCategoryEntity = interviewModifyDto.getJobCategoryEntity();
 	}
 
 	@Override

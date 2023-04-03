@@ -12,6 +12,8 @@ import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
+import org.hoongoin.interviewbank.interview.enums.CareerYear;
+import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
@@ -69,7 +71,8 @@ class QuestionCommandServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(innerQuestions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			savedInterviewEntity.getTitle(), null, null, questionsRequest);
+			savedInterviewEntity.getTitle(), null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR,
+			questionsRequest);
 
 		//when
 		List<Question> questions = questionCommandService.insertQuestions(
@@ -127,7 +130,8 @@ class QuestionCommandServiceTest {
 		//when
 		List<Question> updatedQuestions = questionCommandService.updateQuestions(
 			interviewMapper.updateInterviewRequestToQuestions(
-				new UpdateInterviewRequest(updatingQuestions, savedInterviewEntity.getTitle(), null, null),
+				new UpdateInterviewRequest(updatingQuestions, savedInterviewEntity.getTitle(), null, null,
+					InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR),
 				savedInterviewEntity.getId()));
 
 		//then

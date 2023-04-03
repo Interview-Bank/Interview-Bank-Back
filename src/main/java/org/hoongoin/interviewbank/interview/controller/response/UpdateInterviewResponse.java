@@ -3,6 +3,9 @@ package org.hoongoin.interviewbank.interview.controller.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hoongoin.interviewbank.interview.enums.CareerYear;
+import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +19,8 @@ public class UpdateInterviewResponse {
 	private List<UpdateInterviewResponse.Question> questions;
 	private String primaryJobCategory;
 	private String secondaryJobCategory;
+	private InterviewPeriod interviewPeriod;
+	private CareerYear careerYear;
 
 	@Getter
 	public static class Question {
