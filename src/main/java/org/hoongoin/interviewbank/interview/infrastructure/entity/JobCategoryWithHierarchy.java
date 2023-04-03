@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JobCategoryDTO {
+public class JobCategoryWithHierarchy {
 
 	private Long firstLevelId;
 	private String firstLevelName;
