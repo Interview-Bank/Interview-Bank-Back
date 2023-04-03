@@ -33,7 +33,7 @@ public class InquiryEntity extends BaseEntity {
 	@Column(nullable = false, length = 120)
 	private String email;
 
-	@Column(nullable = false, length = 100000)
+	@Column(nullable = false, length = 65535)
 	private String content;
 
 	@Column(nullable = true)
