@@ -5,8 +5,8 @@ CREATE TABLE account
     deleted_at TIMESTAMP(6),
     deleted_flag BOOLEAN DEFAULT FALSE NOT NULL,
     updated_at TIMESTAMP(6),
-    email CHAR(120) NOT NULL,
-    nickname CHAR(20) NOT NULL,
+    email CHAR(254) NOT NULL,
+    nickname CHAR(48) NOT NULL,
     password CHAR(61),
     account_type CHAR(6),
     PRIMARY KEY (id)
