@@ -30,7 +30,7 @@ public class JobCategoryEntity extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(nullable = false, columnDefinition = "char")
+	@Column(nullable = false)
 	private String name;
 
 	@ManyToOne(fetch = FetchType.LAZY)
