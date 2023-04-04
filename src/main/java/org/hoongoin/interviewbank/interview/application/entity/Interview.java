@@ -3,6 +3,8 @@ package org.hoongoin.interviewbank.interview.application.entity;
 import java.time.LocalDateTime;
 
 import org.hoongoin.interviewbank.exception.IbValidationException;
+import org.hoongoin.interviewbank.interview.enums.CareerYear;
+import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +19,7 @@ public class Interview {
 	@Builder
 	public Interview(Long interviewId, String title, Long accountId, LocalDateTime createdAt,
 		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag, String primaryJobCategory,
-		String secondaryJobCategory) {
+		String secondaryJobCategory, InterviewPeriod interviewPeriod, CareerYear careerYear) {
 		this.setInterviewId(interviewId);
 		this.setTitle(title);
 		this.setAccountId(accountId);
@@ -27,6 +29,8 @@ public class Interview {
 		this.setDeletedFlag(deletedFlag);
 		this.setPrimaryJobCategory(primaryJobCategory);
 		this.setSecondaryJobCategory(secondaryJobCategory);
+		this.setInterviewPeriod(interviewPeriod);
+		this.setCareerYear(careerYear);
 	}
 
 	private Long interviewId;
@@ -38,6 +42,8 @@ public class Interview {
 	private Boolean deletedFlag;
 	private String primaryJobCategory;
 	private String secondaryJobCategory;
+	private CareerYear careerYear;
+	private InterviewPeriod interviewPeriod;
 
 	public void setTitle(String title) {
 		if (validateTitle(title)) {

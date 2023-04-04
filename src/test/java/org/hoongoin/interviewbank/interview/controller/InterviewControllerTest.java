@@ -16,6 +16,8 @@ import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRe
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
+import org.hoongoin.interviewbank.interview.enums.CareerYear;
+import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
@@ -63,7 +65,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, null, null, questionsRequest);
+			testTitle, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		//when
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
@@ -116,7 +118,8 @@ class InterviewControllerTest {
 		questions.add(newQuestion1);
 		questions.add(newQuestion2);
 
-		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(questions, updatedTitle, null, null);
+		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(questions, updatedTitle, null, null,
+			InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR);
 
 		//when
 		ResponseEntity<UpdateInterviewResponse> updateInterviewResponse = interviewController.updateInterview(
@@ -142,7 +145,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, null, null, questionsRequest);
+			testTitle, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
 			createInterviewAndQuestionsRequest);
@@ -172,7 +175,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, null, null, questionsRequest);
+			testTitle, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
 			createInterviewAndQuestionsRequest);

@@ -12,6 +12,8 @@ import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.exception.IbAccountNotMatchException;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
+import org.hoongoin.interviewbank.interview.enums.CareerYear;
+import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
@@ -109,7 +111,8 @@ class InterviewEntityCommandServiceTest {
 		updatedQuestions.add(updatedQuestion1);
 		updatedQuestions.add(updatedQuestion2);
 
-		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle, null, null);
+		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle, null,
+			null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR);
 
 		//when
 		Interview updatedInterview = interviewCommandService.updateInterview(
@@ -164,7 +167,8 @@ class InterviewEntityCommandServiceTest {
 		updatedQuestions.add(updatedQuestion1);
 		updatedQuestions.add(updatedQuestion2);
 
-		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle, null,null);
+		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle, null,
+			null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR);
 
 		Interview testInterview = Interview.builder().title(updateInterviewRequest.getTitle()).build();
 

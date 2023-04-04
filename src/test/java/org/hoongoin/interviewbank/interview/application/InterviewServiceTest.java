@@ -17,6 +17,8 @@ import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
+import org.hoongoin.interviewbank.interview.enums.CareerYear;
+import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +62,7 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, null, null, questionsRequest);
+			title, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		//when
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
@@ -92,7 +94,7 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, null, null, questionsRequest);
+			title, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		//when //then
 		assertThatThrownBy(
@@ -117,7 +119,7 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, null, null, questionsRequest);
+			title, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		//when
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
@@ -143,7 +145,7 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, null, null, questionsRequest);
+			title, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
@@ -175,7 +177,7 @@ class InterviewServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, null, null, questionsRequest);
+			title, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());

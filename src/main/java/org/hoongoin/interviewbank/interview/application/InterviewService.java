@@ -48,6 +48,8 @@ public class InterviewService {
 				.primaryJobCategory(createInterviewAndQuestionsRequest.getPrimaryJobCategory())
 				.secondaryJobCategory(createInterviewAndQuestionsRequest.getSecondaryJobCategory())
 				.accountId(accountId)
+				.interviewPeriod(createInterviewAndQuestionsRequest.getInterviewPeriod())
+				.careerYear(createInterviewAndQuestionsRequest.getCareerYear())
 				.build());
 
 		List<Question> questions = questionCommandService.insertQuestions(
@@ -63,7 +65,7 @@ public class InterviewService {
 			createdInterview.getTitle(), createdInterview.getInterviewId(),
 			createInterviewAndQuestionsRequest.getPrimaryJobCategory(),
 			createInterviewAndQuestionsRequest.getSecondaryJobCategory(), createInterviewAndQuestionsResponseQuiestions,
-			createdInterview.getCreatedAt());
+			createdInterview.getCreatedAt(), createdInterview.getInterviewPeriod(), createdInterview.getCareerYear());
 
 		validateQuestionsSize(createInterviewAndQuestionsResponse.getQuestions().size());
 
@@ -78,6 +80,8 @@ public class InterviewService {
 				.title(updateInterviewRequest.getTitle())
 				.primaryJobCategory(updateInterviewRequest.getPrimaryJobCategory())
 				.secondaryJobCategory(updateInterviewRequest.getSecondaryJobCategory())
+				.interviewPeriod(updateInterviewRequest.getInterviewPeriod())
+				.careerYear(updateInterviewRequest.getCareerYear())
 				.build(),
 			interviewId, accountId);
 
@@ -88,7 +92,8 @@ public class InterviewService {
 
 		UpdateInterviewResponse updateInterviewResponse = interviewMapper.questionsAndTitleToUpdateInterviewResponse(
 			updatedQuestions, interview.getTitle(), updateInterviewRequest.getPrimaryJobCategory(),
-			updateInterviewRequest.getSecondaryJobCategory());
+			updateInterviewRequest.getSecondaryJobCategory(), interview.getInterviewPeriod(),
+			interview.getCareerYear());
 
 		validateQuestionsSize(updateInterviewResponse.getQuestions().size());
 

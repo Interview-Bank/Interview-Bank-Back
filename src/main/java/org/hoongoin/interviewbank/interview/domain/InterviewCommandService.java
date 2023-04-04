@@ -7,6 +7,7 @@ import org.hoongoin.interviewbank.exception.IbAccountNotMatchException;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;;
 
+import org.hoongoin.interviewbank.interview.application.dto.InterviewModifyDto;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
@@ -36,6 +37,8 @@ public class InterviewCommandService {
 			.title(interview.getTitle())
 			.accountEntity(selectedAccountEntity)
 			.jobCategoryEntity(jobCategoryEntity)
+			.interviewPeriod(interview.getInterviewPeriod())
+			.careerYear(interview.getCareerYear())
 			.build();
 
 		InterviewEntity savedInterviewEntity = interviewRepository.save(interviewEntity);
@@ -63,8 +66,7 @@ public class InterviewCommandService {
 		JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityByJobCategory(
 			interview.getPrimaryJobCategory(),
 			interview.getSecondaryJobCategory());
-		interviewEntity.modifyEntity(interview.getTitle());
-		interviewEntity.setJobCategoryEntity(jobCategoryEntity);
+		interviewEntity.modifyEntity(new InterviewModifyDto(interview.getTitle(), interview.getInterviewPeriod(), interview.getCareerYear(), jobCategoryEntity));
 
 		return interviewMapper.interviewEntityToInterview(interviewEntity,
 			accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()));
