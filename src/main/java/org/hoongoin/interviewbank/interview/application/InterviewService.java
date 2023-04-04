@@ -14,6 +14,7 @@ import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRe
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
+import org.hoongoin.interviewbank.interview.controller.response.FindMyInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
@@ -158,5 +159,13 @@ public class InterviewService {
 		if (questionSize > 1000 || questionSize < 1) {
 			throw new IbValidationException("Question Size");
 		}
+	}
+
+	public FindMyInterviewResponse findInterviewsByAccountId(long requestingAccountId, int page, int size) {
+		List<Interview> interviews = interviewQueryService.findInterviewsByAccountIdAndPageAndSize(requestingAccountId,
+			page, size);
+
+		Account account = accountQueryService.findAccountByAccountId(requestingAccountId);
+		return interviewMapper.interviewsToFindMyInterviewResponses(interviews, account.getNickname());
 	}
 }
