@@ -65,4 +65,16 @@ public class InterviewQueryService {
 		return interviews;
 	}
 
+	public List<Interview> findInterviewsByAccountIdAndPageAndSize(long requestingAccountId, int page, int size) {
+		Page<InterviewEntity> interviewPage = interviewRepository.findByAccountEntityIdAndDeleteFlag(
+			PageRequest.of(page, size), requestingAccountId);
+		List<InterviewEntity> interviewEntities = interviewPage.getContent();
+
+		List<Interview> interviews = new ArrayList<>();
+
+		interviewEntities
+			.forEach(interviewEntity -> interviews.add(interviewMapper.interviewEntityToInterview(interviewEntity,
+				accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()))));
+		return interviews;
+	}
 }

@@ -1,5 +1,7 @@
 package org.hoongoin.interviewbank.interview.infrastructure.repository;
 
+import static org.hoongoin.interviewbank.interview.infrastructure.entity.QInterviewEntity.*;
+
 import java.util.Date;
 
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
@@ -8,9 +10,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 
-public interface InterviewRepository extends JpaRepository<InterviewEntity, Long> {
+import com.querydsl.core.types.dsl.BooleanExpression;
+
+public interface InterviewRepository extends JpaRepository<InterviewEntity, Long>,
+	QuerydslPredicateExecutor<InterviewEntity> {
 
 	@Query("SELECT interview FROM InterviewEntity interview ORDER BY interview.createdAt DESC")
 	Page<InterviewEntity> findAllByPageableOrderByCreateTimeDesc(Pageable pageable);
@@ -25,4 +31,10 @@ public interface InterviewRepository extends JpaRepository<InterviewEntity, Long
 	Page<InterviewEntity> findAllByTitleAndJobCategoryIdAndStartDateAndEndDatePageableOrderByCreateTimeAsc(
 		@Param("query") String query, @Param("job_category_id") Long jobCategoryId, @Param("start_date") Date startDate,
 		@Param("end_date") Date endDate, Pageable pageable);
+
+	default Page<InterviewEntity> findByAccountEntityIdAndDeleteFlag(Pageable pageable, long accountId) {
+		BooleanExpression hasAccountId = interviewEntity.accountEntity.id.eq(accountId);
+		BooleanExpression hasDeleteFlag = interviewEntity.deletedFlag.eq(Boolean.FALSE);
+		return findAll(hasAccountId.and(hasDeleteFlag), pageable);
+	}
 }

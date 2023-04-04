@@ -10,10 +10,13 @@ import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRe
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
+import org.hoongoin.interviewbank.interview.controller.response.FindMyInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
 import org.hoongoin.interviewbank.interview.application.InterviewService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,6 +81,17 @@ public class InterviewController {
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size) {
 		return ResponseEntity.ok(
-			interviewService.searchInterview(query, primaryJobCategory, secondaryJobCategory, startDate, endDate, page, size));
+			interviewService.searchInterview(query, primaryJobCategory, secondaryJobCategory, startDate, endDate, page,
+				size));
+	}
+
+	@GetMapping("/me")
+	public ResponseEntity<FindMyInterviewResponse> findMyInterview(
+		@RequestParam(name = "page", defaultValue = "0") int page,
+		@RequestParam(name = "size", defaultValue = "10") int size) {
+		long requestingAccountId = getRequestingAccountId();
+		return ResponseEntity.ok()
+			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.body(interviewService.findInterviewsByAccountId(requestingAccountId, page, size));
 	}
 }

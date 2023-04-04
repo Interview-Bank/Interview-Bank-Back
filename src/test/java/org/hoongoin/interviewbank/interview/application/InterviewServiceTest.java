@@ -16,9 +16,11 @@ import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewA
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
+import org.hoongoin.interviewbank.interview.controller.response.FindMyInterviewResponse;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
+import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,9 @@ class InterviewServiceTest {
 
 	@Autowired
 	private InterviewService interviewService;
+
+	@Autowired
+	private InterviewRepository interviewRepository;
 
 	@Autowired
 	private AccountMapper accountMapper;
@@ -194,6 +199,76 @@ class InterviewServiceTest {
 		//then
 		assertThat(deletedQuestions).isEmpty();
 
+	}
+
+	@Test
+	void findInterviewsByAccountId_Success_Page1() {
+		//given
+		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+
+		String title = "title";
+
+		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
+		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
+
+		List<QuestionsRequest.Question> questions = new ArrayList<>();
+
+		questions.add(question1);
+		questions.add(question2);
+
+		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
+
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
+			title, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+
+		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
+			createInterviewAndQuestionsRequest, testAccountEntity.getId());
+		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse2 = interviewService.createInterviewAndQuestionsByRequest(
+			createInterviewAndQuestionsRequest, testAccountEntity.getId());
+		//when
+		FindMyInterviewResponse findMyInterviewResponse = interviewService.findInterviewsByAccountId(
+			testAccountEntity.getId(), 0, 10);
+
+		//then
+		assertThat(findMyInterviewResponse.getInterviews()).hasSize(2);
+		assertThat(findMyInterviewResponse.getInterviews().get(0).getTitle()).isEqualTo(
+			createInterviewAndQuestionsResponse.getTitle());
+	}
+
+	@Test
+	void findInterviewsByAccountId_Success_Delete() {
+		//given
+		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+
+		String title = "title";
+
+		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
+		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
+
+		List<QuestionsRequest.Question> questions = new ArrayList<>();
+
+		questions.add(question1);
+		questions.add(question2);
+
+		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
+
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
+			title, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+
+		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
+			createInterviewAndQuestionsRequest, testAccountEntity.getId());
+		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse2 = interviewService.createInterviewAndQuestionsByRequest(
+			createInterviewAndQuestionsRequest, testAccountEntity.getId());
+		interviewService.deleteInterviewById(createInterviewAndQuestionsResponse2.getInterviewId(),
+			testAccountEntity.getId());
+		//when
+		FindMyInterviewResponse findMyInterviewResponse = interviewService.findInterviewsByAccountId(
+			testAccountEntity.getId(), 0, 10);
+
+		//then
+		assertThat(findMyInterviewResponse.getInterviews()).hasSize(1);
+		assertThat(findMyInterviewResponse.getInterviews().get(0).getInterviewId()).isEqualTo(
+			createInterviewAndQuestionsResponse.getInterviewId());
 	}
 
 	private AccountEntity createTestAccountEntity() {
