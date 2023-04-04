@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class JobCategory {
 
-	private String primaryJobCategory;
-	private String secondaryJobCategory;
+	private long jobCategoryId;
+	private String firstLevelName;
+	private String secondLevelName;
 }

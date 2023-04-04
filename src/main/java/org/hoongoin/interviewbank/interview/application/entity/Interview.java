@@ -18,8 +18,8 @@ public class Interview {
 
 	@Builder
 	public Interview(Long interviewId, String title, Long accountId, LocalDateTime createdAt,
-		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag, String primaryJobCategory,
-		String secondaryJobCategory, InterviewPeriod interviewPeriod, CareerYear careerYear) {
+		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag, Long jobCategoryId,
+		InterviewPeriod interviewPeriod, CareerYear careerYear) {
 		this.setInterviewId(interviewId);
 		this.setTitle(title);
 		this.setAccountId(accountId);
@@ -27,8 +27,7 @@ public class Interview {
 		this.setUpdatedAt(updatedAt);
 		this.setDeletedAt(deletedAt);
 		this.setDeletedFlag(deletedFlag);
-		this.setPrimaryJobCategory(primaryJobCategory);
-		this.setSecondaryJobCategory(secondaryJobCategory);
+		this.setJobCategoryId(jobCategoryId);
 		this.setInterviewPeriod(interviewPeriod);
 		this.setCareerYear(careerYear);
 	}
@@ -40,8 +39,7 @@ public class Interview {
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;
 	private Boolean deletedFlag;
-	private String primaryJobCategory;
-	private String secondaryJobCategory;
+	private Long jobCategoryId;
 	private CareerYear careerYear;
 	private InterviewPeriod interviewPeriod;
 

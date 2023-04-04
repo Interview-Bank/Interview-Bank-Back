@@ -27,5 +27,6 @@ public class FindInterviewPageResponse {
 		private String title;
 		private InterviewPeriod interviewPeriod;
 		private CareerYear careerYear;
+		private JobCategoryResponse jobCategory;
 	}
 }

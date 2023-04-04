@@ -1,6 +1,5 @@
 package org.hoongoin.interviewbank.interview.domain;
 
-import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.exception.IbAccountNotMatchException;
@@ -24,27 +23,35 @@ public class InterviewCommandService {
 	private final AccountRepository accountRepository;
 	private final JobCategoryQueryService jobCategoryQueryService;
 	private final InterviewMapper interviewMapper;
-	private final AccountMapper accountMapper;
 
 	public Interview insertInterview(Interview interview) {
 		AccountEntity selectedAccountEntity = accountRepository.findById(interview.getAccountId())
 			.orElseThrow(() -> new IbEntityNotFoundException("AccountEntity"));
 
-		JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityByJobCategory(
-			interview.getPrimaryJobCategory(),
-			interview.getSecondaryJobCategory());
-		InterviewEntity interviewEntity = InterviewEntity.builder()
-			.title(interview.getTitle())
-			.accountEntity(selectedAccountEntity)
-			.jobCategoryEntity(jobCategoryEntity)
-			.interviewPeriod(interview.getInterviewPeriod())
-			.careerYear(interview.getCareerYear())
-			.build();
+		InterviewEntity interviewEntity;
+		if(interview.getJobCategoryId() != null){
+			JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityById(
+				interview.getJobCategoryId());
+			interviewEntity = InterviewEntity.builder()
+				.title(interview.getTitle())
+				.accountEntity(selectedAccountEntity)
+				.jobCategoryEntity(jobCategoryEntity)
+				.interviewPeriod(interview.getInterviewPeriod())
+				.careerYear(interview.getCareerYear())
+				.build();
+		}
+		else{
+			interviewEntity = InterviewEntity.builder()
+				.title(interview.getTitle())
+				.accountEntity(selectedAccountEntity)
+				.interviewPeriod(interview.getInterviewPeriod())
+				.careerYear(interview.getCareerYear())
+				.build();
+		}
 
 		InterviewEntity savedInterviewEntity = interviewRepository.save(interviewEntity);
 
-		return interviewMapper.interviewEntityToInterview(savedInterviewEntity,
-			accountMapper.accountEntityToAccount(selectedAccountEntity));
+		return interviewMapper.interviewEntityToInterview(savedInterviewEntity, selectedAccountEntity.getId());
 	}
 
 	public long deleteInterview(long interviewId, long accountId) {
@@ -63,13 +70,16 @@ public class InterviewCommandService {
 
 		isMatchInterviewAndAccount(accountId, interviewEntity);
 
-		JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityByJobCategory(
-			interview.getPrimaryJobCategory(),
-			interview.getSecondaryJobCategory());
-		interviewEntity.modifyEntity(new InterviewModifyDto(interview.getTitle(), interview.getInterviewPeriod(), interview.getCareerYear(), jobCategoryEntity));
+		JobCategoryEntity jobCategoryEntity = null;
+		if(interview.getJobCategoryId() != null) {
+			jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityById(
+				interview.getJobCategoryId());
+		}
+		interviewEntity.modifyEntity(
+			new InterviewModifyDto(interview.getTitle(), interview.getInterviewPeriod(), interview.getCareerYear(),
+		  		jobCategoryEntity));
 
-		return interviewMapper.interviewEntityToInterview(interviewEntity,
-			accountMapper.accountEntityToAccount(interviewEntity.getAccountEntity()));
+		return interviewMapper.interviewEntityToInterview(interviewEntity, interviewEntity.getAccountEntity().getId());
 	}
 
 	private void isMatchInterviewAndAccount(long accountId, InterviewEntity interviewEntity) {

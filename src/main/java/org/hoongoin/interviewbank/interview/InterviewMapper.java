@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
-import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
+import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindMyInterviewResponse;
-import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
-import org.hoongoin.interviewbank.interview.enums.CareerYear;
-import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
@@ -21,11 +19,32 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface InterviewMapper {
 
-	default Interview interviewEntityToInterview(InterviewEntity interviewEntity, Account account) {
-		return new Interview(interviewEntity.getId(), interviewEntity.getTitle(), account.getAccountId(),
-			interviewEntity.getCreatedAt(), interviewEntity.getUpdatedAt(), interviewEntity.getDeletedAt(),
-			interviewEntity.getDeletedFlag(), null, null, interviewEntity.getInterviewPeriod(),
-			interviewEntity.getCareerYear());
+	default Interview interviewEntityToInterview(InterviewEntity interviewEntity, Long accountId) {
+		if (interviewEntity.getJobCategoryEntity() == null) {
+			return Interview.builder()
+				.interviewId(interviewEntity.getId())
+				.title(interviewEntity.getTitle())
+				.accountId(accountId)
+				.createdAt(interviewEntity.getCreatedAt())
+				.updatedAt(interviewEntity.getUpdatedAt())
+				.deletedAt(interviewEntity.getDeletedAt())
+				.deletedFlag(interviewEntity.getDeletedFlag())
+				.interviewPeriod(interviewEntity.getInterviewPeriod())
+				.careerYear(interviewEntity.getCareerYear())
+				.build();
+		}
+		return Interview.builder()
+			.interviewId(interviewEntity.getId())
+			.title(interviewEntity.getTitle())
+			.accountId(accountId)
+			.createdAt(interviewEntity.getCreatedAt())
+			.updatedAt(interviewEntity.getUpdatedAt())
+			.deletedAt(interviewEntity.getDeletedAt())
+			.deletedFlag(interviewEntity.getDeletedFlag())
+			.jobCategoryId(interviewEntity.getJobCategoryEntity().getId())
+			.interviewPeriod(interviewEntity.getInterviewPeriod())
+			.careerYear(interviewEntity.getCareerYear())
+			.build();
 	}
 
 	default Question questionEntityToQuestion(QuestionEntity questionEntity) {
@@ -36,21 +55,11 @@ public interface InterviewMapper {
 			.build();
 	}
 
-	default FindInterviewResponse questionListAndInterviewToFindInterviewResponse(List<Question> questions,
-		Interview interview) {
-		List<FindInterviewResponse.Question> findInterviewResponseQuestions = new ArrayList<>();
-		questions.forEach(question -> findInterviewResponseQuestions.add(
-			new FindInterviewResponse.Question(question.getQuestionId(), question.getContent(), question.getCreatedAt(),
-				question.getUpdatedAt(), question.getDeletedAt(), question.getDeletedFlag())));
-		return new FindInterviewResponse(interview.getInterviewId(), interview.getTitle(), interview.getAccountId(),
-			interview.getCreatedAt(), interview.getUpdatedAt(), interview.getDeletedAt(), interview.getDeletedFlag(),
-			findInterviewResponseQuestions, interview.getInterviewPeriod(), interview.getCareerYear());
-	}
-
 	default FindInterviewPageResponse.Interview interviewAndNicknameToFindInterviewPageResponseInterview(
-		Interview interview, Account account) {
+		Interview interview, Account account, JobCategoryResponse jobCategoryResponse) {
 		return new FindInterviewPageResponse.Interview(interview.getInterviewId(), account.getNickname(),
-			interview.getCreatedAt(), interview.getTitle(), interview.getInterviewPeriod(), interview.getCareerYear());
+			interview.getCreatedAt(), interview.getTitle(), interview.getInterviewPeriod(), interview.getCareerYear(),
+			jobCategoryResponse);
 	}
 
 	default List<Question> updateInterviewRequestToQuestions(UpdateInterviewRequest updateInterviewRequest,
@@ -65,18 +74,6 @@ public interface InterviewMapper {
 					.build())
 			);
 		return questions;
-	}
-
-	default UpdateInterviewResponse questionsAndTitleToUpdateInterviewResponse(List<Question> questions, String title,
-		String primaryJobCategory, String secondaryJobCategory, InterviewPeriod interviewPeriod,
-		CareerYear careerYear) {
-		List<UpdateInterviewResponse.Question> updateInterviewResponseQuestions = new ArrayList<>();
-
-		questions.forEach(question -> updateInterviewResponseQuestions.add(
-			new UpdateInterviewResponse.Question(question.getQuestionId(), question.getContent(),
-				question.getUpdatedAt())));
-		return new UpdateInterviewResponse(title, updateInterviewResponseQuestions, primaryJobCategory,
-			secondaryJobCategory, interviewPeriod, careerYear);
 	}
 
 	default List<Question> createInterviewAndQuestionsRequestToQuestions(
@@ -94,6 +91,12 @@ public interface InterviewMapper {
 
 		return questions;
 	}
+
+	Interview createInterviewAndQuestionsRequestToInterview(CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest, long accountId);
+
+	JobCategoryResponse jobCategoryToJobCategoryRespnose(JobCategory jobCategory);
+
+	Interview updateInterviewRequestToInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId);
 
 	default FindMyInterviewResponse interviewsToFindMyInterviewResponses(List<Interview> interviews,
 		String nickname) {

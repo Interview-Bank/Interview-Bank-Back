@@ -18,9 +18,11 @@ import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
 
 @Transactional
 @IbSpringBootTest
+@Sql(scripts = {"classpath:/account-data.sql", "classpath:/job-category-data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class QuestionQueryServiceTest {
 
 	@Autowired
@@ -55,7 +57,7 @@ class QuestionQueryServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		interviewService.createInterviewAndQuestionsByRequest(createInterviewAndQuestionsRequest,
 			testAccountEntity.getId());

@@ -112,7 +112,7 @@ class InterviewEntityCommandServiceTest {
 		updatedQuestions.add(updatedQuestion2);
 
 		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle, null,
-			null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR);
+			InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR);
 
 		//when
 		Interview updatedInterview = interviewCommandService.updateInterview(
@@ -168,7 +168,7 @@ class InterviewEntityCommandServiceTest {
 		updatedQuestions.add(updatedQuestion2);
 
 		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(updatedQuestions, newTitle, null,
-			null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR);
+			InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR);
 
 		Interview testInterview = Interview.builder().title(updateInterviewRequest.getTitle()).build();
 

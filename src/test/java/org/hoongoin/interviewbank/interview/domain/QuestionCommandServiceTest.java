@@ -71,7 +71,7 @@ class QuestionCommandServiceTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(innerQuestions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			savedInterviewEntity.getTitle(), null, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR,
+			savedInterviewEntity.getTitle(), 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR,
 			questionsRequest);
 
 		//when
@@ -130,7 +130,7 @@ class QuestionCommandServiceTest {
 		//when
 		List<Question> updatedQuestions = questionCommandService.updateQuestions(
 			interviewMapper.updateInterviewRequestToQuestions(
-				new UpdateInterviewRequest(updatingQuestions, savedInterviewEntity.getTitle(), null, null,
+				new UpdateInterviewRequest(updatingQuestions, savedInterviewEntity.getTitle(), null,
 					InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR),
 				savedInterviewEntity.getId()));
 
