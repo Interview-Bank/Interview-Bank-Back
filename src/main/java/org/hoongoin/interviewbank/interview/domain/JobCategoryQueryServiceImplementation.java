@@ -1,6 +1,9 @@
 package org.hoongoin.interviewbank.interview.domain;
 
+import java.util.List;
+
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryWithHierarchy;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.JobCategoryRepository;
 import org.springframework.stereotype.Service;
@@ -43,5 +46,10 @@ public class JobCategoryQueryServiceImplementation implements JobCategoryQuerySe
 				.orElseThrow(() -> new IbEntityNotFoundException("Job Category"));
 		}
 		return jobCategoryEntity;
+	}
+
+	@Override
+	public List<JobCategoryWithHierarchy> findAllJobCategoriesWithHierarchy() {
+		return jobCategoryRepository.findAllJobCategoriesWithHierarchy();
 	}
 }
