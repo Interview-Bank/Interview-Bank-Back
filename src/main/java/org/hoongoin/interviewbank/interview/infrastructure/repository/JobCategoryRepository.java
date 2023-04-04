@@ -27,7 +27,9 @@ public interface JobCategoryRepository extends JpaRepository<JobCategoryEntity, 
 		"WHERE firstLevel.parentJobCategory IS NULL")
 	List<JobCategoryWithHierarchy> findAllJobCategoriesWithHierarchy();
 
-	@Query("SELECT new org.hoongoin.interviewbank.interview.application.entity.JobCategory(jc.id, pjc.name, jc.name) " +
+	@Query("SELECT new org.hoongoin.interviewbank.interview.application.entity.JobCategory(jc.id, " +
+		"COALESCE(pjc.name, jc.name), " +
+		"CASE WHEN pjc.name IS NULL THEN NULL ELSE jc.name END) " +
 		"FROM JobCategoryEntity jc " +
 		"LEFT JOIN jc.parentJobCategory pjc " +
 		"WHERE jc.id = :job_category_id")
