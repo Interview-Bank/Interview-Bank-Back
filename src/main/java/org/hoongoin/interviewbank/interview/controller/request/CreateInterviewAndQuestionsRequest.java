@@ -13,7 +13,7 @@ import lombok.Setter;
 public class CreateInterviewAndQuestionsRequest {
 
 	private String title;
-	private Long jobCategoryId;
+	private long jobCategoryId;
 	private InterviewPeriod interviewPeriod;
 	private CareerYear careerYear;
 	private QuestionsRequest questionsRequest;

@@ -7,11 +7,13 @@ import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class UpdateInterviewResponse {
 

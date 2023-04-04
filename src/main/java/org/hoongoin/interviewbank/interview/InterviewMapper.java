@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
@@ -22,7 +23,20 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface InterviewMapper {
 
-	default Interview interviewEntityToInterview(InterviewEntity interviewEntity, Long accountId, Long jobCategoryId) {
+	default Interview interviewEntityToInterview(InterviewEntity interviewEntity, Long accountId) {
+		if (interviewEntity.getJobCategoryEntity() == null) {
+			return Interview.builder()
+				.interviewId(interviewEntity.getId())
+				.title(interviewEntity.getTitle())
+				.accountId(accountId)
+				.createdAt(interviewEntity.getCreatedAt())
+				.updatedAt(interviewEntity.getUpdatedAt())
+				.deletedAt(interviewEntity.getDeletedAt())
+				.deletedFlag(interviewEntity.getDeletedFlag())
+				.interviewPeriod(interviewEntity.getInterviewPeriod())
+				.careerYear(interviewEntity.getCareerYear())
+				.build();
+		}
 		return Interview.builder()
 			.interviewId(interviewEntity.getId())
 			.title(interviewEntity.getTitle())
@@ -31,7 +45,7 @@ public interface InterviewMapper {
 			.updatedAt(interviewEntity.getUpdatedAt())
 			.deletedAt(interviewEntity.getDeletedAt())
 			.deletedFlag(interviewEntity.getDeletedFlag())
-			.jobCategoryId(jobCategoryId)
+			.jobCategoryId(interviewEntity.getJobCategoryEntity().getId())
 			.interviewPeriod(interviewEntity.getInterviewPeriod())
 			.careerYear(interviewEntity.getCareerYear())
 			.build();
@@ -43,17 +57,6 @@ public interface InterviewMapper {
 			.interviewId(questionEntity.getInterviewEntity().getId())
 			.content(questionEntity.getContent())
 			.build();
-	}
-
-	default FindInterviewResponse questionListAndInterviewToFindInterviewResponse(List<Question> questions,
-		Interview interview, JobCategoryResponse jobCategoryResponse) {
-		List<FindInterviewResponse.Question> findInterviewResponseQuestions = new ArrayList<>();
-		questions.forEach(question -> findInterviewResponseQuestions.add(
-			new FindInterviewResponse.Question(question.getQuestionId(), question.getContent(), question.getCreatedAt(),
-				question.getUpdatedAt(), question.getDeletedAt(), question.getDeletedFlag())));
-		return new FindInterviewResponse(interview.getInterviewId(), interview.getTitle(), interview.getAccountId(),
-			interview.getCreatedAt(), interview.getUpdatedAt(), interview.getDeletedAt(), interview.getDeletedFlag(),
-			findInterviewResponseQuestions, interview.getInterviewPeriod(), interview.getCareerYear(), jobCategoryResponse);
 	}
 
 	default FindInterviewPageResponse.Interview interviewAndNicknameToFindInterviewPageResponseInterview(
@@ -77,19 +80,6 @@ public interface InterviewMapper {
 		return questions;
 	}
 
-	default UpdateInterviewResponse questionsAndTitleToUpdateInterviewResponse(List<Question> questions, String title,
-		Long jobCategoryId, InterviewPeriod interviewPeriod,
-		CareerYear careerYear, FullJobCategory fullJobCategory) {
-		List<UpdateInterviewResponse.Question> updateInterviewResponseQuestions = new ArrayList<>();
-
-		questions.forEach(question -> updateInterviewResponseQuestions.add(
-			new UpdateInterviewResponse.Question(question.getQuestionId(), question.getContent(),
-				question.getUpdatedAt())));
-		return new UpdateInterviewResponse(title, updateInterviewResponseQuestions, jobCategoryId, interviewPeriod,
-			careerYear, new JobCategoryResponse(fullJobCategory.getJobCategoryId(), fullJobCategory.getFirstLevelName(),
-			fullJobCategory.getSecondLevelName()));
-	}
-
 	default List<Question> createInterviewAndQuestionsRequestToQuestions(
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest, long interviewId) {
 		List<Question> questions = new ArrayList<>();
@@ -106,5 +96,9 @@ public interface InterviewMapper {
 		return questions;
 	}
 
-	JobCategoryResponse fullJobCategoryToJobCategoryResponse(FullJobCategory fullJobCategory);
+	Interview createInterviewAndQuestionsRequestToInterview(CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest, long accountId);
+
+	JobCategoryResponse jobCategoryToJobCategoryRespnose(JobCategory jobCategory);
+
+	Interview updateInterviewRequestToInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId);
 }

@@ -31,8 +31,7 @@ public class InterviewQueryService {
 			throw new IbSoftDeleteException("Interview");
 		}
 
-		return interviewMapper.interviewEntityToInterview(interviewEntity, interviewEntity.getAccountEntity().getId(),
-			null);
+		return interviewMapper.interviewEntityToInterview(interviewEntity, interviewEntity.getAccountEntity().getId());
 	}
 
 	public List<Interview> findInterviewListByPageAndSize(int page, int size) {
@@ -57,7 +56,7 @@ public class InterviewQueryService {
 			interviewEntity -> {
 				if (Boolean.FALSE.equals(interviewEntity.getDeletedFlag())) {
 					interviews.add(interviewMapper.interviewEntityToInterview(interviewEntity,
-						interviewEntity.getAccountEntity().getId(), null));
+						interviewEntity.getAccountEntity().getId()));
 				}
 			});
 		return interviews;

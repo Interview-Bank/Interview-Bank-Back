@@ -51,8 +51,7 @@ public class InterviewCommandService {
 
 		InterviewEntity savedInterviewEntity = interviewRepository.save(interviewEntity);
 
-		return interviewMapper.interviewEntityToInterview(savedInterviewEntity, selectedAccountEntity.getId(),
-			interview.getJobCategoryId());
+		return interviewMapper.interviewEntityToInterview(savedInterviewEntity, selectedAccountEntity.getId());
 	}
 
 	public long deleteInterview(long interviewId, long accountId) {
@@ -78,10 +77,9 @@ public class InterviewCommandService {
 		}
 		interviewEntity.modifyEntity(
 			new InterviewModifyDto(interview.getTitle(), interview.getInterviewPeriod(), interview.getCareerYear(),
-				jobCategoryEntity));
+		  		jobCategoryEntity));
 
-		return interviewMapper.interviewEntityToInterview(interviewEntity, interviewEntity.getAccountEntity().getId(),
-			interview.getJobCategoryId());
+		return interviewMapper.interviewEntityToInterview(interviewEntity, interviewEntity.getAccountEntity().getId());
 	}
 
 	private void isMatchInterviewAndAccount(long accountId, InterviewEntity interviewEntity) {

@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @IbSpringBootTest
 @Transactional
-@Sql(scripts = "classpath:/account-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = {"classpath:/account-data.sql", "classpath:/job-category-data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class InterviewControllerTest {
 
 	@Autowired
@@ -61,7 +61,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+			testTitle, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		//when
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
@@ -114,7 +114,7 @@ class InterviewControllerTest {
 		questions.add(newQuestion1);
 		questions.add(newQuestion2);
 
-		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(questions, updatedTitle, null,
+		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(questions, updatedTitle, 1L,
 			InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR);
 
 		//when
@@ -141,7 +141,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+			testTitle, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
 			createInterviewAndQuestionsRequest);
@@ -171,7 +171,7 @@ class InterviewControllerTest {
 		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, null, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+			testTitle, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
 			createInterviewAndQuestionsRequest);

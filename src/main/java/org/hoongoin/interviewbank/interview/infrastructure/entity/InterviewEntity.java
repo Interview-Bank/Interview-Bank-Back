@@ -43,7 +43,7 @@ public class InterviewEntity extends SoftDeletedBaseEntity {
 	@JoinColumn(nullable = false, name = "account_id")
 	private AccountEntity accountEntity;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "job_category_id")
 	private JobCategoryEntity jobCategoryEntity;
 

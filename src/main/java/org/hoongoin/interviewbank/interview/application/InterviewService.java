@@ -8,6 +8,7 @@ import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
+import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
@@ -23,7 +24,6 @@ import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
 import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
 import org.hoongoin.interviewbank.interview.domain.QuestionCommandService;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
-import org.hoongoin.interviewbank.interview.infrastructure.entity.FullJobCategory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,38 +47,18 @@ public class InterviewService {
 
 		validateQuestionsSize(createInterviewAndQuestionsRequest.getQuestionsRequest().getQuestions().size());
 
-		Interview createdInterview = interviewCommandService.insertInterview(
-			Interview.builder()
-				.title(createInterviewAndQuestionsRequest.getTitle())
-				.jobCategoryId(createInterviewAndQuestionsRequest.getJobCategoryId())
-				.accountId(accountId)
-				.interviewPeriod(createInterviewAndQuestionsRequest.getInterviewPeriod())
-				.careerYear(createInterviewAndQuestionsRequest.getCareerYear())
-				.build());
+		Interview interviewToCreate = interviewMapper.createInterviewAndQuestionsRequestToInterview(
+			createInterviewAndQuestionsRequest, accountId);
+		Interview createdInterview = interviewCommandService.insertInterview(interviewToCreate);
 
-		FullJobCategory fullJobCategory;
-		if(createInterviewAndQuestionsRequest.getJobCategoryId() != null) {
-			fullJobCategory = jobCategoryQueryService.findFullJobCategoryById(createInterviewAndQuestionsRequest.getJobCategoryId());
-		} else {
-			fullJobCategory = new FullJobCategory();
-		}
+		JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(
+			createInterviewAndQuestionsRequest.getJobCategoryId());
 
 		List<Question> questions = questionCommandService.insertQuestions(
 			interviewMapper.createInterviewAndQuestionsRequestToQuestions(createInterviewAndQuestionsRequest,
 				createdInterview.getInterviewId()), createdInterview.getInterviewId());
 
-		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
-
-		questions.forEach(question -> createInterviewAndQuestionsResponseQuiestions.add(
-			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getInterviewId())));
-		JobCategoryResponse jobCategoryResponse = new JobCategoryResponse(fullJobCategory.getJobCategoryId(),
-			fullJobCategory.getFirstLevelName(), fullJobCategory.getSecondLevelName());
-
-		return new CreateInterviewAndQuestionsResponse(
-			createdInterview.getTitle(), createdInterview.getInterviewId(),
-			createInterviewAndQuestionsResponseQuiestions,
-			createdInterview.getCreatedAt(), createdInterview.getInterviewPeriod(), createdInterview.getCareerYear(),
-			jobCategoryResponse);
+		return makeCreateInterviewAndQuestionsResponse(createdInterview, jobCategory, questions);
 	}
 
 	@Transactional
@@ -87,29 +67,17 @@ public class InterviewService {
 
 		validateQuestionsSize(updateInterviewRequest.getQuestions().size());
 
-		Interview interview = interviewCommandService.updateInterview(
-			Interview.builder()
-				.title(updateInterviewRequest.getTitle())
-				.jobCategoryId(updateInterviewRequest.getJobCategoryId())
-				.interviewPeriod(updateInterviewRequest.getInterviewPeriod())
-				.careerYear(updateInterviewRequest.getCareerYear())
-				.build(),
+		Interview interviewToUpdate = interviewMapper.updateInterviewRequestToInterview(updateInterviewRequest,
 			interviewId, accountId);
+		Interview interview = interviewCommandService.updateInterview(interviewToUpdate, interviewId, accountId);
 
-		FullJobCategory fullJobCategory;
-		if(updateInterviewRequest.getJobCategoryId() != null) {
-			fullJobCategory = jobCategoryQueryService.findFullJobCategoryById(updateInterviewRequest.getJobCategoryId());
-		} else {
-			fullJobCategory = new FullJobCategory();
-		}
+		JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(updateInterviewRequest.getJobCategoryId());
 
 		List<Question> newQuestions = interviewMapper.updateInterviewRequestToQuestions(updateInterviewRequest,
 			interviewId);
-
 		List<Question> updatedQuestions = questionCommandService.updateQuestions(newQuestions);
 
-		return interviewMapper.questionsAndTitleToUpdateInterviewResponse(updatedQuestions, interview.getTitle(),
-			interview.getJobCategoryId(), interview.getInterviewPeriod(), interview.getCareerYear(), fullJobCategory);
+		return makeUpdateInterviewResponse(interview, jobCategory, updatedQuestions);
 	}
 
 	@Transactional
@@ -124,26 +92,17 @@ public class InterviewService {
 	@Transactional(readOnly = true)
 	public FindInterviewResponse findInterviewById(long interviewId) {
 		Interview interview = interviewQueryService.findInterviewById(interviewId);
-		FullJobCategory fullJobCategory;
-		if(interview.getJobCategoryId() != null) {
-			fullJobCategory = jobCategoryQueryService.findFullJobCategoryById(interview.getJobCategoryId());
-		} else {
-			fullJobCategory = new FullJobCategory();
-		}
+		JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(interview.getJobCategoryId());
 
 		List<Question> questions = questionQueryService.findQuestionsByInterviewId(
 			interview.getInterviewId());
 
-		validateQuestionsSize(questions.size());
-
-		JobCategoryResponse jobCategoryResponse = interviewMapper.fullJobCategoryToJobCategoryResponse(fullJobCategory);
-		return interviewMapper.questionListAndInterviewToFindInterviewResponse(questions, interview, jobCategoryResponse);
+		return makeFindInterviewResponse(interview, jobCategory, questions);
 	}
 
 	@Transactional(readOnly = true)
 	public FindInterviewPageResponse findInterviewPageByPageAndSize(int page, int size) {
 		List<Interview> interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
-
 		return getFindInterviewPageResponse(interviews);
 	}
 
@@ -158,21 +117,69 @@ public class InterviewService {
 		return getFindInterviewPageResponse(interviews);
 	}
 
+	private CreateInterviewAndQuestionsResponse makeCreateInterviewAndQuestionsResponse(Interview createdInterview,
+		JobCategory jobCategory, List<Question> questions) {
+		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
+		questions.forEach(question -> createInterviewAndQuestionsResponseQuiestions.add(
+			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getInterviewId())));
+
+		return CreateInterviewAndQuestionsResponse.builder()
+			.title(createdInterview.getTitle())
+			.interviewId(createdInterview.getInterviewId())
+			.questions(createInterviewAndQuestionsResponseQuiestions)
+			.interviewPeriod(createdInterview.getInterviewPeriod())
+			.careerYear(createdInterview.getCareerYear())
+			.jobCategory(interviewMapper.jobCategoryToJobCategoryRespnose(jobCategory))
+			.build();
+	}
+
+	private UpdateInterviewResponse makeUpdateInterviewResponse(Interview interview, JobCategory jobCategory, List<Question> questions) {
+
+		List<UpdateInterviewResponse.Question> updateInterviewResponseQuestions = new ArrayList<>();
+
+		questions.forEach(question -> updateInterviewResponseQuestions.add(
+			new UpdateInterviewResponse.Question(question.getQuestionId(), question.getContent(),
+				question.getUpdatedAt())));
+
+		return UpdateInterviewResponse.builder()
+			.title(interview.getTitle())
+			.questions(updateInterviewResponseQuestions)
+			.interviewPeriod(interview.getInterviewPeriod())
+			.careerYear(interview.getCareerYear())
+			.jobCategory(interviewMapper.jobCategoryToJobCategoryRespnose(jobCategory))
+			.build();
+	}
+
+	private FindInterviewResponse makeFindInterviewResponse(Interview interview, JobCategory jobCategory,
+		List<Question> questions) {
+
+		List<FindInterviewResponse.Question> findInterviewResponseQuestions = new ArrayList<>();
+		questions.forEach(question -> findInterviewResponseQuestions.add(
+			new FindInterviewResponse.Question(question.getQuestionId(), question.getContent(), question.getCreatedAt(),
+				question.getUpdatedAt(), question.getDeletedAt(), question.getDeletedFlag())));
+
+		return FindInterviewResponse.builder()
+			.interviewId(interview.getInterviewId())
+			.title(interview.getTitle())
+			.accountId(interview.getAccountId())
+			.createdAt(interview.getCreatedAt())
+			.updatedAt(interview.getUpdatedAt())
+			.questions(findInterviewResponseQuestions)
+			.interviewPeriod(interview.getInterviewPeriod())
+			.careerYear(interview.getCareerYear())
+			.jobCategory(interviewMapper.jobCategoryToJobCategoryRespnose(jobCategory))
+			.build();
+	}
+
 	private FindInterviewPageResponse getFindInterviewPageResponse(List<Interview> interviews) {
 		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
-		for(Interview interview: interviews){
-			FullJobCategory fullJobCategory;
-			if(interview.getJobCategoryId() != null) {
-				fullJobCategory = jobCategoryQueryService.findFullJobCategoryById(interview.getJobCategoryId());
-			} else {
-				fullJobCategory = new FullJobCategory();
-			}
+		for (Interview interview : interviews) {
+			JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(interview.getJobCategoryId());
+			JobCategoryResponse jobCategoryResponse = interviewMapper.jobCategoryToJobCategoryRespnose(jobCategory);
 
-			JobCategoryResponse jobCategoryResponse = interviewMapper.fullJobCategoryToJobCategoryResponse(fullJobCategory);
 			findInterviewPageResponseInterview.add(
 				interviewMapper.interviewAndNicknameToFindInterviewPageResponseInterview(interview,
 					findAccountByInterview(interview), jobCategoryResponse));
-
 		}
 		return new FindInterviewPageResponse(findInterviewPageResponseInterview);
 	}

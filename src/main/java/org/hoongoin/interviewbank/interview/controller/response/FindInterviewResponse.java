@@ -7,11 +7,13 @@ import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class FindInterviewResponse {
 
@@ -20,8 +22,6 @@ public class FindInterviewResponse {
 	private Long accountId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
-	private LocalDateTime deletedAt;
-	private Boolean deletedFlag;
 	private List<Question> questions;
 	private InterviewPeriod interviewPeriod;
 	private CareerYear careerYear;
