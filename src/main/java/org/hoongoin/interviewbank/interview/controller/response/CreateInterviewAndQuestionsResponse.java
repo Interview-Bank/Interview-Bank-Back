@@ -17,12 +17,12 @@ public class CreateInterviewAndQuestionsResponse {
 
 	private String title;
 	private Long interviewId;
-	private String primaryJobCategory;
-	private String secondaryJobCategory;
 	private List<Question> questions;
 	private LocalDateTime interviewCreatedAt;
 	private InterviewPeriod interviewPeriod;
 	private CareerYear careerYear;
+
+	private JobCategoryResponse jobCategory;
 
 	@Getter
 	@Setter

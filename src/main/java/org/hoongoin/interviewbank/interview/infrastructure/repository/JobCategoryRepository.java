@@ -3,6 +3,7 @@ package org.hoongoin.interviewbank.interview.infrastructure.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.hoongoin.interviewbank.interview.infrastructure.entity.FullJobCategory;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryWithHierarchy;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +26,10 @@ public interface JobCategoryRepository extends JpaRepository<JobCategoryEntity, 
 		"LEFT JOIN JobCategoryEntity secondLevel ON firstLevel.id = secondLevel.parentJobCategory.id " +
 		"WHERE firstLevel.parentJobCategory IS NULL")
 	List<JobCategoryWithHierarchy> findAllJobCategoriesWithHierarchy();
+
+	@Query("SELECT new org.hoongoin.interviewbank.interview.infrastructure.entity.FullJobCategory(jc.id, pjc.name, jc.name) " +
+		"FROM JobCategoryEntity jc " +
+		"LEFT JOIN jc.parentJobCategory pjc " +
+		"WHERE jc.id = :job_category_id")
+	Optional<FullJobCategory> findFullJobCategoryById(@Param("job_category_id") long jobCategoryId);
 }

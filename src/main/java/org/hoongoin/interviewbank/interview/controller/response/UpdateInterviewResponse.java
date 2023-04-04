@@ -17,10 +17,10 @@ public class UpdateInterviewResponse {
 
 	private String title;
 	private List<UpdateInterviewResponse.Question> questions;
-	private String primaryJobCategory;
-	private String secondaryJobCategory;
+	private Long jobCategoryId;
 	private InterviewPeriod interviewPeriod;
 	private CareerYear careerYear;
+	private JobCategoryResponse jobCategory;
 
 	@Getter
 	public static class Question {

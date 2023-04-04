@@ -25,6 +25,7 @@ public class FindInterviewResponse {
 	private List<Question> questions;
 	private InterviewPeriod interviewPeriod;
 	private CareerYear careerYear;
+	private JobCategoryResponse jobCategory;
 
 	@Getter
 	public static class Question {

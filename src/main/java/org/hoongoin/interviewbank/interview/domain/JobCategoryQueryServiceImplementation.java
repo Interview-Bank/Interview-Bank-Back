@@ -3,6 +3,7 @@ package org.hoongoin.interviewbank.interview.domain;
 import java.util.List;
 
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.FullJobCategory;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryWithHierarchy;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.JobCategoryRepository;
@@ -16,6 +17,7 @@ public class JobCategoryQueryServiceImplementation implements JobCategoryQuerySe
 
 	private final JobCategoryRepository jobCategoryRepository;
 
+	@Override
 	public Long findJobCategoryIdByJobCategoryName(String primaryJobCategory, String secondaryJobCategory) {
 		Long jobCategoryId = null;
 		if (primaryJobCategory != null && secondaryJobCategory != null) {
@@ -31,6 +33,7 @@ public class JobCategoryQueryServiceImplementation implements JobCategoryQuerySe
 		return jobCategoryId;
 	}
 
+	@Override
 	public JobCategoryEntity findJobCategoryEntityByJobCategory(String primaryCategory, String secondaryCategory) {
 		JobCategoryEntity jobCategoryEntity;
 		if (primaryCategory == null){
@@ -51,5 +54,17 @@ public class JobCategoryQueryServiceImplementation implements JobCategoryQuerySe
 	@Override
 	public List<JobCategoryWithHierarchy> findAllJobCategoriesWithHierarchy() {
 		return jobCategoryRepository.findAllJobCategoriesWithHierarchy();
+	}
+
+	@Override
+	public JobCategoryEntity findJobCategoryEntityById(Long jobCategoryId){
+		return jobCategoryRepository.findById(jobCategoryId)
+				.orElseThrow(() -> new IbEntityNotFoundException("Job Category"));
+	}
+
+	@Override
+	public FullJobCategory findFullJobCategoryById(Long jobCategoryId){
+		return jobCategoryRepository.findFullJobCategoryById(jobCategoryId)
+			.orElseThrow(() -> new IbEntityNotFoundException("Job Category"));
 	}
 }
