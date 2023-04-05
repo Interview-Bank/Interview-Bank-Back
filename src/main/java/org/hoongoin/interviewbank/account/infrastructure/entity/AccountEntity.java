@@ -37,7 +37,8 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 	@Column
 	private LocalDateTime passwordUpdatedAt;
 
-	public void modifyEntity(String password) {
+	public void resetPassword(String password) {
+		this.passwordUpdatedAt = LocalDateTime.now();
 		this.password = password;
 	}
 

@@ -1,5 +1,6 @@
 package org.hoongoin.interviewbank.account.application;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
@@ -43,6 +44,7 @@ public class AccountService {
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		account.setAccountType(AccountType.EMAIL);
 		account = accountCommandService.insertAccount(account);
+		account.setPasswordUpdatedAt(LocalDateTime.now());
 		return accountMapper.accountToRegisterResponse(account);
 	}
 
