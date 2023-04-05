@@ -20,6 +20,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers("/account/logout").authenticated()
+			.antMatchers("/account/me").authenticated()
 			.antMatchers("/account/**").permitAll()
 			.antMatchers("/scraps/**").authenticated()
 			.antMatchers("/").permitAll()

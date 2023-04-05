@@ -1,5 +1,6 @@
 package org.hoongoin.interviewbank.account.application;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
@@ -7,6 +8,7 @@ import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.request.ResetPasswordRequest;
 import org.hoongoin.interviewbank.account.controller.request.SendEmailRequest;
+import org.hoongoin.interviewbank.account.controller.response.GetMeResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
@@ -41,7 +43,10 @@ public class AccountService {
 		Account account = accountMapper.registerRequestToAccount(registerRequest);
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		account.setAccountType(AccountType.EMAIL);
+		account.setPasswordUpdatedAt(LocalDateTime.now());
+
 		account = accountCommandService.insertAccount(account);
+
 		return accountMapper.accountToRegisterResponse(account);
 	}
 
@@ -85,5 +90,10 @@ public class AccountService {
 
 		String encodedPassword = passwordEncoder.encode(resetPasswordRequest.getNewPasswordCheck());
 		accountCommandService.resetPassword(requestingAccountId, encodedPassword);
+	}
+
+	public GetMeResponse getMe(long requestingAccountId) {
+		Account account = accountQueryService.findAccountByAccountId(requestingAccountId);
+		return accountMapper.accountToGetMeResponse(account);
 	}
 }

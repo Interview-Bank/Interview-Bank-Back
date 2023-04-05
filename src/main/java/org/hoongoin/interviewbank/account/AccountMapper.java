@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.account;
 
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
+import org.hoongoin.interviewbank.account.controller.response.GetMeResponse;
 import org.hoongoin.interviewbank.account.controller.response.LoginResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
@@ -14,7 +15,8 @@ public interface AccountMapper {
 	default Account accountEntityToAccount(AccountEntity accountEntity) {
 		return new Account(accountEntity.getId(), accountEntity.getNickname(), accountEntity.getEmail(),
 			accountEntity.getPassword(), accountEntity.getCreatedAt(), accountEntity.getUpdatedAt(),
-			accountEntity.getDeletedAt(), accountEntity.getDeletedFlag(), accountEntity.getAccountType());
+			accountEntity.getDeletedAt(), accountEntity.getDeletedFlag(), accountEntity.getAccountType(),
+			accountEntity.getPasswordUpdatedAt());
 	}
 
 	@Mapping(target = "id", source = "accountId")
@@ -30,4 +32,6 @@ public interface AccountMapper {
 	RegisterResponse accountToRegisterResponse(Account account);
 
 	LoginResponse accountToLoginResponse(Account account);
+
+	GetMeResponse accountToGetMeResponse(Account account);
 }

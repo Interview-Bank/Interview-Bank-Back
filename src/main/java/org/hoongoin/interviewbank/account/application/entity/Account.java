@@ -14,7 +14,8 @@ public class Account {
 
 	@Builder
 	public Account(long accountId, String nickname, String email, String password, LocalDateTime createdAt,
-		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag, AccountType accountType) {
+		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag, AccountType accountType,
+		LocalDateTime passwordUpdatedAt) {
 		this.setAccountId(accountId);
 		this.setNickname(nickname);
 		this.setEmail(email);
@@ -24,6 +25,7 @@ public class Account {
 		this.setDeletedAt(deletedAt);
 		this.setDeletedFlag(deletedFlag);
 		this.setAccountType(accountType);
+		this.setPasswordUpdatedAt(passwordUpdatedAt);
 	}
 
 	private Long accountId;
@@ -35,6 +37,7 @@ public class Account {
 	private LocalDateTime deletedAt;
 	private Boolean deletedFlag;
 	private AccountType accountType;
+	private LocalDateTime passwordUpdatedAt;
 
 	public void setNickname(String nickname) {
 		if (nickname == null) {
