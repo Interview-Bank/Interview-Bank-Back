@@ -9,6 +9,7 @@ CREATE TABLE `account`
     `nickname` CHAR(48) NOT NULL,
     `password` CHAR(61),
     `account_type` CHAR(6),
+    `password_updated_at` DATETIME(6),
     PRIMARY KEY (`id`),
     UNIQUE KEY `unique_account` (`account_type`, `email`)
 );

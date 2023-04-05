@@ -1,5 +1,7 @@
 package org.hoongoin.interviewbank.account.infrastructure.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 
 import lombok.*;
@@ -31,6 +33,9 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType;
+
+	@Column
+	private LocalDateTime passwordUpdatedAt;
 
 	public void modifyEntity(String password) {
 		this.password = password;
