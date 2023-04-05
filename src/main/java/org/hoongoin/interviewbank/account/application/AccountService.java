@@ -43,8 +43,10 @@ public class AccountService {
 		Account account = accountMapper.registerRequestToAccount(registerRequest);
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		account.setAccountType(AccountType.EMAIL);
-		account = accountCommandService.insertAccount(account);
 		account.setPasswordUpdatedAt(LocalDateTime.now());
+
+		account = accountCommandService.insertAccount(account);
+
 		return accountMapper.accountToRegisterResponse(account);
 	}
 
