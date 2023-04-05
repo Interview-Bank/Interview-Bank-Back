@@ -7,6 +7,7 @@ import org.hoongoin.interviewbank.account.controller.request.ResetPasswordReques
 import org.hoongoin.interviewbank.account.controller.request.SendEmailRequest;
 import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
+import org.hoongoin.interviewbank.account.controller.response.GetMeResponse;
 import org.hoongoin.interviewbank.account.controller.response.LoginResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.AccountService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import static org.hoongoin.interviewbank.utils.SecurityUtil.getRequestingAccountId;
 import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
 
 @RequiredArgsConstructor
@@ -66,5 +68,11 @@ public class AccountController {
 		@RequestBody ResetPasswordRequest resetPasswordRequest) {
 		accountService.resetPasswordByTokenAndRequest(token, resetPasswordRequest);
 		return ResponseEntity.ok(null);
+	}
+
+	@GetMapping("/me")
+	public ResponseEntity<GetMeResponse> getMe() {
+		long requestingAccountId = getRequestingAccountId();
+		return ResponseEntity.ok(accountService.getMe(requestingAccountId));
 	}
 }

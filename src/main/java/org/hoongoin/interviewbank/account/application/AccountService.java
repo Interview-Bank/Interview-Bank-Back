@@ -7,6 +7,7 @@ import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.request.ResetPasswordRequest;
 import org.hoongoin.interviewbank.account.controller.request.SendEmailRequest;
+import org.hoongoin.interviewbank.account.controller.response.GetMeResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
@@ -85,5 +86,10 @@ public class AccountService {
 
 		String encodedPassword = passwordEncoder.encode(resetPasswordRequest.getNewPasswordCheck());
 		accountCommandService.resetPassword(requestingAccountId, encodedPassword);
+	}
+
+	public GetMeResponse getMe(long requestingAccountId) {
+		Account account = accountQueryService.findAccountByAccountId(requestingAccountId);
+		return accountMapper.accountToGetMeResponse(account);
 	}
 }
