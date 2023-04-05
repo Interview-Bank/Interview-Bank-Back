@@ -43,10 +43,10 @@ public class InterviewQueryService {
 		return getInterviews(interviewEntityPage);
 	}
 
-	public List<Interview> searchInterview(String query, Long jobCategoryId, Date startDate, Date endDate, int page,
-		int size) {
-		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdAndStartDateAndEndDatePageableOrderByCreateTimeAsc(
-			query, jobCategoryId, startDate, endDate, PageRequest.of(page, size));
+	public List<Interview> searchInterview(String query, List<Long> jobCategoryIds, Date startDate, Date endDate,
+		int page, int size) {
+		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdsAndStartDateAndEndDatePageableOrderByCreateTimeAsc(
+			query, jobCategoryIds, startDate, endDate, PageRequest.of(page, size));
 
 		return getInterviews(interviewEntityPage);
 	}

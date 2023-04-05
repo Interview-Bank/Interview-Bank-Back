@@ -3,6 +3,7 @@ package org.hoongoin.interviewbank.interview.controller;
 import static org.hoongoin.interviewbank.utils.SecurityUtil.*;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
@@ -74,15 +75,13 @@ public class InterviewController {
 	@GetMapping("/search")
 	public ResponseEntity<FindInterviewPageResponse> searchInterview(
 		@RequestParam(name = "query", required = false) String query,
-		@RequestParam(name = "primary-job-category", required = false) String primaryJobCategory,
-		@RequestParam(name = "secondary-job-category", required = false) String secondaryJobCategory,
-		@RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-		@RequestParam(name = "end-date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+		@RequestParam(name = "job-categories", required = false) List<Long> jobCategories,
+		@RequestParam(name = "created-start-date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+		@RequestParam(name = "created-end-date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size) {
 		return ResponseEntity.ok(
-			interviewService.searchInterview(query, primaryJobCategory, secondaryJobCategory, startDate, endDate, page,
-				size));
+			interviewService.searchInterview(query, jobCategories, startDate, endDate, page, size));
 	}
 
 	@GetMapping("/me")

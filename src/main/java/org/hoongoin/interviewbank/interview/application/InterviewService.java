@@ -72,7 +72,8 @@ public class InterviewService {
 			interviewId, accountId);
 		Interview interview = interviewCommandService.updateInterview(interviewToUpdate, interviewId, accountId);
 
-		JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(updateInterviewRequest.getJobCategoryId());
+		JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(
+			updateInterviewRequest.getJobCategoryId());
 
 		List<Question> newQuestions = interviewMapper.updateInterviewRequestToQuestions(updateInterviewRequest,
 			interviewId);
@@ -108,11 +109,9 @@ public class InterviewService {
 	}
 
 	@Transactional(readOnly = true)
-	public FindInterviewPageResponse searchInterview(String query, String primaryJobCategory,
-		String secondaryJobCategory, Date startDate, Date endDate, int page, int size) {
-		Long jobCategoryId = jobCategoryQueryService.findJobCategoryIdByJobCategoryName(primaryJobCategory,
-			secondaryJobCategory);
-		List<Interview> interviews = interviewQueryService.searchInterview(query, jobCategoryId, startDate, endDate,
+	public FindInterviewPageResponse searchInterview(String query, List<Long> jobCategories, Date startDate,
+		Date endDate, int page, int size) {
+		List<Interview> interviews = interviewQueryService.searchInterview(query, jobCategories, startDate, endDate,
 			page, size);
 
 		return getFindInterviewPageResponse(interviews);
@@ -134,7 +133,8 @@ public class InterviewService {
 			.build();
 	}
 
-	private UpdateInterviewResponse makeUpdateInterviewResponse(Interview interview, JobCategory jobCategory, List<Question> questions) {
+	private UpdateInterviewResponse makeUpdateInterviewResponse(Interview interview, JobCategory jobCategory,
+		List<Question> questions) {
 
 		List<UpdateInterviewResponse.Question> updateInterviewResponseQuestions = new ArrayList<>();
 
