@@ -68,4 +68,18 @@ class AccountApiAuthentication {
 		mockMvc.perform(post("/account/reset-password"))
 			.andExpect(status().isOk());
 	}
+
+	@WithAnonymousUser
+	@Test
+	void getMe_Fail_Unauthorized() throws Exception {
+		mockMvc.perform(post("/account/me"))
+			.andExpect(status().isUnauthorized());
+	}
+
+	@IbWithMockUser
+	@Test
+	void getMe_Success() throws Exception {
+		mockMvc.perform(post("/account/me"))
+			.andExpect(status().isOk());
+	}
 }
