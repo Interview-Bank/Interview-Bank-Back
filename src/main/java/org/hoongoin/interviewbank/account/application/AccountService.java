@@ -5,10 +5,12 @@ import java.util.Objects;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
+import org.hoongoin.interviewbank.account.controller.request.ModifyNicknameRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.request.ResetPasswordRequest;
 import org.hoongoin.interviewbank.account.controller.request.SendEmailRequest;
 import org.hoongoin.interviewbank.account.controller.response.GetMeResponse;
+import org.hoongoin.interviewbank.account.controller.response.ModifyNicknameResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
@@ -95,5 +97,12 @@ public class AccountService {
 	public GetMeResponse getMe(long requestingAccountId) {
 		Account account = accountQueryService.findAccountByAccountId(requestingAccountId);
 		return accountMapper.accountToGetMeResponse(account);
+	}
+
+	@Transactional
+	public ModifyNicknameResponse modifyNicknameByRequest(ModifyNicknameRequest modifyNicknameRequest,
+		long requestingAccountId) {
+		Account account = accountCommandService.modifyNickname(modifyNicknameRequest, requestingAccountId);
+		return new ModifyNicknameResponse(account.getNickname(), account.getEmail(), account.getPasswordUpdatedAt());
 	}
 }
