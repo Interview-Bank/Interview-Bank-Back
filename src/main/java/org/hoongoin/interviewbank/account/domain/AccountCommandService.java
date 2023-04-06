@@ -35,12 +35,11 @@ public class AccountCommandService {
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 
-	public Account resetPassword(long requestingAccountId, String password) {
+	public void resetPassword(long requestingAccountId, String password) {
 		AccountEntity accountEntity = accountRepository.findById(requestingAccountId)
 			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 
 		accountEntity.resetPassword(password);
-		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 
 	@Transactional

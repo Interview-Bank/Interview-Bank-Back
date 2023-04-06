@@ -1,10 +1,15 @@
 package org.hoongoin.interviewbank.account.application;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+
+import javax.imageio.ImageIO;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
@@ -23,6 +28,7 @@ import org.hoongoin.interviewbank.account.domain.PasswordResetTokenCommand;
 import org.hoongoin.interviewbank.account.domain.PasswordResetTokenQuery;
 import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.entity.PasswordResetToken;
+import org.hoongoin.interviewbank.exception.IbBadRequestException;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.exception.IbLoginFailedException;
 import org.hoongoin.interviewbank.exception.IbValidationException;
@@ -35,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -123,8 +130,8 @@ public class AccountService {
 
 	@Transactional
 	public UploadProfileImageResponse saveProfileImage(MultipartFile multipartFile,
-		long requestedAccountId) throws IOException {
-		byte[] fileBytes = convertMultiPartFileToFileBytes(multipartFile);
+		long requestedAccountId) {
+		byte[] fileBytes = resizeImageSizeOfFile(multipartFile);
 
 		String filename = UUID.randomUUID().toString();
 
@@ -137,6 +144,49 @@ public class AccountService {
 		return new UploadProfileImageResponse(account.getImageUrl());
 	}
 
+	private byte[] resizeImageSizeOfFile(MultipartFile multipartFile) {
+		BufferedImage originalImage;
+
+		try {
+			originalImage = ImageIO.read(multipartFile.getInputStream());
+		} catch (IOException e) {
+			throw new IbBadRequestException(e.getMessage());
+		}
+
+		int resizedWidth = resize(originalImage.getWidth());
+		int resizedHeight = resize(originalImage.getHeight());
+
+		BufferedImage resizedImage = new BufferedImage(resizedWidth, resizedHeight, originalImage.getType());
+		Graphics2D graphics = resizedImage.createGraphics();
+		graphics.drawImage(originalImage, 0, 0, resizedWidth, resizedHeight, null);
+		graphics.dispose();
+
+		return imageAndContentTypeToBytes(resizedImage, multipartFile.getContentType());
+	}
+
+	private byte[] imageAndContentTypeToBytes(BufferedImage image, String contentType) {
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ImageIO.write(image, getFormatName(contentType), bos);
+			return bos.toByteArray();
+		} catch (IOException e) {
+			throw new IbBadRequestException(e.getMessage());
+		}
+	}
+
+	private String getFormatName(String contentType) {
+		return switch (contentType) {
+			case "image/jpeg" -> "jpeg";
+			case "image/png" -> "png";
+			case "image/gif" -> "gif";
+			default -> throw new IllegalArgumentException("Unsupported image type: " + contentType);
+		};
+	}
+
+	private int resize(int size) {
+		return Math.min(size, 400);
+	}
+
 	private String extractS3Url(String filename) {
 		return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + filename;
 	}
@@ -147,9 +197,5 @@ public class AccountService {
 		metadata.setContentLength(fileBytes.length);
 		metadata.setContentType(multipartFile.getContentType());
 		amazonS3.putObject(new PutObjectRequest(bucket, filename, new ByteArrayInputStream(fileBytes), metadata));
-	}
-
-	private byte[] convertMultiPartFileToFileBytes(MultipartFile multipartFile) throws IOException {
-		return multipartFile.getBytes();
 	}
 }
