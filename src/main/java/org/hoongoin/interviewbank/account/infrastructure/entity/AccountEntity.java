@@ -42,6 +42,10 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 		this.password = password;
 	}
 
+	public void editNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	@Override
 	public String toString() {
 		return "AccountEntity{" +

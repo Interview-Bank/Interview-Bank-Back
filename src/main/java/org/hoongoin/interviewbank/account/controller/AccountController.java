@@ -3,18 +3,21 @@ package org.hoongoin.interviewbank.account.controller;
 import javax.servlet.http.HttpSession;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
+import org.hoongoin.interviewbank.account.controller.request.ModifyNicknameRequest;
 import org.hoongoin.interviewbank.account.controller.request.ResetPasswordRequest;
 import org.hoongoin.interviewbank.account.controller.request.SendEmailRequest;
 import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.response.GetMeResponse;
 import org.hoongoin.interviewbank.account.controller.response.LoginResponse;
+import org.hoongoin.interviewbank.account.controller.response.ModifyNicknameResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.AccountService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,5 +77,13 @@ public class AccountController {
 	public ResponseEntity<GetMeResponse> getMe() {
 		long requestingAccountId = getRequestingAccountId();
 		return ResponseEntity.ok(accountService.getMe(requestingAccountId));
+	}
+
+	@PutMapping("/nickname")
+	public ResponseEntity<ModifyNicknameResponse> modifyNickname(
+		@RequestBody ModifyNicknameRequest modifyNicknameRequest) {
+		long requestingAccountId = getRequestingAccountId();
+		return ResponseEntity.ok()
+			.body(accountService.modifyNicknameByRequest(modifyNicknameRequest, requestingAccountId));
 	}
 }

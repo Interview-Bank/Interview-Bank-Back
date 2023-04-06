@@ -2,6 +2,7 @@ package org.hoongoin.interviewbank.account.domain;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.application.dto.KakaoUerInfoResponse;
+import org.hoongoin.interviewbank.account.controller.request.ModifyNicknameRequest;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
@@ -50,8 +51,7 @@ public class AccountCommandService {
 			AccountEntity accountEntity = accountMapper.accountToAccountEntity(account);
 			accountRepository.save(accountEntity);
 			account = accountMapper.accountEntityToAccount(accountEntity);
-		}
-		else{
+		} else {
 			account = accountMapper.accountEntityToAccount(optionalAccountEntity.get());
 		}
 		return account;
@@ -72,6 +72,13 @@ public class AccountCommandService {
 				.build();
 			accountRepository.save(accountEntity);
 		}
+		return accountMapper.accountEntityToAccount(accountEntity);
+	}
+
+	public Account modifyNickname(ModifyNicknameRequest modifyNicknameRequest, long requestingAccountId) {
+		AccountEntity accountEntity = accountRepository.findById(requestingAccountId)
+			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+		accountEntity.editNickname(modifyNicknameRequest.getNickname());
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 }
