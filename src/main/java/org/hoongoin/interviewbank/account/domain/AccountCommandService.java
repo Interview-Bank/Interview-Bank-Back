@@ -68,6 +68,7 @@ public class AccountCommandService {
 				.nickname(kakaoUserInfoResponse.getKakao_account().getProfile().getNickname())
 				.email(kakaoUserInfoResponse.getKakao_account().getEmail())
 				.accountType(AccountType.KAKAO)
+				.imageUrl(kakaoUserInfoResponse.getProperties().profile_image)
 				.build();
 			accountRepository.save(accountEntity);
 		}
