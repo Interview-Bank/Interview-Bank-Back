@@ -63,4 +63,11 @@ public class Account {
 		}
 		this.email = email;
 	}
+
+	public void setImageUrl(String imageUrl) {
+		if (imageUrl.length() > 300) {
+			throw new IbValidationException("image url than 300 length");
+		}
+		this.imageUrl = imageUrl;
+	}
 }
