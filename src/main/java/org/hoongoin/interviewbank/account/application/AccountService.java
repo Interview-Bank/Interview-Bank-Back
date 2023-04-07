@@ -113,10 +113,12 @@ public class AccountService {
 		long requestedAccountId) {
 		String uploadedUrl = accountExternalService.uploadImageFile(multipartFile);
 
-		Account account = accountCommandService.updateImageUrl(requestedAccountId, uploadedUrl);
+		Account originalAccount = accountQueryService.findAccountByAccountId(requestedAccountId);
 
-		accountExternalService.checkImageUrlOfAccountEntity(account);
+		Account updatedAccount = accountCommandService.updateImageUrl(requestedAccountId, uploadedUrl);
 
-		return new UploadProfileImageResponse(account.getImageUrl());
+		accountExternalService.checkImageUrlOfAccountEntity(originalAccount);
+
+		return new UploadProfileImageResponse(updatedAccount.getImageUrl());
 	}
 }
