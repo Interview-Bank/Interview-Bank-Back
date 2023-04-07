@@ -9,6 +9,7 @@ CREATE TABLE account
     nickname CHAR(48) NOT NULL,
     password CHAR(61),
     account_type CHAR(6),
+    `image_url` VARCHAR(300),
     password_updated_at TIMESTAMP(6),
     PRIMARY KEY (id)
 );

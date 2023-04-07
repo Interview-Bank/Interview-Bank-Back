@@ -111,14 +111,12 @@ public class AccountService {
 	@Transactional
 	public UploadProfileImageResponse saveProfileImage(MultipartFile multipartFile,
 		long requestedAccountId) {
+		Account originalAccount = accountQueryService.findAccountByAccountId(requestedAccountId);
+		accountExternalService.checkImageUrlOfAccount(originalAccount);
+
 		String uploadedUrl = accountExternalService.uploadImageFile(multipartFile);
 
-		Account originalAccount = accountQueryService.findAccountByAccountId(requestedAccountId);
-
 		Account updatedAccount = accountCommandService.updateImageUrl(requestedAccountId, uploadedUrl);
-
-		accountExternalService.checkImageUrlOfAccountEntity(originalAccount);
-
 		return new UploadProfileImageResponse(updatedAccount.getImageUrl());
 	}
 }

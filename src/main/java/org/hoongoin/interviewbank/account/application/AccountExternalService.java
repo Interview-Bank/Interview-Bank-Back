@@ -105,7 +105,7 @@ public class AccountExternalService {
 		return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + filename;
 	}
 
-	public void checkImageUrlOfAccountEntity(Account account) {
+	public void checkImageUrlOfAccount(Account account) {
 		if (account.getImageUrl() != null) {
 			amazonS3.deleteObject(new DeleteObjectRequest(bucket, getObjectKeyFromS3Url(account.getImageUrl())));
 		}
