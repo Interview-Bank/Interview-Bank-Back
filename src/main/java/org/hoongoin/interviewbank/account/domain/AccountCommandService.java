@@ -180,7 +180,7 @@ public class AccountCommandService {
 	}
 
 	private void checkImageUrlOfAccountEntity(AccountEntity accountEntity) {
-		if (!accountEntity.getImageUrl().isEmpty()) {
+		if (accountEntity.getImageUrl() != null) {
 			amazonS3.deleteObject(new DeleteObjectRequest(bucket, getObjectKeyFromS3Url(accountEntity.getImageUrl())));
 		}
 	}

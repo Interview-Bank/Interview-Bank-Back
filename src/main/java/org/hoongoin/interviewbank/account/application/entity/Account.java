@@ -65,7 +65,7 @@ public class Account {
 	}
 
 	public void setImageUrl(String imageUrl) {
-		if (imageUrl.length() > 300) {
+		if (imageUrl != null && imageUrl.length() > 300) {
 			throw new IbValidationException("image url than 300 length");
 		}
 		this.imageUrl = imageUrl;
