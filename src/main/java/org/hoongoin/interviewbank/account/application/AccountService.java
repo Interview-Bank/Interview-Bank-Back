@@ -41,7 +41,7 @@ public class AccountService {
 	private final PasswordResetTokenProvider passwordResetTokenProvider;
 	private final PasswordResetTokenCommand passwordResetTokenCommand;
 	private final PasswordResetTokenQuery passwordResetTokenQuery;
-	private final MailService mailService;
+	private final AccountExternalService accountExternalService;
 
 	public RegisterResponse registerByRegisterRequest(RegisterRequest registerRequest) {
 		Account account = accountMapper.registerRequestToAccount(registerRequest);
@@ -76,7 +76,7 @@ public class AccountService {
 		String hashedToken = passwordResetTokenProvider.createToken();
 		passwordResetTokenCommand.saveToken(account.getAccountId(), sendEmailRequest.getEmail(), hashedToken);
 
-		mailService.sendMailTo(sendEmailRequest.getEmail(), hashedToken);
+		accountExternalService.sendMailTo(sendEmailRequest.getEmail(), hashedToken);
 	}
 
 	public boolean validateToken(String token) {
@@ -111,7 +111,11 @@ public class AccountService {
 	@Transactional
 	public UploadProfileImageResponse saveProfileImage(MultipartFile multipartFile,
 		long requestedAccountId) {
-		Account account = accountCommandService.updateImageUrl(requestedAccountId, multipartFile);
+		String uploadedUrl = accountExternalService.uploadImageFile(multipartFile);
+
+		Account account = accountCommandService.updateImageUrl(requestedAccountId, uploadedUrl);
+
+		accountExternalService.checkImageUrlOfAccountEntity(account);
 
 		return new UploadProfileImageResponse(account.getImageUrl());
 	}
