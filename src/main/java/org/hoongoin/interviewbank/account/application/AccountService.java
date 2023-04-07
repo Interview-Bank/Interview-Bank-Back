@@ -1,15 +1,7 @@
 package org.hoongoin.interviewbank.account.application;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
-
-import javax.imageio.ImageIO;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
