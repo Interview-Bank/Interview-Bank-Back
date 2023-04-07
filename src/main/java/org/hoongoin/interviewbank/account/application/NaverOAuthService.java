@@ -3,7 +3,6 @@ package org.hoongoin.interviewbank.account.application;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.hoongoin.interviewbank.account.application.dto.NaverTokenResponse;
 import org.hoongoin.interviewbank.account.application.dto.NaverProfileResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.application.entity.AccountType;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -136,6 +134,7 @@ public class NaverOAuthService {
 			.nickname(naverProfileResponse.getResponse().getNickname())
 			.email(naverProfileResponse.getResponse().getEmail())
 			.accountType(AccountType.NAVER)
+			.imageUrl(naverProfileResponse.getResponse().getProfileImage())
 			.build();
 	}
 }

@@ -51,7 +51,7 @@ public class GoogleOAuthService {
 		queryParams.put("redirect_uri", googleRedirectUri);
 		queryParams.put("state", sessionId);
 		queryParams.put("nonce", "0394852-3190485-2490358");  // TODO : used once random nonce 만들기
-		
+
 		String queryString = queryParams.entrySet().stream()
 			.map(entry -> entry.getKey() + "=" + entry.getValue())
 			.collect(Collectors.joining("&"));
@@ -91,13 +91,13 @@ public class GoogleOAuthService {
 			httpEntity,
 			GoogleTokenResponse.class);
 
-		if(!tokenResponseEntity.hasBody()){
+		if (!tokenResponseEntity.hasBody()) {
 			throw new IbInternalServerException("Google OAuth Failed");
 		}
 		return tokenResponseEntity.getBody();
 	}
 
-	private Account getUserInfoIn(String jwt){
+	private Account getUserInfoIn(String jwt) {
 		String[] jwtParts = jwt.split("\\.");
 		String claimsJson = new String(Base64.getDecoder().decode(jwtParts[1]));
 
@@ -108,6 +108,7 @@ public class GoogleOAuthService {
 			.email(googleJwtPayload.getEmail())
 			.nickname(googleJwtPayload.getName())
 			.accountType(AccountType.GOOGLE)
+			.imageUrl(googleJwtPayload.getPicture())
 			.build();
 	}
 }

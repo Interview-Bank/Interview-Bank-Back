@@ -13,6 +13,7 @@ import org.hoongoin.interviewbank.account.controller.response.GetMeResponse;
 import org.hoongoin.interviewbank.account.controller.response.ModifyNicknameResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.account.controller.response.UploadProfileImageResponse;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.domain.PasswordResetTokenCommand;
@@ -25,6 +26,7 @@ import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +41,7 @@ public class AccountService {
 	private final PasswordResetTokenProvider passwordResetTokenProvider;
 	private final PasswordResetTokenCommand passwordResetTokenCommand;
 	private final PasswordResetTokenQuery passwordResetTokenQuery;
-	private final MailService mailService;
+	private final AccountExternalService accountExternalService;
 
 	public RegisterResponse registerByRegisterRequest(RegisterRequest registerRequest) {
 		Account account = accountMapper.registerRequestToAccount(registerRequest);
@@ -74,7 +76,7 @@ public class AccountService {
 		String hashedToken = passwordResetTokenProvider.createToken();
 		passwordResetTokenCommand.saveToken(account.getAccountId(), sendEmailRequest.getEmail(), hashedToken);
 
-		mailService.sendMailTo(sendEmailRequest.getEmail(), hashedToken);
+		accountExternalService.sendMailTo(sendEmailRequest.getEmail(), hashedToken);
 	}
 
 	public boolean validateToken(String token) {
@@ -104,5 +106,17 @@ public class AccountService {
 		long requestingAccountId) {
 		Account account = accountCommandService.modifyNickname(modifyNicknameRequest, requestingAccountId);
 		return new ModifyNicknameResponse(account.getNickname(), account.getEmail(), account.getPasswordUpdatedAt());
+	}
+
+	@Transactional
+	public UploadProfileImageResponse saveProfileImage(MultipartFile multipartFile,
+		long requestedAccountId) {
+		Account originalAccount = accountQueryService.findAccountByAccountId(requestedAccountId);
+		accountExternalService.checkImageUrlOfAccount(originalAccount);
+
+		String uploadedUrl = accountExternalService.uploadImageFile(multipartFile);
+
+		Account updatedAccount = accountCommandService.updateImageUrl(requestedAccountId, uploadedUrl);
+		return new UploadProfileImageResponse(updatedAccount.getImageUrl());
 	}
 }

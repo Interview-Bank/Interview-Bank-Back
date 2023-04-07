@@ -71,3 +71,12 @@ spring:
 discord:
   token: test-token
   channelId: 1234
+
+aws:
+  credentials:
+    accessKeyId: test
+    secretAccessKey: test
+  region:
+    static: test-region
+  s3:
+    bucket: testbank

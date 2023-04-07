@@ -35,12 +35,11 @@ public class AccountCommandService {
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 
-	public Account resetPassword(long requestingAccountId, String password) {
+	public void resetPassword(long requestingAccountId, String password) {
 		AccountEntity accountEntity = accountRepository.findById(requestingAccountId)
 			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 
 		accountEntity.resetPassword(password);
-		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 
 	@Transactional
@@ -69,6 +68,7 @@ public class AccountCommandService {
 				.nickname(kakaoUserInfoResponse.getKakao_account().getProfile().getNickname())
 				.email(kakaoUserInfoResponse.getKakao_account().getEmail())
 				.accountType(AccountType.KAKAO)
+				.imageUrl(kakaoUserInfoResponse.getProperties().profile_image)
 				.build();
 			accountRepository.save(accountEntity);
 		}
@@ -79,6 +79,15 @@ public class AccountCommandService {
 		AccountEntity accountEntity = accountRepository.findById(requestingAccountId)
 			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
 		accountEntity.editNickname(modifyNicknameRequest.getNickname());
+		return accountMapper.accountEntityToAccount(accountEntity);
+	}
+
+	public Account updateImageUrl(long requestedAccountId, String uploadedUrl) {
+		AccountEntity accountEntity = accountRepository.findById(requestedAccountId)
+			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+
+		accountEntity.uploadImageUrl(uploadedUrl);
+
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 }

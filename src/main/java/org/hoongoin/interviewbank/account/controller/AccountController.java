@@ -14,6 +14,8 @@ import org.hoongoin.interviewbank.account.controller.response.ModifyNicknameResp
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.AccountService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.account.controller.response.UploadProfileImageResponse;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +24,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
 import static org.hoongoin.interviewbank.utils.SecurityUtil.getRequestingAccountId;
 import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
@@ -85,5 +90,12 @@ public class AccountController {
 		long requestingAccountId = getRequestingAccountId();
 		return ResponseEntity.ok()
 			.body(accountService.modifyNicknameByRequest(modifyNicknameRequest, requestingAccountId));
+	}
+
+	@PostMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<UploadProfileImageResponse> uploadProfileImage(
+		@RequestParam("file") MultipartFile file) throws IOException {
+		return ResponseEntity.ok()
+			.body(accountService.saveProfileImage(file, getRequestingAccountId()));
 	}
 }

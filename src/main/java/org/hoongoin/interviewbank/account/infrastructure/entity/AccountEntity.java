@@ -34,6 +34,9 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType;
 
+	@Column(length = 300)
+	private String imageUrl;
+
 	@Column
 	private LocalDateTime passwordUpdatedAt;
 
@@ -44,6 +47,10 @@ public class AccountEntity extends SoftDeletedBaseEntity {
 
 	public void editNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public void uploadImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	@Override
