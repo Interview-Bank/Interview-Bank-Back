@@ -80,3 +80,8 @@ aws:
     static: test-region
   s3:
     bucket: testbank
+
+cloud:
+  aws:
+    stack:
+      auto: false
