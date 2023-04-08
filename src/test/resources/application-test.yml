@@ -83,7 +83,5 @@ aws:
 
 cloud:
   aws:
-    region:
-      auto: false
     stack:
       auto: false
