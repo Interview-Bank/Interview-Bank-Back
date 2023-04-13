@@ -24,7 +24,7 @@ public interface InterviewRepository extends JpaRepository<InterviewEntity, Long
 
 	@EntityGraph(attributePaths = {"accountEntity"})
 	@Query("SELECT interview FROM InterviewEntity interview "
-		+ "WHERE (:job_category_ids IS NULL OR interview.jobCategoryEntity.id IN :job_category_ids ) "
+		+ "WHERE (COALESCE(:job_category_ids, NULL) IS NULL OR interview.jobCategoryEntity.id IN :job_category_ids ) "
 		+ "AND (:query IS NULL OR interview.title LIKE %:query%) "
 		+ "AND (:start_date IS NULL OR interview.createdAt >= TIMESTAMP(:start_date)) "
 		+ "AND (:end_date IS NULL OR interview.createdAt <= TIMESTAMP(:end_date)) "
