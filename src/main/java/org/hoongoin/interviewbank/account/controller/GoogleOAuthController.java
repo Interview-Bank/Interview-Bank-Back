@@ -29,7 +29,7 @@ public class GoogleOAuthController {
 
 	@GetMapping("/login")
 	public ResponseEntity<Object> getGoogleLoginUrl(HttpSession session) {
-		URI authUri = googleOAuthService.getGoogleLoginUrI(session.getId());
+		URI authUri = googleOAuthService.getGoogleLoginUri(session.getId());
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(authUri);
 		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
