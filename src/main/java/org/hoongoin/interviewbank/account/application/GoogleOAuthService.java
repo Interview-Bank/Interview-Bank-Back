@@ -12,6 +12,7 @@ import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,40 +29,20 @@ import com.google.gson.Gson;
 public class GoogleOAuthService {
 
 	private final AccountCommandService accountCommandService;
-	@Value("${spring.oauth2.client.registration.google.auth-uri}")
-	private String googleAuthUri;
-	@Value("${spring.oauth2.client.registration.google.token-uri}")
-	private String googleTokenUri;
-	@Value("${spring.oauth2.client.registration.google.client-id}")
-	private String googleClientId;
-	@Value("${spring.oauth2.client.registration.google.client-secret}")
-	private String googleClientSecret;
-	@Value("${spring.oauth2.client.registration.google.redirect-uri}")
-	private String googleRedirectUri;
-	@Value("${spring.oauth2.client.registration.google.profile-uri}")
-	private String googleProfileUri;
-	@Value("${spring.oauth2.client.registration.google.scope}")
-	private List<String> scopes;
+	private final GoogleOAuthProperties googleOAuthProperties;
+	private final RestTemplate restTemplate;
 
-	public URI getGoogleLoginUrI(String sessionId) {
-		Map<String, String> queryParams = new HashMap<>();
-		queryParams.put("client_id", googleClientId);
-		queryParams.put("response_type", "code");
-		queryParams.put("scope", String.join("%20", scopes));
-		queryParams.put("redirect_uri", googleRedirectUri);
-		queryParams.put("state", sessionId);
-		queryParams.put("nonce", "0394852-3190485-2490358");  // TODO : used once random nonce 만들기
-
-		String queryString = queryParams.entrySet().stream()
-			.map(entry -> entry.getKey() + "=" + entry.getValue())
-			.collect(Collectors.joining("&"));
-
-		String authUrl = googleAuthUri + "?" + queryString;
-		try {
-			return new URI(authUrl);
-		} catch (URISyntaxException e) {
-			throw new IbInternalServerException("URISyntaxException");
-		}
+	public URI getGoogleLoginUri(String sessionId) {
+		return UriComponentsBuilder.fromHttpUrl(googleOAuthProperties.getAuthUri())
+			.queryParam("client_id", googleOAuthProperties.getClientId())
+			.queryParam("response_type", "code")
+			.queryParam("scope", String.join("%20", googleOAuthProperties.getScopes()))
+			.queryParam("redirect_uri", googleOAuthProperties.getRedirectUri())
+			.queryParam("state", sessionId)
+			.queryParam("nonce", "0394852-3190485-2490358")
+			.build()
+			.encode()
+			.toUri();
 	}
 
 	public Account googleLoginOrRegister(String authorizationCode) {
@@ -71,23 +52,21 @@ public class GoogleOAuthService {
 	}
 
 	private GoogleTokenResponse exchangeCodeForAccessTokenAndIdToken(String authorizationCode) {
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		GoogleTokenRequestParams requestParams = GoogleTokenRequestParams.builder()
 			.code(authorizationCode)
-			.clientId(googleClientId)
-			.clientSecret(googleClientSecret)
-			.redirectUri(googleRedirectUri)
+			.clientId(googleOAuthProperties.getClientId())
+			.clientSecret(googleOAuthProperties.getClientSecret())
+			.redirectUri(googleOAuthProperties.getRedirectUri())
 			.grantType("authorization_code")
 			.build();
 
 		HttpEntity<GoogleTokenRequestParams> httpEntity = new HttpEntity<>(requestParams, headers);
 
 		ResponseEntity<GoogleTokenResponse> tokenResponseEntity = restTemplate.postForEntity(
-			googleTokenUri,
+			googleOAuthProperties.getTokenUri(),
 			httpEntity,
 			GoogleTokenResponse.class);
 
