@@ -51,7 +51,7 @@ spring:
           redirect-uri: https://localhost:3000/oauth2/google/redirect
           client-id: test
           client-secret: test
-          scope: test
+          scopes: test
         naver:
           auth-uri: https://nid.naver.com/oauth2.0/authorize
           token-uri: https://nid.naver.com/oauth2.0/token
