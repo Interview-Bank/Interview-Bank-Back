@@ -29,7 +29,7 @@ public class GoogleOAuthService {
 		return UriComponentsBuilder.fromHttpUrl(googleOAuthProperties.getAuthUri())
 			.queryParam("client_id", googleOAuthProperties.getClientId())
 			.queryParam("response_type", "code")
-			.queryParam("scope", String.join("%20", googleOAuthProperties.getScopes()))
+			.queryParam("scope", String.join(" ", googleOAuthProperties.getScopes()))
 			.queryParam("redirect_uri", googleOAuthProperties.getRedirectUri())
 			.queryParam("state", sessionId)
 			.queryParam("nonce", "0394852-3190485-2490358")
