@@ -3,7 +3,7 @@ package org.hoongoin.interviewbank.account.application.dto;
 import lombok.Getter;
 
 @Getter
-public class KakaoUerInfoResponse {
+public class KakaoUserInfoResponse {
 	public Long id;
 	public String connected_at;
 	public Properties properties;

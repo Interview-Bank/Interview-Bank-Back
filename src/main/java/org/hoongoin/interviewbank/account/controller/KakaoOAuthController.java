@@ -1,7 +1,5 @@
 package org.hoongoin.interviewbank.account.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import lombok.RequiredArgsConstructor;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
 
@@ -26,7 +23,7 @@ public class KakaoOAuthController {
 	private final AccountMapper accountMapper;
 
 	@GetMapping("/login")
-	public ResponseEntity<Object> getKakaoLoginUrl() throws URISyntaxException {
+	public ResponseEntity<Object> getKakaoLoginUrl() {
 		URI authUri = kakaoOAuthService.getKakaoLoginUri();
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(authUri);
@@ -35,8 +32,7 @@ public class KakaoOAuthController {
 
 	@PostMapping("/login/redirect")
 	public ResponseEntity<Object> kakaoLoginOrRegister(
-		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state)
-		throws JsonProcessingException, URISyntaxException {
+		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state) {
 		Account account = kakaoOAuthService.kakaoLoginOrRegister(authorizationCode);
 		setAuthentication(account);
 		return ResponseEntity.ok(accountMapper.accountToLoginResponse(account));

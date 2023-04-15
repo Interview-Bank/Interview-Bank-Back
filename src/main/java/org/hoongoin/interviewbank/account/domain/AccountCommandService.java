@@ -1,7 +1,7 @@
 package org.hoongoin.interviewbank.account.domain;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
-import org.hoongoin.interviewbank.account.application.dto.KakaoUerInfoResponse;
+import org.hoongoin.interviewbank.account.application.dto.KakaoUserInfoResponse;
 import org.hoongoin.interviewbank.account.controller.request.ModifyNicknameRequest;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.application.entity.AccountType;
@@ -54,25 +54,6 @@ public class AccountCommandService {
 			account = accountMapper.accountEntityToAccount(optionalAccountEntity.get());
 		}
 		return account;
-	}
-
-	@Transactional
-	public Account saveKakaoUserIfNotExists(KakaoUerInfoResponse kakaoUserInfoResponse) {
-		Optional<AccountEntity> optionalAccountEntity = accountRepository.findByEmailAndAccountType(
-			kakaoUserInfoResponse.getKakao_account().getEmail(), AccountType.KAKAO);
-		AccountEntity accountEntity;
-		if (optionalAccountEntity.isPresent()) {
-			accountEntity = optionalAccountEntity.get();
-		} else {
-			accountEntity = AccountEntity.builder()
-				.nickname(kakaoUserInfoResponse.getKakao_account().getProfile().getNickname())
-				.email(kakaoUserInfoResponse.getKakao_account().getEmail())
-				.accountType(AccountType.KAKAO)
-				.imageUrl(kakaoUserInfoResponse.getProperties().profile_image)
-				.build();
-			accountRepository.save(accountEntity);
-		}
-		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 
 	public Account modifyNickname(ModifyNicknameRequest modifyNicknameRequest, long requestingAccountId) {
