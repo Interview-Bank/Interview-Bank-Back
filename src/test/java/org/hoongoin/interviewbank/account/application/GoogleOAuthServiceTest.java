@@ -24,5 +24,6 @@ class GoogleOAuthServiceTest {
 
 		//then
 		assertThat(googleLoginUri).isNotNull();
+		System.out.println(googleLoginUri);
 	}
 }
