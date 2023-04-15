@@ -1,7 +1,6 @@
 package org.hoongoin.interviewbank.account.domain;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
-import org.hoongoin.interviewbank.account.application.dto.KakaoUserInfoResponse;
 import org.hoongoin.interviewbank.account.controller.request.ModifyNicknameRequest;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.application.entity.AccountType;
