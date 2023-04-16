@@ -31,8 +31,6 @@ import lombok.RequiredArgsConstructor;
 import static org.hoongoin.interviewbank.utils.SecurityUtil.getRequestingAccountId;
 import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
 
-import java.io.IOException;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account")
