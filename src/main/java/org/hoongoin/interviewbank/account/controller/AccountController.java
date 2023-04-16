@@ -94,7 +94,7 @@ public class AccountController {
 
 	@PostMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<UploadProfileImageResponse> uploadProfileImage(
-		@RequestParam("file") MultipartFile file) throws IOException {
+		@RequestParam(name = "file", required = false) MultipartFile file) {
 		return ResponseEntity.ok()
 			.body(accountService.saveProfileImage(file, getRequestingAccountId()));
 	}
