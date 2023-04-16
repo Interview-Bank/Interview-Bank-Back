@@ -76,3 +76,7 @@ management:
     export:
       prometheus:
         enabled: true
+
+  logging:
+    pattern:
+      dateformat: yyyy-MM-dd HH:mm:ss.SSS K
