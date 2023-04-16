@@ -77,14 +77,3 @@ services:
       backend:
         aliases:
           - grafana.interviewbank
-
-  backup:
-    build: ../db-backup
-    env_file:
-      - ../db-backup/backup.env
-    volumes:
-      - ../db-backup:/backup
-    depends_on:
-      - db
-    networks:
-      backend:
