@@ -10,4 +10,5 @@ public class LoginResponse {
 	private long accountId;
 	private String nickname;
 	private String email;
+	private String imageUrl;
 }

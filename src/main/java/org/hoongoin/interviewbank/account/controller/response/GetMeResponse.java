@@ -12,4 +12,5 @@ public class GetMeResponse {
 	private String nickname;
 	private String email;
 	private LocalDate passwordUpdatedAt;
+	private String imageUrl;
 }
