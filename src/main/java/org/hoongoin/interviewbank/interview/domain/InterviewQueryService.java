@@ -8,6 +8,7 @@ import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.exception.IbSoftDeleteException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
+import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
@@ -44,9 +45,9 @@ public class InterviewQueryService {
 	}
 
 	public List<Interview> searchInterview(String query, List<Long> jobCategoryIds, Date startDate, Date endDate,
-		int page, int size) {
-		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdsAndStartDateAndEndDatePageableOrderByCreateTimeAsc(
-			query, jobCategoryIds, startDate, endDate, PageRequest.of(page, size));
+		InterviewPeriod interviewPeriod, int page, int size) {
+		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdsAndStartDateAndEndDatePageableOrderByCreateTimeDesc(
+			query, jobCategoryIds, startDate, endDate, interviewPeriod, PageRequest.of(page, size));
 
 		return getInterviews(interviewEntityPage);
 	}
