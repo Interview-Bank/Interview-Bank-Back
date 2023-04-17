@@ -66,3 +66,7 @@ spring:
           token-uri: https://kauth.kakao.com/oauth/token
           profile-uri: https://kapi.kakao.com/v2/user/me
           redirect-uri: http://localhost:3000/oauth2/kakao/redirect
+
+  logging:
+    pattern:
+      dateformat: yyyy-MM-dd HH:mm:ss.SSS K
