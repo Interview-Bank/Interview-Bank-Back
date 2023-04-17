@@ -21,6 +21,7 @@ public class SecurityConfig {
 		http.authorizeRequests()
 			.antMatchers("/account/logout").authenticated()
 			.antMatchers("/account/me").authenticated()
+			.antMatchers("/account/reset-password").authenticated()
 			.antMatchers("/account/**").permitAll()
 			.antMatchers("/scraps/**").authenticated()
 			.antMatchers("/").permitAll()

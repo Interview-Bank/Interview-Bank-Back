@@ -69,10 +69,17 @@ public class AccountController {
 		return ResponseEntity.ok(accountService.validateToken(token));
 	}
 
-	@PostMapping("/reset-password")
-	public ResponseEntity<Object> resetPassword(@RequestParam(value = "token") String token,
+	@PostMapping("/reset-password-with-token")
+	public ResponseEntity<Object> resetPasswordWithToken(@RequestParam(value = "token") String token,
 		@RequestBody ResetPasswordRequest resetPasswordRequest) {
 		accountService.resetPasswordByTokenAndRequest(token, resetPasswordRequest);
+		return ResponseEntity.ok(null);
+	}
+
+	@PostMapping("/reset-password")
+	public ResponseEntity<Object> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+		long requestingAccountId = getRequestingAccountId();
+		accountService.resetPasswordByRequestAndRequestingAccountId(resetPasswordRequest, requestingAccountId);
 		return ResponseEntity.ok(null);
 	}
 

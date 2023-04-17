@@ -64,6 +64,20 @@ class AccountApiAuthentication {
 
 	@WithAnonymousUser
 	@Test
+	void resetPasswordWithToken_Success() throws Exception {
+		mockMvc.perform(post("/account/reset-password-with-token"))
+			.andExpect(status().isOk());
+	}
+
+	@WithAnonymousUser
+	@Test
+	void resetPassword_Fail_Unauthorized() throws Exception {
+		mockMvc.perform(post("/account/reset-password"))
+			.andExpect(status().isUnauthorized());
+	}
+
+	@IbWithMockUser
+	@Test
 	void resetPassword_Success() throws Exception {
 		mockMvc.perform(post("/account/reset-password"))
 			.andExpect(status().isOk());

@@ -96,6 +96,16 @@ public class AccountService {
 		accountCommandService.resetPassword(requestingAccountId, encodedPassword);
 	}
 
+	public void resetPasswordByRequestAndRequestingAccountId(ResetPasswordRequest resetPasswordRequest,
+		long requestingAccountId) {
+		if (!Objects.equals(resetPasswordRequest.getNewPassword(), resetPasswordRequest.getNewPasswordCheck())) {
+			throw new IbValidationException("Password and Password Check is not same");
+		}
+
+		String encodedPassword = passwordEncoder.encode(resetPasswordRequest.getNewPasswordCheck());
+		accountCommandService.resetPassword(requestingAccountId, encodedPassword);
+	}
+
 	public GetMeResponse getMe(long requestingAccountId) {
 		Account account = accountQueryService.findAccountByAccountId(requestingAccountId);
 		return accountMapper.accountToGetMeResponse(account);
