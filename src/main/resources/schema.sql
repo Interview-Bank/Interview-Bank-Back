@@ -63,6 +63,7 @@ CREATE TABLE `scrap`
     `title` CHAR(128) NOT NULL,
     `account_id` BIGINT NOT NULL,
     `interview_id` BIGINT NOT NULL,
+    `job_category_id` BIGINT,
     PRIMARY KEY (`id`),
     CONSTRAINT FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
     CONSTRAINT FOREIGN KEY (`interview_id`) REFERENCES `interview` (`id`)
