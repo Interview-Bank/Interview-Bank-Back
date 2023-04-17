@@ -6,8 +6,10 @@ import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
+import org.hoongoin.interviewbank.interview.infrastructure.repository.JobCategoryRepository;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.QuestionRepository;
 import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
@@ -47,6 +49,8 @@ class ScrapControllerTest {
 
 	@Autowired
 	private ScrapQuestionRepository scrapQuestionRepository;
+	@Autowired
+	private JobCategoryRepository jobCategoryRepository;
 
 	@BeforeEach
 	void setUp() {
@@ -66,9 +70,15 @@ class ScrapControllerTest {
 			.build();
 		accountRepository.saveAndFlush(interviewWriterAccountEntity);
 
+		JobCategoryEntity jobCategoryEntity = JobCategoryEntity.builder()
+			.name("job category")
+			.build();
+		jobCategoryRepository.saveAndFlush(jobCategoryEntity);
+
 		InterviewEntity interviewEntity = InterviewEntity.builder()
 			.title("title")
 			.accountEntity(interviewWriterAccountEntity)
+			.jobCategoryEntity(jobCategoryEntity)
 			.build();
 		interviewRepository.saveAndFlush(interviewEntity);
 

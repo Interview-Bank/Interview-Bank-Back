@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
@@ -21,6 +20,7 @@ import org.hoongoin.interviewbank.interview.infrastructure.repository.QuestionRe
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @IbSpringBootTest
@@ -37,9 +37,6 @@ class InterviewEntityCommandServiceTest {
 	private InterviewCommandService interviewCommandService;
 
 	@Autowired
-	private AccountMapper accountMapper;
-
-	@Autowired
 	private QuestionRepository questionRepository;
 
 	private static final long testAccountId = 1L;
@@ -47,6 +44,7 @@ class InterviewEntityCommandServiceTest {
 	private static final String testEmail = "gnsrl76@naver.com";
 	private static final String testPassword = "asdfasdf12!";
 
+	@Sql(scripts = "classpath:/job-category-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Test
 	void insertInterview_Success() {
 		//given
@@ -57,6 +55,7 @@ class InterviewEntityCommandServiceTest {
 		Interview testInterview = Interview.builder()
 			.title(title)
 			.accountId(testAccountEntity.getId())
+			.jobCategoryId(1L)
 			.build();
 
 		//when
