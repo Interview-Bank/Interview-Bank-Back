@@ -25,6 +25,7 @@ import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
 import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
 import org.hoongoin.interviewbank.interview.domain.QuestionCommandService;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
+import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -110,9 +111,9 @@ public class InterviewService {
 
 	@Transactional(readOnly = true)
 	public FindInterviewPageResponse searchInterview(String query, List<Long> jobCategories, Date startDate,
-		Date endDate, int page, int size) {
+		Date endDate, InterviewPeriod interviewPeriod, int page, int size) {
 		List<Interview> interviews = interviewQueryService.searchInterview(query, jobCategories, startDate, endDate,
-			page, size);
+			interviewPeriod, page, size);
 
 		return getFindInterviewPageResponse(interviews);
 	}

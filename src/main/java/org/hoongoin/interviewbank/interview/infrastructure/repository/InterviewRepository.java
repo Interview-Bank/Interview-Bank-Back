@@ -5,6 +5,7 @@ import static org.hoongoin.interviewbank.interview.infrastructure.entity.QInterv
 import java.util.Date;
 import java.util.List;
 
+import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,10 +29,11 @@ public interface InterviewRepository extends JpaRepository<InterviewEntity, Long
 		+ "AND (:query IS NULL OR interview.title LIKE %:query%) "
 		+ "AND (:start_date IS NULL OR interview.createdAt >= TIMESTAMP(:start_date)) "
 		+ "AND (:end_date IS NULL OR interview.createdAt <= TIMESTAMP(:end_date)) "
+		+ "AND (:interview_period IS NULL OR interview.interviewPeriod = :interview_period) "
 		+ "ORDER BY interview.createdAt DESC")
-	Page<InterviewEntity> findAllByTitleAndJobCategoryIdsAndStartDateAndEndDatePageableOrderByCreateTimeAsc(
+	Page<InterviewEntity> findAllByTitleAndJobCategoryIdsAndStartDateAndEndDatePageableOrderByCreateTimeDesc(
 		@Param("query") String query, @Param("job_category_ids") List<Long> jobCategoryIds, @Param("start_date") Date startDate,
-		@Param("end_date") Date endDate, Pageable pageable);
+		@Param("end_date") Date endDate, @Param("interview_period") InterviewPeriod interviewPeriod, Pageable pageable);
 
 	default Page<InterviewEntity> findByAccountEntityIdAndDeleteFlag(Pageable pageable, long accountId) {
 		BooleanExpression hasAccountId = interviewEntity.accountEntity.id.eq(accountId);
