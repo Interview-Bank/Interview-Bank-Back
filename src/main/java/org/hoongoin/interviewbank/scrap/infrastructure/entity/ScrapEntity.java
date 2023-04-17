@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.common.entity.BaseEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,10 @@ public class ScrapEntity extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "interview_id")
 	private InterviewEntity interviewEntity;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "job_category_id")
+	private JobCategoryEntity jobCategoryEntity;
 
 	@Column(nullable = false, length = 128)
 	private String title;

@@ -6,7 +6,10 @@ import java.util.List;
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
+import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
+import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
+import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
@@ -51,6 +54,7 @@ public class ScrapService {
 	private final QuestionQueryService questionQueryService;
 	private final ScrapMapper scrapMapper;
 	private final ScrapAnswerCommandService scrapAnswerCommandService;
+	private final JobCategoryQueryService jobCategoryQueryService;
 
 	@Transactional
 	public CreateScrapResponse createScrapByCreateRequest(CreateScrapRequest createScrapRequest,
@@ -64,6 +68,7 @@ public class ScrapService {
 		Scrap scrap = Scrap.builder()
 			.interviewId(originalInterview.getInterviewId())
 			.title(originalInterview.getTitle())
+			.jobCategoryId(originalInterview.getJobCategoryId())
 			.build();
 
 		List<ScrapQuestion> scrapQuestions = new ArrayList<>();
@@ -120,7 +125,12 @@ public class ScrapService {
 		List<ReadScrapResponse> readScrapResponses = new ArrayList<>();
 		scraps.forEach(scrap ->
 			{
-				readScrapResponses.add(scrapMapper.scrapToReadScrapResponse(scrap));
+				JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(scrap.getJobCategoryId());
+				JobCategoryResponse jobCategoryResponse = new JobCategoryResponse(jobCategory.getJobCategoryId(),
+					jobCategory.getFirstLevelName(), jobCategory.getSecondLevelName());
+				readScrapResponses.add(
+					new ReadScrapResponse(scrap.getScrapId(), scrap.getTitle(), jobCategoryResponse)
+				);
 			}
 		);
 		return readScrapResponses;

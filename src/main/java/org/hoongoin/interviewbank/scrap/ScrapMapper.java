@@ -6,6 +6,7 @@ import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
@@ -28,6 +29,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ScrapMapper {
 
+	@Mapping(target = "jobCategoryId", source = "jobCategoryEntity.id")
 	@Mapping(target = "scrapId", source = "id")
 	@Mapping(target = "accountId", source = "accountEntity.id")
 	@Mapping(target = "interviewId", source = "interviewEntity.id")
@@ -45,10 +47,14 @@ public interface ScrapMapper {
 			.title(interview.getTitle())
 			.accountEntity(accountEntity)
 			.build();
+		JobCategoryEntity jobCategoryEntity = JobCategoryEntity.builder()
+			.id(interview.getJobCategoryId())
+			.build();
 
 		return ScrapEntity.builder()
 			.accountEntity(accountEntity)
 			.interviewEntity(interviewEntity)
+			.jobCategoryEntity(jobCategoryEntity)
 			.title(scrap.getTitle())
 			.build();
 	}
