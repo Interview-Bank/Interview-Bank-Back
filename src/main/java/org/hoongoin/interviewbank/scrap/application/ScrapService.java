@@ -14,7 +14,6 @@ import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
-import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestionAndScrapAnswer;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapWithScrapQuestionAndScrapAnswerList;
 import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
@@ -23,12 +22,10 @@ import org.hoongoin.interviewbank.scrap.controller.response.OriginalInterviewRes
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionAndScrapAnswerResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
-import org.hoongoin.interviewbank.scrap.application.entity.ScrapAndScrapQuestions;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestion;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestionWithScrapAnswers;
 import org.hoongoin.interviewbank.scrap.domain.ScrapAnswerCommandService;
@@ -121,6 +118,7 @@ public class ScrapService {
 	public List<ReadScrapResponse> readScrapAll(long requestingAccountId, int page, int size) {
 		List<Scrap> scraps = scrapQueryService.findScrapAllByScrapWriterAccountIdAndPageAndSize(requestingAccountId,
 			page, size);
+		Account scrapWriterAccount = accountQueryService.findAccountByAccountId(requestingAccountId);
 
 		List<ReadScrapResponse> readScrapResponses = new ArrayList<>();
 		scraps.forEach(scrap ->
@@ -129,8 +127,9 @@ public class ScrapService {
 				JobCategoryResponse jobCategoryResponse = new JobCategoryResponse(jobCategory.getJobCategoryId(),
 					jobCategory.getFirstLevelName(), jobCategory.getSecondLevelName());
 				readScrapResponses.add(
-					new ReadScrapResponse(scrap.getScrapId(), scrap.getTitle(), jobCategoryResponse)
-				);
+					new ReadScrapResponse(scrap.getScrapId(), scrap.getTitle(), jobCategoryResponse,
+						scrapWriterAccount.getNickname(), scrap.getCreatedAt().toLocalDate())
+					);
 			}
 		);
 		return readScrapResponses;
@@ -147,14 +146,17 @@ public class ScrapService {
 		OriginalInterviewResponse originalInterviewResponse = new OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());
 
-		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(scrapWithScrapQuestionAndScrapAnswerList.getScrap());
+		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(
+			scrapWithScrapQuestionAndScrapAnswerList.getScrap());
 
 		List<ScrapQuestionAndScrapAnswerResponse> scrapQuestionAndScrapAnswerResponseList = new ArrayList<>();
 		scrapWithScrapQuestionAndScrapAnswerList.getScrapQuestionAndScrapAnswerList().forEach(
 			scrapQuestionAndScrapAnswer -> scrapQuestionAndScrapAnswerResponseList.add(
-				new ScrapQuestionAndScrapAnswerResponse(scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestionAndScrapAnswer.getScrapQuestion()),
+				new ScrapQuestionAndScrapAnswerResponse(
+					scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestionAndScrapAnswer.getScrapQuestion()),
 					scrapMapper.scrapAnswerToScrapAnswerResponse(scrapQuestionAndScrapAnswer.getScrapAnswer()))));
-		return new CreateScrapResponse(originalInterviewResponse, scrapResponse, scrapQuestionAndScrapAnswerResponseList);
+		return new CreateScrapResponse(originalInterviewResponse, scrapResponse,
+			scrapQuestionAndScrapAnswerResponseList);
 	}
 
 	private ReadScrapDetailResponse makeReadScrapResponse(Scrap scrap, Interview interview,
