@@ -96,6 +96,7 @@ public class AccountService {
 		accountCommandService.resetPassword(requestingAccountId, encodedPassword);
 	}
 
+	@Transactional
 	public void resetPasswordByRequestAndRequestingAccountId(ResetPasswordRequest resetPasswordRequest,
 		long requestingAccountId) {
 		if (!Objects.equals(resetPasswordRequest.getNewPassword(), resetPasswordRequest.getNewPasswordCheck())) {
