@@ -11,7 +11,6 @@ import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRe
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
-import org.hoongoin.interviewbank.interview.controller.response.FindMyInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
 import org.hoongoin.interviewbank.interview.application.InterviewService;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
@@ -87,7 +86,7 @@ public class InterviewController {
 	}
 
 	@GetMapping("/me")
-	public ResponseEntity<FindMyInterviewResponse> findMyInterview(
+	public ResponseEntity<FindInterviewPageResponse> findMyInterview(
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size) {
 		long requestingAccountId = getRequestingAccountId();

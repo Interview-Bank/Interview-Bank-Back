@@ -118,6 +118,15 @@ public class InterviewService {
 		return getFindInterviewPageResponse(interviews);
 	}
 
+	@Transactional(readOnly = true)
+	public FindInterviewPageResponse findInterviewsByAccountId(long requestingAccountId, int page, int size) {
+		List<Interview> interviews = interviewQueryService.findInterviewsByAccountIdAndPageAndSize(requestingAccountId,
+			page, size);
+
+		Account account = accountQueryService.findAccountByAccountId(requestingAccountId);
+		return getFindInterviewPageResponse(interviews);
+	}
+
 	private CreateInterviewAndQuestionsResponse makeCreateInterviewAndQuestionsResponse(Interview createdInterview,
 		JobCategory jobCategory, List<Question> questions) {
 		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
@@ -194,13 +203,5 @@ public class InterviewService {
 		if (questionSize > 1000 || questionSize < 1) {
 			throw new IbValidationException("Question Size");
 		}
-	}
-
-	public FindMyInterviewResponse findInterviewsByAccountId(long requestingAccountId, int page, int size) {
-		List<Interview> interviews = interviewQueryService.findInterviewsByAccountIdAndPageAndSize(requestingAccountId,
-			page, size);
-
-		Account account = accountQueryService.findAccountByAccountId(requestingAccountId);
-		return interviewMapper.interviewsToFindMyInterviewResponses(interviews, account.getNickname());
 	}
 }

@@ -97,14 +97,4 @@ public interface InterviewMapper {
 	JobCategoryResponse jobCategoryToJobCategoryRespnose(JobCategory jobCategory);
 
 	Interview updateInterviewRequestToInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId);
-
-	default FindMyInterviewResponse interviewsToFindMyInterviewResponses(List<Interview> interviews,
-		String nickname) {
-		List<FindMyInterviewResponse.Interview> findMyInterviewResponseInterviews = new ArrayList<>();
-
-		interviews.forEach(interview -> findMyInterviewResponseInterviews.add(
-			new FindMyInterviewResponse.Interview(interview.getInterviewId(), nickname, interview.getCreatedAt(),
-				interview.getTitle(), interview.getInterviewPeriod(), interview.getCareerYear())));
-		return new FindMyInterviewResponse(findMyInterviewResponseInterviews);
-	}
 }
