@@ -67,13 +67,6 @@ public interface ScrapMapper {
 
 	UpdateScrapResponse scrapToUpdateScrapResponse(Scrap scrap);
 
-	@Mapping(target = "scrapId", ignore = true)
-	@Mapping(target = "accountId", ignore = true)
-	@Mapping(target = "interviewId", ignore = true)
-	@Mapping(target = "createdAt", ignore = true)
-	@Mapping(target = "updatedAt", ignore = true)
-	Scrap updateScrapRequestToScrap(UpdateScrapRequest updateScrapRequest);
-
 	@Mapping(target = "scrapAnswerId", source = "id")
 	@Mapping(target = "scrapQuestionId", source = "scrapQuestionEntity.id")
 	ScrapAnswer scrapAnswerEntityToScrapAnswer(ScrapAnswerEntity scrapAnswerEntity);

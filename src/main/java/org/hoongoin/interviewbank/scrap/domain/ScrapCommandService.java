@@ -60,8 +60,8 @@ public class ScrapCommandService {
 		return new ScrapWithScrapQuestionAndScrapAnswerList(savedScrap, scrapQuestionAndScrapAnswerList);
 	}
 
-	public Scrap updateScrap(long scrapId, Scrap scrap) {
-		ScrapEntity scrapEntity = scrapRepository.findById(scrapId)
+	public Scrap updateScrap(Scrap scrap) {
+		ScrapEntity scrapEntity = scrapRepository.findById(scrap.getScrapId())
 			.orElseThrow(() -> new IbEntityNotFoundException("ScrapEntity"));
 		scrapEntity.modifyEntity(scrap.getTitle());
 		return scrapMapper.scrapEntityToScrap(scrapEntity);
