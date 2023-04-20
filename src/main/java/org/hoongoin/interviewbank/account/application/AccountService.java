@@ -51,6 +51,7 @@ public class AccountService {
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		account.setAccountType(AccountType.EMAIL);
 		account.setPasswordUpdatedAt(LocalDateTime.now());
+		account.setImageUrl(DEFAULT_IMAGE_URL);
 
 		account = accountCommandService.insertAccount(account);
 
