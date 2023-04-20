@@ -8,6 +8,7 @@ import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.exception.IbSoftDeleteException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
+import org.hoongoin.interviewbank.interview.application.dto.PageDto;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
@@ -37,14 +38,14 @@ public class InterviewQueryService {
 		return interviewMapper.interviewEntityToInterview(interviewEntity, interviewEntity.getAccountEntity().getId());
 	}
 
-	public List<Interview> findInterviewListByPageAndSize(int page, int size) {
+	public PageDto<Interview> findInterviewListByPageAndSize(int page, int size) {
 		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByPageableOrderByCreateTimeDesc(
 			PageRequest.of(page, size));
 
 		return getInterviews(interviewEntityPage);
 	}
 
-	public List<Interview> searchInterview(String query, List<Long> jobCategoryIds, Date startDate, Date endDate,
+	public PageDto<Interview> searchInterview(String query, List<Long> jobCategoryIds, Date startDate, Date endDate,
 		InterviewPeriod interviewPeriod, int page, int size) {
 		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdsAndStartDateAndEndDatePageableOrderByCreateTimeDesc(
 			query, jobCategoryIds, startDate, endDate, interviewPeriod, PageRequest.of(page, size));
@@ -52,7 +53,14 @@ public class InterviewQueryService {
 		return getInterviews(interviewEntityPage);
 	}
 
-	private List<Interview> getInterviews(Page<InterviewEntity> interviewEntityPage) {
+	public PageDto<Interview> findInterviewsByAccountIdAndPageAndSize(long requestingAccountId, int page, int size) {
+		Page<InterviewEntity> interviewPage = interviewRepository.findByAccountEntityIdAndDeleteFlag(
+			PageRequest.of(page, size), requestingAccountId);
+
+		return getInterviews(interviewPage);
+	}
+
+	private PageDto<Interview> getInterviews(Page<InterviewEntity> interviewEntityPage) {
 		List<Interview> interviews = new ArrayList<>();
 
 		interviewEntityPage.forEach(
@@ -62,19 +70,11 @@ public class InterviewQueryService {
 						interviewEntity.getAccountEntity().getId()));
 				}
 			});
-		return interviews;
-	}
 
-	public List<Interview> findInterviewsByAccountIdAndPageAndSize(long requestingAccountId, int page, int size) {
-		Page<InterviewEntity> interviewPage = interviewRepository.findByAccountEntityIdAndDeleteFlag(
-			PageRequest.of(page, size), requestingAccountId);
-		List<InterviewEntity> interviewEntities = interviewPage.getContent();
-
-		List<Interview> interviews = new ArrayList<>();
-
-		interviewEntities
-			.forEach(interviewEntity -> interviews.add(interviewMapper.interviewEntityToInterview(interviewEntity,
-				interviewEntity.getAccountEntity().getId())));
-		return interviews;
+		PageDto<Interview> interviewPageDto = new PageDto<>();
+		interviewPageDto.setTotalPages(interviewEntityPage.getTotalPages());
+		interviewPageDto.setTotalElements(interviewEntityPage.getTotalElements());
+		interviewPageDto.setContent(interviews);
+		return interviewPageDto;
 	}
 }

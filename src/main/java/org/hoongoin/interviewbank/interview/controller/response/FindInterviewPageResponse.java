@@ -15,6 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FindInterviewPageResponse {
 
+	private int totalPages;
+	private long totalElements;
 	private List<Interview> interviews;
 
 	@Getter
