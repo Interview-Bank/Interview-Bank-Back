@@ -70,12 +70,17 @@ public class KakaoOAuthService {
 
 		HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
 
-		return restTemplate.exchange(
-				kakaoOAuthProperties.getProfileUri(),
-				HttpMethod.POST,
-				kakaoProfileRequest,
-				KakaoUserInfoResponse.class)
-			.getBody();
+		KakaoUserInfoResponse kakaoUserInfoResponse = restTemplate.exchange(
+			kakaoOAuthProperties.getProfileUri(),
+			HttpMethod.POST,
+			kakaoProfileRequest,
+			KakaoUserInfoResponse.class
+		).getBody();
+
+		if (kakaoUserInfoResponse == null) {
+			throw new IbInternalServerException("Failed to get user info from Kakao");
+		}
+		return kakaoUserInfoResponse;
 	}
 
 	private Account getAccount(KakaoUserInfoResponse kakaoUserInfoResponse) {
