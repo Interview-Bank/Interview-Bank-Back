@@ -9,7 +9,7 @@ CREATE TABLE account
     nickname CHAR(48) NOT NULL,
     password CHAR(61),
     account_type CHAR(6),
-    image_url VARCHAR(300),
+    image_url VARCHAR(300) DEFAULT 'https://interviewbank.s3.us-west-2.amazonaws.com/BasicProfilePhoto.png',
     password_updated_at TIMESTAMP(6),
     PRIMARY KEY (id)
 );

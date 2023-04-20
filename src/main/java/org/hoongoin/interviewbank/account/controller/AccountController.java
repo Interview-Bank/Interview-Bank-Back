@@ -9,6 +9,7 @@ import org.hoongoin.interviewbank.account.controller.request.SendEmailRequest;
 import org.hoongoin.interviewbank.account.controller.request.LoginRequest;
 import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.response.GetMeResponse;
+import org.hoongoin.interviewbank.account.controller.response.InitializeProfileImageResponse;
 import org.hoongoin.interviewbank.account.controller.response.LoginResponse;
 import org.hoongoin.interviewbank.account.controller.response.ModifyNicknameResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
@@ -102,5 +103,10 @@ public class AccountController {
 		@RequestParam(name = "file", required = false) MultipartFile file) {
 		return ResponseEntity.ok()
 			.body(accountService.saveProfileImage(file, getRequestingAccountId()));
+	}
+
+	@PutMapping(value = "/initialize/profile-image")
+	public ResponseEntity<InitializeProfileImageResponse> initializeProfileImage() {
+		return ResponseEntity.ok().body(accountService.saveDefaultProfileImage(getRequestingAccountId()));
 	}
 }

@@ -10,6 +10,7 @@ import org.hoongoin.interviewbank.account.controller.request.RegisterRequest;
 import org.hoongoin.interviewbank.account.controller.request.ResetPasswordRequest;
 import org.hoongoin.interviewbank.account.controller.request.SendEmailRequest;
 import org.hoongoin.interviewbank.account.controller.response.GetMeResponse;
+import org.hoongoin.interviewbank.account.controller.response.InitializeProfileImageResponse;
 import org.hoongoin.interviewbank.account.controller.response.ModifyNicknameResponse;
 import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
@@ -42,6 +43,8 @@ public class AccountService {
 	private final PasswordResetTokenCommand passwordResetTokenCommand;
 	private final PasswordResetTokenQuery passwordResetTokenQuery;
 	private final AccountExternalService accountExternalService;
+
+	private static final String DEFAULT_IMAGE_URL = "https://interviewbank.s3.us-west-2.amazonaws.com/BasicProfilePhoto.png";
 
 	public RegisterResponse registerByRegisterRequest(RegisterRequest registerRequest) {
 		Account account = accountMapper.registerRequestToAccount(registerRequest);
@@ -121,13 +124,23 @@ public class AccountService {
 
 	@Transactional
 	public UploadProfileImageResponse saveProfileImage(MultipartFile multipartFile,
-		long requestedAccountId) {
-		Account originalAccount = accountQueryService.findAccountByAccountId(requestedAccountId);
+		long requestingAccountId) {
+		Account originalAccount = accountQueryService.findAccountByAccountId(requestingAccountId);
+
+		if (multipartFile.isEmpty()) {
+			return new UploadProfileImageResponse(originalAccount.getImageUrl());
+		}
 		accountExternalService.checkImageUrlOfAccount(originalAccount);
 
 		String uploadedUrl = accountExternalService.uploadImageFile(multipartFile);
 
-		Account updatedAccount = accountCommandService.updateImageUrl(requestedAccountId, uploadedUrl);
+		Account updatedAccount = accountCommandService.updateImageUrl(requestingAccountId, uploadedUrl);
 		return new UploadProfileImageResponse(updatedAccount.getImageUrl());
+	}
+
+	@Transactional
+	public InitializeProfileImageResponse saveDefaultProfileImage(long requestingAccountId) {
+		return new InitializeProfileImageResponse(
+			accountCommandService.updateImageUrl(requestingAccountId, DEFAULT_IMAGE_URL).getImageUrl());
 	}
 }
