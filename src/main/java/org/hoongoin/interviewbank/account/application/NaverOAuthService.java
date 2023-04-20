@@ -88,7 +88,7 @@ public class NaverOAuthService {
 			NaverProfileResponse.class
 		);
 
-		if (!httpResponseEntity.getStatusCode().equals(HttpStatus.OK) || httpResponseEntity.hasBody()) {
+		if (!httpResponseEntity.getStatusCode().equals(HttpStatus.OK) || !httpResponseEntity.hasBody()) {
 			throw new IbInternalServerException("Naver OAuth Failed");
 		}
 
