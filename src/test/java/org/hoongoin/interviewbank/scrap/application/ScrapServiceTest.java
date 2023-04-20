@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
-import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
@@ -52,23 +51,22 @@ class ScrapServiceTest {
 		Scrap scrap = Scrap.builder().scrapId(1).accountId(1).interviewId(1).title("title")
 			.createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
 		UpdateScrapRequest updateScrapRequest = new UpdateScrapRequest("New Title");
+		Scrap updatedScrap = Scrap.builder().scrapId(1).accountId(1).interviewId(1).title(updateScrapRequest.getTitle())
+			.createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
 
 		given(scrapQueryService.findScrapByScrapId(1)).willReturn(scrap);
 
-		Scrap scrapToUpdate = Scrap.builder().title(updateScrapRequest.getTitle()).build();
-		given(scrapMapper.updateScrapRequestToScrap(updateScrapRequest)).willReturn(scrapToUpdate);
+		given(scrapCommandService.updateScrap(scrap)).willReturn(updatedScrap);
 
-		scrap.setTitle(updateScrapRequest.getTitle());
-		given(scrapCommandService.updateScrap(scrapId, scrapToUpdate)).willReturn(scrap);
-
-		given(scrapMapper.scrapToUpdateScrapResponse(scrap)).willReturn(new UpdateScrapResponse(scrap.getTitle()));
+		given(scrapMapper.scrapToUpdateScrapResponse(updatedScrap)).willReturn(
+			new UpdateScrapResponse(updateScrapRequest.getTitle()));
 
 		//when
 		UpdateScrapResponse updateScrapResponse = scrapService.updateScrapByRequestAndScrapId(updateScrapRequest,
 			scrapId, requestingAccountId);
 
 		//then
-		assertThat(updateScrapResponse.getTitle()).isEqualTo(scrap.getTitle());
+		assertThat(updateScrapResponse.getTitle()).isEqualTo(updateScrapRequest.getTitle());
 	}
 
 	@Test
