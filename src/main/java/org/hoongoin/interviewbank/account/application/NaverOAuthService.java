@@ -34,7 +34,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class NaverOAuthService {
 
 	private final AccountCommandService accountCommandService;
-	private final DiscordHandler discordHandler;
 	@Value("${spring.oauth2.client.registration.naver.auth-uri}")
 	private String naverAuthUri;
 	@Value("${spring.oauth2.client.registration.naver.token-uri}")
@@ -82,7 +81,6 @@ public class NaverOAuthService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-		// HTTP Body 생성
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		body.add("grant_type", "authorization_code");
 		body.add("client_id", naverClientId);
@@ -90,12 +88,11 @@ public class NaverOAuthService {
 		body.add("code", authorizationCode);
 		body.add("state", state);
 
-		// HTTP 요청 보내기
 		HttpEntity<MultiValueMap<String, String>> naverTokenRequest =
 			new HttpEntity<>(body, headers);
 		RestTemplate rt = new RestTemplate();
 		ResponseEntity<String> response = rt.exchange(
-			"https://nid.naver.com/oauth2.0/token",
+			naverTokenUri,
 			HttpMethod.POST,
 			naverTokenRequest,
 			String.class
@@ -107,7 +104,7 @@ public class NaverOAuthService {
 		return jsonNode.get("access_token").asText();
 	}
 
-	private NaverProfileResponse getNaverProfileResponse(String accessToken){
+	private NaverProfileResponse getNaverProfileResponse(String accessToken) {
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
@@ -122,12 +119,12 @@ public class NaverOAuthService {
 			NaverProfileResponse.class
 		);
 
-		if(!httpResponseEntity.hasBody()){
+		if (!httpResponseEntity.getStatusCode().equals(HttpStatus.OK) || httpResponseEntity.hasBody()) {
 			throw new IbInternalServerException("Naver OAuth Failed");
 		}
+
 		return httpResponseEntity.getBody();
 	}
-
 
 	private Account getAccount(NaverProfileResponse naverProfileResponse) {
 		return Account.builder()
