@@ -6,6 +6,7 @@ import java.util.List;
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
+import org.hoongoin.interviewbank.common.dto.PageDto;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
@@ -20,7 +21,7 @@ import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.OriginalInterviewResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapPageResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionAndScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
@@ -115,24 +116,33 @@ public class ScrapService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ReadScrapResponse> readScrapAll(long requestingAccountId, int page, int size) {
-		List<Scrap> scraps = scrapQueryService.findScrapAllByScrapWriterAccountIdAndPageAndSize(requestingAccountId,
+	public ReadScrapPageResponse readScrapByRequestingAccountIdAndPageAndSize(long requestingAccountId, int page,
+		int size) {
+		PageDto<Scrap> scrapPageDto = scrapQueryService.findScrapAllByScrapWriterAccountIdAndPageAndSize(
+			requestingAccountId,
 			page, size);
 		Account scrapWriterAccount = accountQueryService.findAccountByAccountId(requestingAccountId);
 
-		List<ReadScrapResponse> readScrapResponses = new ArrayList<>();
-		scraps.forEach(scrap ->
+		List<ReadScrapPageResponse.Scrap> readScrapPageResponseScraps = new ArrayList<>();
+
+		scrapPageDto.getContent().forEach(scrap ->
 			{
 				JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(scrap.getJobCategoryId());
 				JobCategoryResponse jobCategoryResponse = new JobCategoryResponse(jobCategory.getJobCategoryId(),
 					jobCategory.getFirstLevelName(), jobCategory.getSecondLevelName());
-				readScrapResponses.add(
-					new ReadScrapResponse(scrap.getScrapId(), scrap.getTitle(), jobCategoryResponse,
-						scrapWriterAccount.getNickname(), scrap.getCreatedAt().toLocalDate())
-					);
+				readScrapPageResponseScraps.add(
+					ReadScrapPageResponse.Scrap.builder()
+						.scrapId(scrap.getScrapId())
+						.title(scrap.getTitle())
+						.jobCategory(jobCategoryResponse)
+						.nickname(scrapWriterAccount.getNickname())
+						.createdAt(scrap.getCreatedAt().toLocalDate())
+						.build());
 			}
 		);
-		return readScrapResponses;
+
+		return new ReadScrapPageResponse(scrapPageDto.getTotalPages(), scrapPageDto.getTotalElements(),
+			readScrapPageResponseScraps);
 	}
 
 	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId) {

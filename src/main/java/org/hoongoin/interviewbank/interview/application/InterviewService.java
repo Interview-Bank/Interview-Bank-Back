@@ -8,6 +8,7 @@ import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
+import org.hoongoin.interviewbank.common.dto.PageDto;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
@@ -104,14 +105,14 @@ public class InterviewService {
 
 	@Transactional(readOnly = true)
 	public FindInterviewPageResponse findInterviewPageByPageAndSize(int page, int size) {
-		List<Interview> interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
+		PageDto<Interview> interviews = interviewQueryService.findInterviewListByPageAndSize(page, size);
 		return getFindInterviewPageResponse(interviews);
 	}
 
 	@Transactional(readOnly = true)
 	public FindInterviewPageResponse searchInterview(String query, List<Long> jobCategories, Date startDate,
 		Date endDate, InterviewPeriod interviewPeriod, int page, int size) {
-		List<Interview> interviews = interviewQueryService.searchInterview(query, jobCategories, startDate, endDate,
+		PageDto<Interview> interviews = interviewQueryService.searchInterview(query, jobCategories, startDate, endDate,
 			interviewPeriod, page, size);
 
 		return getFindInterviewPageResponse(interviews);
@@ -119,10 +120,9 @@ public class InterviewService {
 
 	@Transactional(readOnly = true)
 	public FindInterviewPageResponse findInterviewsByAccountId(long requestingAccountId, int page, int size) {
-		List<Interview> interviews = interviewQueryService.findInterviewsByAccountIdAndPageAndSize(requestingAccountId,
+		PageDto<Interview> interviews = interviewQueryService.findInterviewsByAccountIdAndPageAndSize(requestingAccountId,
 			page, size);
 
-		Account account = accountQueryService.findAccountByAccountId(requestingAccountId);
 		return getFindInterviewPageResponse(interviews);
 	}
 
@@ -181,9 +181,10 @@ public class InterviewService {
 			.build();
 	}
 
-	private FindInterviewPageResponse getFindInterviewPageResponse(List<Interview> interviews) {
+	private FindInterviewPageResponse getFindInterviewPageResponse(PageDto<Interview> interviewPageDto) {
 		List<FindInterviewPageResponse.Interview> findInterviewPageResponseInterview = new ArrayList<>();
-		for (Interview interview : interviews) {
+
+		for (Interview interview : interviewPageDto.getContent()) {
 			JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(interview.getJobCategoryId());
 			JobCategoryResponse jobCategoryResponse = interviewMapper.jobCategoryToJobCategoryRespnose(jobCategory);
 
@@ -191,7 +192,7 @@ public class InterviewService {
 				interviewMapper.interviewAndNicknameToFindInterviewPageResponseInterview(interview,
 					findAccountByInterview(interview), jobCategoryResponse));
 		}
-		return new FindInterviewPageResponse(findInterviewPageResponseInterview);
+		return new FindInterviewPageResponse(interviewPageDto.getTotalPages(), interviewPageDto.getTotalElements(), findInterviewPageResponseInterview);
 	}
 
 	private Account findAccountByInterview(Interview interview) {

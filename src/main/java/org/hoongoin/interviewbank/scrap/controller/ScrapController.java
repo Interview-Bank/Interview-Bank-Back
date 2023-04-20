@@ -2,13 +2,11 @@ package org.hoongoin.interviewbank.scrap.controller;
 
 import static org.hoongoin.interviewbank.utils.SecurityUtil.*;
 
-import java.util.List;
-
 import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapPageResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.application.ScrapService;
 import org.springframework.http.HttpHeaders;
@@ -40,13 +38,13 @@ public class ScrapController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ReadScrapResponse>> readScrapAll(
+	public ResponseEntity<ReadScrapPageResponse> readScrapAll(
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size) {
 		long requestingAccountId = getRequestingAccountId();
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
-			.body(scrapService.readScrapAll(requestingAccountId, page, size));
+			.body(scrapService.readScrapByRequestingAccountIdAndPageAndSize(requestingAccountId, page, size));
 	}
 
 	@GetMapping("/{scrap-id}")
