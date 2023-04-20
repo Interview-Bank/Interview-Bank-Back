@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PageDto<T>{
+public class PageDto<T> {
 
 	private int totalPages;
 	private long totalElements;
