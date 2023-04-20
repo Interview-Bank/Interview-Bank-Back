@@ -9,7 +9,6 @@ import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAn
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
-import org.hoongoin.interviewbank.interview.controller.response.FindMyInterviewResponse;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
@@ -97,14 +96,4 @@ public interface InterviewMapper {
 	JobCategoryResponse jobCategoryToJobCategoryRespnose(JobCategory jobCategory);
 
 	Interview updateInterviewRequestToInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId);
-
-	default FindMyInterviewResponse interviewsToFindMyInterviewResponses(List<Interview> interviews,
-		String nickname) {
-		List<FindMyInterviewResponse.Interview> findMyInterviewResponseInterviews = new ArrayList<>();
-
-		interviews.forEach(interview -> findMyInterviewResponseInterviews.add(
-			new FindMyInterviewResponse.Interview(interview.getInterviewId(), nickname, interview.getCreatedAt(),
-				interview.getTitle(), interview.getInterviewPeriod(), interview.getCareerYear())));
-		return new FindMyInterviewResponse(findMyInterviewResponseInterviews);
-	}
 }

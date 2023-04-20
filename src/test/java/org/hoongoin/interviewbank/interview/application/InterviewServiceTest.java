@@ -15,7 +15,6 @@ import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewA
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
-import org.hoongoin.interviewbank.interview.controller.response.FindMyInterviewResponse;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
@@ -220,7 +219,7 @@ class InterviewServiceTest {
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse2 = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
 		//when
-		FindMyInterviewResponse findMyInterviewResponse = interviewService.findInterviewsByAccountId(
+		FindInterviewPageResponse findMyInterviewResponse = interviewService.findInterviewsByAccountId(
 			testAccountEntity.getId(), 0, 10);
 
 		//then
@@ -256,7 +255,7 @@ class InterviewServiceTest {
 		interviewService.deleteInterviewById(createInterviewAndQuestionsResponse2.getInterviewId(),
 			testAccountEntity.getId());
 		//when
-		FindMyInterviewResponse findMyInterviewResponse = interviewService.findInterviewsByAccountId(
+		FindInterviewPageResponse findMyInterviewResponse = interviewService.findInterviewsByAccountId(
 			testAccountEntity.getId(), 0, 10);
 
 		//then

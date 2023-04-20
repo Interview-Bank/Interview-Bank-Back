@@ -16,7 +16,6 @@ import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewR
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
-import org.hoongoin.interviewbank.interview.controller.response.FindMyInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
@@ -118,6 +117,15 @@ public class InterviewService {
 		return getFindInterviewPageResponse(interviews);
 	}
 
+	@Transactional(readOnly = true)
+	public FindInterviewPageResponse findInterviewsByAccountId(long requestingAccountId, int page, int size) {
+		List<Interview> interviews = interviewQueryService.findInterviewsByAccountIdAndPageAndSize(requestingAccountId,
+			page, size);
+
+		Account account = accountQueryService.findAccountByAccountId(requestingAccountId);
+		return getFindInterviewPageResponse(interviews);
+	}
+
 	private CreateInterviewAndQuestionsResponse makeCreateInterviewAndQuestionsResponse(Interview createdInterview,
 		JobCategory jobCategory, List<Question> questions) {
 		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
@@ -194,13 +202,5 @@ public class InterviewService {
 		if (questionSize > 1000 || questionSize < 1) {
 			throw new IbValidationException("Question Size");
 		}
-	}
-
-	public FindMyInterviewResponse findInterviewsByAccountId(long requestingAccountId, int page, int size) {
-		List<Interview> interviews = interviewQueryService.findInterviewsByAccountIdAndPageAndSize(requestingAccountId,
-			page, size);
-
-		Account account = accountQueryService.findAccountByAccountId(requestingAccountId);
-		return interviewMapper.interviewsToFindMyInterviewResponses(interviews, account.getNickname());
 	}
 }
