@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
-import org.hoongoin.interviewbank.interview.application.dto.PageDto;
+import org.hoongoin.interviewbank.common.dto.PageDto;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapRepository;

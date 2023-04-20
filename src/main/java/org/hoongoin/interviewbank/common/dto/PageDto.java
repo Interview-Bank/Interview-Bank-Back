@@ -1,4 +1,4 @@
-package org.hoongoin.interviewbank.interview.application.dto;
+package org.hoongoin.interviewbank.common.dto;
 
 import java.util.List;
 
