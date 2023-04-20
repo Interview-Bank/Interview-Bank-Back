@@ -128,10 +128,13 @@ public class AccountService {
 		long requestingAccountId) {
 		Account originalAccount = accountQueryService.findAccountByAccountId(requestingAccountId);
 
-		if (multipartFile.isEmpty()) {
+		if (multipartFile == null) {
 			return new UploadProfileImageResponse(originalAccount.getImageUrl());
 		}
-		accountExternalService.checkImageUrlOfAccount(originalAccount);
+
+		if (!originalAccount.getImageUrl().equals(DEFAULT_IMAGE_URL)) {
+			accountExternalService.checkImageUrlOfAccount(originalAccount);
+		}
 
 		String uploadedUrl = accountExternalService.uploadImageFile(multipartFile);
 
