@@ -8,8 +8,6 @@ import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntit
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
-import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapAnswerResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapPageResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
@@ -80,16 +78,6 @@ public interface ScrapMapper {
 	@Mapping(target = "scrapQuestionId", source = "scrapQuestionEntity.id")
 	ScrapAnswer scrapAnswerEntityToScrapAnswer(ScrapAnswerEntity scrapAnswerEntity);
 
-	default ScrapAnswerEntity scrapAnswerAndScrapQuestionEntityToScrapAnswerEntity(ScrapAnswer scrapAnswer,
-		ScrapQuestionEntity scrapQuestionEntity) {
-		return ScrapAnswerEntity.builder()
-			.scrapQuestionEntity(scrapQuestionEntity)
-			.content(scrapAnswer.getContent())
-			.build();
-	}
-
-	CreateScrapAnswerResponse scrapAnswerToCreateScrapAnswerResponse(ScrapAnswer scrapAnswer);
-
 	UpdateScrapAnswerResponse scrapAnswerToUpdateScrapAnswerResponse(ScrapAnswer scrapAnswer);
 
 	default ScrapQuestionWithScrapAnswers scrapQuestionEntityWithScrapAnswerEntitiesToScrapQuestionWithScrapAnswers(
@@ -115,8 +103,6 @@ public interface ScrapMapper {
 	@Mapping(target = "scrapAnswerResponseList", source = "scrapAnswers")
 	ScrapQuestionWithScrapAnswersResponse scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(
 		ScrapQuestionWithScrapAnswers scrapQuestionWithScrapAnswers);
-
-	ReadScrapPageResponse scrapToReadScrapResponse(Scrap scrap);
 
 	ScrapAnswerResponse scrapAnswerToScrapAnswerResponse(ScrapAnswer scrapAnswer);
 }
