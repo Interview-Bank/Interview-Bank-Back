@@ -4,11 +4,13 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
+import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
@@ -101,7 +103,7 @@ class ScrapServiceTest {
 
 		Scrap scrap = Scrap.builder().scrapId(scrapId).title("title").build();
 		scrap.setAccountId(requestingAccountId);
-		Interview interview = Interview.builder().interviewId(3L).title("title").build();
+		Interview interview = Interview.builder().interviewId(3L).jobCategoryId(1L).title("title").build();
 		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers = Arrays.asList(
 			ScrapQuestionWithScrapAnswers.builder().build());
 
@@ -110,7 +112,7 @@ class ScrapServiceTest {
 		given(scrapQuestionQueryService.findAllScrapQuestionWithScrapAnswersByScrapId(scrapId)).willReturn(
 			scrapQuestionsWithScrapAnswers);
 		given(scrapMapper.scrapToScrapResponse(scrap)).willReturn(
-			new ScrapResponse(scrap.getScrapId(), scrap.getTitle()));
+			new ScrapResponse(scrap.getScrapId(), scrap.getTitle(), LocalDate.now()));
 
 		List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = Arrays.asList(
 			new ScrapQuestionWithScrapAnswersResponse());

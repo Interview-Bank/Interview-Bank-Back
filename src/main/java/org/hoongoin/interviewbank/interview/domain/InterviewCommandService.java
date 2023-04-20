@@ -28,27 +28,15 @@ public class InterviewCommandService {
 		AccountEntity selectedAccountEntity = accountRepository.findById(interview.getAccountId())
 			.orElseThrow(() -> new IbEntityNotFoundException("AccountEntity"));
 
-		InterviewEntity interviewEntity;
-		if(interview.getJobCategoryId() != null){
-			JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityById(
-				interview.getJobCategoryId());
-			interviewEntity = InterviewEntity.builder()
-				.title(interview.getTitle())
-				.accountEntity(selectedAccountEntity)
-				.jobCategoryEntity(jobCategoryEntity)
-				.interviewPeriod(interview.getInterviewPeriod())
-				.careerYear(interview.getCareerYear())
-				.build();
-		}
-		else{
-			interviewEntity = InterviewEntity.builder()
-				.title(interview.getTitle())
-				.accountEntity(selectedAccountEntity)
-				.interviewPeriod(interview.getInterviewPeriod())
-				.careerYear(interview.getCareerYear())
-				.build();
-		}
-
+		JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityById(
+			interview.getJobCategoryId());
+		InterviewEntity interviewEntity = InterviewEntity.builder()
+			.title(interview.getTitle())
+			.accountEntity(selectedAccountEntity)
+			.jobCategoryEntity(jobCategoryEntity)
+			.interviewPeriod(interview.getInterviewPeriod())
+			.careerYear(interview.getCareerYear())
+			.build();
 		InterviewEntity savedInterviewEntity = interviewRepository.save(interviewEntity);
 
 		return interviewMapper.interviewEntityToInterview(savedInterviewEntity, selectedAccountEntity.getId());

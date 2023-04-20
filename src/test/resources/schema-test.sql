@@ -36,7 +36,7 @@ CREATE TABLE interview
     updated_at TIMESTAMP(6),
     title CHAR(128) NOT NULL,
     account_id BIGINT NOT NULL,
-    job_category_id BIGINT,
+    job_category_id BIGINT NOT NULL,
     interview_period CHAR(32) DEFAULT 'ETC',
     career_year CHAR(16) DEFAULT 'ETC',
     PRIMARY KEY (id),
@@ -65,6 +65,7 @@ CREATE TABLE scrap
     title CHAR(128) NOT NULL,
     account_id BIGINT NOT NULL,
     interview_id BIGINT NOT NULL,
+    job_category_id BIGINT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_account_id_2 FOREIGN KEY (account_id) REFERENCES account (id),
     CONSTRAINT FK_interview_id_2 FOREIGN KEY (interview_id) REFERENCES interview (id)

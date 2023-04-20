@@ -14,12 +14,13 @@ import lombok.Setter;
 public class Scrap {
 
 	@Builder
-	public Scrap(long scrapId, long accountId, long interviewId, String title, LocalDateTime createdAt,
-		LocalDateTime updatedAt) {
+	public Scrap(long scrapId, long accountId, long interviewId, String title, Long jobCategoryId,
+		LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.setScrapId(scrapId);
 		this.setAccountId(accountId);
 		this.setInterviewId(interviewId);
 		this.setTitle(title);
+		this.setJobCategoryId(jobCategoryId);
 		this.setCreatedAt(createdAt);
 		this.setUpdatedAt(updatedAt);
 	}
@@ -28,6 +29,7 @@ public class Scrap {
 	private long accountId;
 	private long interviewId;
 	private String title;
+	private Long jobCategoryId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 

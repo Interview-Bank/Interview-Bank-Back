@@ -6,6 +6,8 @@ import java.util.List;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
+import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapAnswer;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestionAndScrapAnswer;
