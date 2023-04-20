@@ -25,7 +25,6 @@ public class InterviewQueryService {
 
 	private final InterviewRepository interviewRepository;
 	private final InterviewMapper interviewMapper;
-	private final AccountMapper accountMapper;
 
 	public Interview findInterviewById(long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)

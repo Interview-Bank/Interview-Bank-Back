@@ -44,7 +44,7 @@ public class IbControllerAdvice {
 	}
 
 	@ExceptionHandler({IbEntityNotFoundException.class, IbSoftDeleteException.class})
-	public ResponseEntity<Object> handleIbEntityNotFoundException(IbEntityNotFoundException exception,
+	public ResponseEntity<Object> handleIbEntityNotFoundException(Exception exception,
 		HttpServletRequest request) {
 		discordHandler.send(exception, request);
 		return ResponseEntity

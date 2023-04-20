@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
+import org.hoongoin.interviewbank.interview.application.dto.PageDto;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapRepository;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +28,18 @@ public class ScrapQueryService {
 		return scrapMapper.scrapEntityToScrap(scrapEntity);
 	}
 
-	public List<Scrap> findScrapAllByScrapWriterAccountIdAndPageAndSize(long requestingAccountId, int page, int size) {
-		List<ScrapEntity> scrapEntities = scrapRepository.findByAccountIdAndPageableOrderByCreatedAtDesc(
+	public PageDto<Scrap> findScrapAllByScrapWriterAccountIdAndPageAndSize(long requestingAccountId, int page,
+		int size) {
+		Page<ScrapEntity> scrapEntities = scrapRepository.findByAccountIdAndPageableOrderByCreatedAtDesc(
 			requestingAccountId, PageRequest.of(page, size));
 
+		PageDto<Scrap> scrapPageDto = new PageDto<>();
+		scrapPageDto.setTotalPages(scrapEntities.getTotalPages());
+		scrapPageDto.setTotalElements(scrapEntities.getTotalElements());
+
 		List<Scrap> scraps = new ArrayList<>();
-		scrapEntities.forEach(scrapEntity -> {
-			scraps.add(scrapMapper.scrapEntityToScrap(scrapEntity));
-		});
-		return scraps;
+		scrapEntities.forEach(scrapEntity -> scraps.add(scrapMapper.scrapEntityToScrap(scrapEntity)));
+		scrapPageDto.setContent(scraps);
+		return scrapPageDto;
 	}
 }

@@ -1,8 +1,7 @@
 package org.hoongoin.interviewbank.scrap.infrastructure.repository;
 
-import java.util.List;
-
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +18,6 @@ public interface ScrapRepository extends JpaRepository<ScrapEntity, Long> {
 	@Query("SELECT scrap FROM ScrapEntity scrap "
 		+ "WHERE scrap.accountEntity.id = :account_id "
 		+ "ORDER BY scrap.createdAt DESC")
-	List<ScrapEntity> findByAccountIdAndPageableOrderByCreatedAtDesc(@Param("account_id") long accountId,
+	Page<ScrapEntity> findByAccountIdAndPageableOrderByCreatedAtDesc(@Param("account_id") long accountId,
 		Pageable pageable);
 }
