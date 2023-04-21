@@ -31,6 +31,7 @@ public interface InterviewRepository extends JpaRepository<InterviewEntity, Long
 		+ "AND (:start_date IS NULL OR interview.createdAt >= TIMESTAMP(:start_date)) "
 		+ "AND (:end_date IS NULL OR interview.createdAt <= TIMESTAMP(:end_date)) "
 		+ "AND (:interview_period IS NULL OR interview.interviewPeriod = :interview_period) "
+		+ "AND (:career_year IS NULL OR interview.careerPeriod = :career_year) "
 		+ "ORDER BY interview.createdAt DESC")
 	Page<InterviewEntity> findAllByTitleAndJobCategoryIdsAndStartDateAndEndDatePageableOrderByCreateTimeDesc(
 		@Param("query") String query, @Param("job_category_ids") List<Long> jobCategoryIds, @Param("start_date") Date startDate,
