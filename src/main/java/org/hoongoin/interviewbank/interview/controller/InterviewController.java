@@ -13,6 +13,7 @@ import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPag
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.UpdateInterviewResponse;
 import org.hoongoin.interviewbank.interview.application.InterviewService;
+import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -79,10 +80,12 @@ public class InterviewController {
 		@RequestParam(name = "created-start-date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
 		@RequestParam(name = "created-end-date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
 		@RequestParam(name = "interview-period", required = false) InterviewPeriod interviewPeriod,
+		@RequestParam(name = "career-year", required = false) CareerYear careerYear,
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size) {
 		return ResponseEntity.ok(
-			interviewService.searchInterview(query, jobCategories, startDate, endDate, interviewPeriod, page, size));
+			interviewService.searchInterview(query, jobCategories, startDate, endDate, interviewPeriod, careerYear,
+				page, size));
 	}
 
 	@GetMapping("/me")
