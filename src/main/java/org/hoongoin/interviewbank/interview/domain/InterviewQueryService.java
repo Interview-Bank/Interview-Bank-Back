@@ -18,7 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InterviewQueryService {
@@ -28,10 +30,14 @@ public class InterviewQueryService {
 
 	public Interview findInterviewById(long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("Interview"));
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		if (Boolean.TRUE.equals(interviewEntity.getDeletedFlag())) {
-			throw new IbSoftDeleteException("Interview");
+			log.info("Interview SoftDeleted");
+			throw new IbSoftDeleteException("Interview SoftDeleted");
 		}
 
 		return interviewMapper.interviewEntityToInterview(interviewEntity, interviewEntity.getAccountEntity().getId());

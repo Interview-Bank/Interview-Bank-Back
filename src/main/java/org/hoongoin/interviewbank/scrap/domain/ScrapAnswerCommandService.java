@@ -7,12 +7,13 @@ import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapAnswerEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapQuestionEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapAnswerRepository;
-import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapQuestionRepository;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapAnswer;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ScrapAnswerCommandService {
@@ -22,13 +23,17 @@ public class ScrapAnswerCommandService {
 
 	public ScrapAnswer updateScrapAnswer(ScrapAnswer scrapAnswer) {
 		ScrapAnswerEntity scrapAnswerEntity = scrapAnswerRepository.findById(scrapAnswer.getScrapAnswerId())
-			.orElseThrow(() -> new IbEntityNotFoundException("ScrapAnswer"));
+			.orElseThrow(() -> {
+				log.info("Scrap Answer Not Found");
+				return new IbEntityNotFoundException("Scrap Answer Not Found");
+			});
 		ScrapQuestionEntity scrapQuestionEntity = scrapAnswerEntity.getScrapQuestionEntity();
 		ScrapEntity scrapEntity = scrapQuestionEntity.getScrapEntity();
 
 		if (scrapQuestionEntity.getId() != scrapAnswer.getScrapQuestionId()
 			|| scrapEntity.getId() != scrapAnswer.getScrapId()) {
-			throw new IbBadRequestException("ScrapAnswer Id mismatch");
+			log.info("ScrapAnswer Doesn't belong to Scrap");
+			throw new IbBadRequestException("Bad Request");
 		}
 
 		scrapAnswerEntity.modifyEntity(scrapAnswer.getContent());

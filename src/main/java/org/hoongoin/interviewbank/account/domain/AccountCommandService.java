@@ -11,11 +11,13 @@ import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.transaction.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountCommandService {
@@ -26,7 +28,8 @@ public class AccountCommandService {
 	public Account insertAccount(Account account) {
 		Boolean emailExists = accountRepository.existsByEmailAndAccountType(account.getEmail(), AccountType.EMAIL);
 		if (Boolean.TRUE.equals(emailExists)) {
-			throw new IbEntityExistsException(account.getEmail());
+			log.info("Email {} Already Exists", account.getEmail());
+			throw new IbEntityExistsException("Email " + account.getEmail() + " Already Exists");
 		}
 		AccountEntity accountEntity = accountMapper.accountToAccountEntity(account);
 		accountRepository.save(accountEntity);
@@ -36,7 +39,10 @@ public class AccountCommandService {
 
 	public void resetPassword(long requestingAccountId, String password) {
 		AccountEntity accountEntity = accountRepository.findById(requestingAccountId)
-			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+			.orElseThrow(() -> {
+				log.info("Account Not Found");
+				return new IbEntityNotFoundException("Account Not Found");
+			});
 
 		accountEntity.resetPassword(password);
 	}
@@ -57,14 +63,20 @@ public class AccountCommandService {
 
 	public Account modifyNickname(ModifyNicknameRequest modifyNicknameRequest, long requestingAccountId) {
 		AccountEntity accountEntity = accountRepository.findById(requestingAccountId)
-			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+			.orElseThrow(() -> {
+				log.info("Account Not Found");
+				return new IbEntityNotFoundException("Account Not Found");
+			});
 		accountEntity.editNickname(modifyNicknameRequest.getNickname());
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 
 	public Account updateImageUrl(long requestedAccountId, String uploadedUrl) {
 		AccountEntity accountEntity = accountRepository.findById(requestedAccountId)
-			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+			.orElseThrow(() -> {
+				log.info("Account Not Found");
+				return new IbEntityNotFoundException("Account Not Found");
+			});
 
 		accountEntity.uploadImageUrl(uploadedUrl);
 

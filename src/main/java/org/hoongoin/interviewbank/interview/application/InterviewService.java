@@ -31,7 +31,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InterviewService {
@@ -202,7 +204,8 @@ public class InterviewService {
 
 	private void validateQuestionsSize(int questionSize) {
 		if (questionSize > 1000 || questionSize < 1) {
-			throw new IbValidationException("Question Size");
+			log.info("Question Size Validation Failed");
+			throw new IbValidationException("Question Size Validation Failed");
 		}
 	}
 }

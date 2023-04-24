@@ -13,7 +13,9 @@ import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QuestionQueryService {
@@ -24,7 +26,10 @@ public class QuestionQueryService {
 
 	public List<Question> findQuestionsByInterviewId(long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		List<QuestionEntity> questionEntities = questionRepository.findQuestionEntitiesByInterviewEntity(
 			interviewEntity);

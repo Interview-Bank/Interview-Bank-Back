@@ -10,7 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Setter
 @ToString
@@ -45,7 +47,8 @@ public class Interview {
 
 	public void setTitle(String title) {
 		if (validateTitle(title)) {
-			throw new IbValidationException("title");
+			log.info("Title Validation Failed");
+			throw new IbValidationException("Title Validation Failed");
 		}
 		this.title = title;
 	}

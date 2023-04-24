@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.exception.IbBadRequestException;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.common.dto.PageDto;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
@@ -38,7 +39,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ScrapService {
@@ -147,7 +150,8 @@ public class ScrapService {
 
 	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId) {
 		if (scrapWriterAccountId != requestingAccountId) {
-			throw new IbUnauthorizedException("Scrap");
+			log.info("Bad Request");
+			throw new IbBadRequestException("Bad Request");
 		}
 	}
 

@@ -14,7 +14,9 @@ import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InterviewCommandService {
@@ -26,7 +28,10 @@ public class InterviewCommandService {
 
 	public Interview insertInterview(Interview interview) {
 		AccountEntity selectedAccountEntity = accountRepository.findById(interview.getAccountId())
-			.orElseThrow(() -> new IbEntityNotFoundException("AccountEntity"));
+			.orElseThrow(() -> {
+				log.info("Account Not Found");
+				return new IbEntityNotFoundException("Account Not Found");
+			});
 
 		JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityById(
 			interview.getJobCategoryId());
@@ -44,7 +49,10 @@ public class InterviewCommandService {
 
 	public long deleteInterview(long interviewId, long accountId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("InterviewEntity"));
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		isMatchInterviewAndAccount(accountId, interviewEntity);
 
@@ -54,7 +62,10 @@ public class InterviewCommandService {
 
 	public Interview updateInterview(Interview interview, long interviewId, long accountId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("InterviewEntity"));
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		isMatchInterviewAndAccount(accountId, interviewEntity);
 
@@ -70,7 +81,8 @@ public class InterviewCommandService {
 
 	private void isMatchInterviewAndAccount(long accountId, InterviewEntity interviewEntity) {
 		if (interviewEntity.getAccountEntity().getId() != accountId) {
-			throw new IbAccountNotMatchException("Interview");
+			log.info("Interview Writer Account And Request Account Do Not Match");
+			throw new IbAccountNotMatchException("Bad Request");
 		}
 	}
 }

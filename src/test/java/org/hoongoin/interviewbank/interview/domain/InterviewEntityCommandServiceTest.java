@@ -180,7 +180,7 @@ class InterviewEntityCommandServiceTest {
 		assertThatThrownBy(() -> interviewCommandService.updateInterview(testInterview, savedInterviewEntity.getId(),
 			testAccountEntity.getId() + 1))
 			.isInstanceOf(IbAccountNotMatchException.class)
-			.hasMessageContaining("Interview");
+			.hasMessageContaining("Bad Request");
 
 	}
 

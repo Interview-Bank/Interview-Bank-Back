@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.account.application;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.hoongoin.interviewbank.account.application.dto.*;
 import org.hoongoin.interviewbank.account.application.entity.Account;
@@ -17,6 +18,7 @@ import java.util.Base64;
 
 import com.google.gson.Gson;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class GoogleOAuthService {
@@ -64,6 +66,7 @@ public class GoogleOAuthService {
 			GoogleTokenResponse.class);
 
 		if (!tokenResponseEntity.hasBody()) {
+			log.error("Google OAuth Failed");
 			throw new IbInternalServerException("Google OAuth Failed");
 		}
 		return tokenResponseEntity.getBody();

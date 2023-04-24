@@ -8,7 +8,9 @@ import org.hoongoin.interviewbank.exception.IbValidationException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Setter
 public class ScrapAnswer {
@@ -37,6 +39,7 @@ public class ScrapAnswer {
 
 	private void setContent(String content) {
 		if (content!=null && content.getBytes(StandardCharsets.UTF_8).length > 100000) {
+			log.info("Scrap Answer content over 100000 byte");
 			throw new IbValidationException("Scrap Answer content over 100000 byte");
 		}
 		this.content = content;

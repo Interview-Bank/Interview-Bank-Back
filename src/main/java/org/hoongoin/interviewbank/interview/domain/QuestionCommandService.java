@@ -17,7 +17,9 @@ import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QuestionCommandService {
@@ -33,7 +35,10 @@ public class QuestionCommandService {
 
 	public List<Question> insertQuestions(List<Question> questions, long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		return saveAllQuestions(questions, interviewEntity);
 	}
@@ -97,7 +102,10 @@ public class QuestionCommandService {
 
 	public List<Long> deleteQuestionsByInterviewId(long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		List<Long> deletedQuestions = new ArrayList<>();
 

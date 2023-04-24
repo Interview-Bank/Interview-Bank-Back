@@ -8,7 +8,9 @@ import org.hoongoin.interviewbank.exception.IbValidationException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Setter
 public class Scrap {
@@ -35,6 +37,7 @@ public class Scrap {
 
 	public void setTitle(String title) {
 		if (title.getBytes(StandardCharsets.UTF_8).length > 128) {
+			log.info("Title over 128 byte");
 			throw new IbValidationException("Title over 128 byte");
 		}
 		this.title = title;
