@@ -129,6 +129,7 @@ class QuestionCommandServiceTest {
 
 		//when
 		List<Question> updatedQuestions = questionCommandService.updateQuestions(
+			savedInterviewEntity.getId(),
 			interviewMapper.updateInterviewRequestToQuestions(
 				new UpdateInterviewRequest(updatingQuestions, savedInterviewEntity.getTitle(), null,
 					InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR),

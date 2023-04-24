@@ -81,7 +81,7 @@ public class InterviewService {
 
 		List<Question> newQuestions = interviewMapper.updateInterviewRequestToQuestions(updateInterviewRequest,
 			interviewId);
-		List<Question> updatedQuestions = questionCommandService.updateQuestions(newQuestions);
+		List<Question> updatedQuestions = questionCommandService.updateQuestions(interviewId, newQuestions);
 
 		return makeUpdateInterviewResponse(interview, jobCategory, updatedQuestions);
 	}
