@@ -36,7 +36,8 @@ public class InterviewQueryService {
 			});
 
 		if (Boolean.TRUE.equals(interviewEntity.getDeletedFlag())) {
-			throw new IbSoftDeleteException("Interview");
+			log.info("Interview SoftDeleted");
+			throw new IbSoftDeleteException("Interview SoftDeleted");
 		}
 
 		return interviewMapper.interviewEntityToInterview(interviewEntity, interviewEntity.getAccountEntity().getId());

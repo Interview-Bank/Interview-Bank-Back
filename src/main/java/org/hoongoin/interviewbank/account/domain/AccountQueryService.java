@@ -47,7 +47,8 @@ public class AccountQueryService {
 
 	private void isDeleted(AccountEntity accountEntity) {
 		if (Boolean.TRUE.equals(accountEntity.getDeletedFlag())) {
-			throw new IbSoftDeleteException("Account");
+			log.info("Account SoftDeleted");
+			throw new IbSoftDeleteException("Account SoftDeleted");
 		}
 	}
 }
