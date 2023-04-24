@@ -58,7 +58,7 @@ public class AccountExternalService {
 		try {
 			originalImage = ImageIO.read(multipartFile.getInputStream());
 		} catch (IOException e) {
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 			throw new IbInternalServerException("Internal Server Error");
 		}
 
@@ -83,7 +83,7 @@ public class AccountExternalService {
 			ImageIO.write(image, getFormatName(contentType), bos);
 			return bos.toByteArray();
 		} catch (IOException e) {
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 			throw new IbInternalServerException("Internal Server Error");
 		}
 	}

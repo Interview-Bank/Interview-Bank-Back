@@ -42,7 +42,7 @@ public class NaverOAuthService {
 			.toUri();
 	}
 
-	public Account naverLoginOrRegister(String authorizationCode, String state) throws JsonProcessingException {
+	public Account naverLoginOrRegister(String authorizationCode, String state) {
 		NaverTokenResponse naverTokenResponse = exchangeCodeForAccessToken(authorizationCode, state);
 		NaverProfileResponse naverProfileResponse = getNaverProfileResponse(naverTokenResponse.getAccessToken());
 		Account account = getAccount(naverProfileResponse);
@@ -70,6 +70,7 @@ public class NaverOAuthService {
 		).getBody();
 
 		if (naverTokenResponse == null) {
+			log.error("Naver OAuth Failed");
 			throw new IbInternalServerException("Naver OAuth Failed");
 		}
 		return naverTokenResponse;
@@ -89,6 +90,7 @@ public class NaverOAuthService {
 		);
 
 		if (!httpResponseEntity.getStatusCode().equals(HttpStatus.OK) || !httpResponseEntity.hasBody()) {
+			log.error("Naver OAuth Failed");
 			throw new IbInternalServerException("Naver OAuth Failed");
 		}
 

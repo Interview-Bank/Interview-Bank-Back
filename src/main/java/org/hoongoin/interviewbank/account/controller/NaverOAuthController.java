@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.account.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.application.NaverOAuthService;
@@ -19,8 +20,7 @@ import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
 
 import javax.servlet.http.HttpSession;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/oauth/naver")
@@ -42,10 +42,10 @@ public class NaverOAuthController {
 	public ResponseEntity<Object> naverLoginOrRegister(HttpSession session,
 		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state,
 		@RequestParam(name = "error", required = false) String error,
-		@RequestParam(name = "error_description", required = false) String errorDescription) throws
-		JsonProcessingException {
+		@RequestParam(name = "error_description", required = false) String errorDescription) {
 		if (error != null) {
-			throw new IbInternalServerException(error + errorDescription);
+			log.error("Naver OAuth error: {} {}", error, errorDescription);
+			throw new IbInternalServerException("Naver OAuth Failed");
 		}
 
 		if (sessionRepository.findById(state) == null) {

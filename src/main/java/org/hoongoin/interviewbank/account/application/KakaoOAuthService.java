@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.account.application;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.hoongoin.interviewbank.account.application.dto.*;
 import org.hoongoin.interviewbank.account.application.entity.Account;
@@ -16,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class KakaoOAuthService {
@@ -58,7 +60,8 @@ public class KakaoOAuthService {
 			kakaoTokenRequest,
 			KakaoTokenResponse.class);
 		if (kakaoTokenResponse == null) {
-			throw new IbInternalServerException("Failed to get access token from Kakao");
+			log.error("Kakao OAuth Failed");
+			throw new IbInternalServerException("Kakao OAuth Failed");
 		}
 		return kakaoTokenResponse;
 	}
@@ -78,7 +81,8 @@ public class KakaoOAuthService {
 		).getBody();
 
 		if (kakaoUserInfoResponse == null) {
-			throw new IbInternalServerException("Failed to get user info from Kakao");
+			log.error("Kakao OAuth Failed");
+			throw new IbInternalServerException("Kakao OAuth Failed");
 		}
 		return kakaoUserInfoResponse;
 	}
