@@ -58,11 +58,9 @@ public class InterviewCommandService {
 
 		isMatchInterviewAndAccount(accountId, interviewEntity);
 
-		JobCategoryEntity jobCategoryEntity = null;
-		if(interview.getJobCategoryId() != null) {
-			jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityById(
+		JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityById(
 				interview.getJobCategoryId());
-		}
+
 		interviewEntity.modifyEntity(
 			new InterviewModifyDto(interview.getTitle(), interview.getInterviewPeriod(), interview.getCareerYear(),
 		  		jobCategoryEntity));
