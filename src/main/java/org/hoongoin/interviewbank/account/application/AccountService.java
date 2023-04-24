@@ -22,7 +22,7 @@ import org.hoongoin.interviewbank.account.domain.PasswordResetTokenQuery;
 import org.hoongoin.interviewbank.account.application.entity.AccountType;
 import org.hoongoin.interviewbank.account.infrastructure.entity.PasswordResetToken;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
-import org.hoongoin.interviewbank.exception.IbLoginFailedException;
+import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AccountService {
@@ -63,11 +65,13 @@ public class AccountService {
 		try {
 			account = accountQueryService.findAccountByEmailAndAccountType(loginRequest.getEmail(), AccountType.EMAIL);
 		} catch (IbEntityNotFoundException e) {
-			throw new IbLoginFailedException("Email or Password is not correct");
+			log.info("Account of Email {} Not Exists", loginRequest.getEmail());
+			throw new IbUnauthorizedException("Email or Password is not correct");
 		}
 
 		if (!passwordEncoder.matches(loginRequest.getPassword(), account.getPassword())) {
-			throw new IbLoginFailedException("Email or Password is not correct");
+			log.info("Password of Account {} is not correct", account.getAccountId());
+			throw new IbUnauthorizedException("Email or Password is not correct");
 		}
 
 		return account;

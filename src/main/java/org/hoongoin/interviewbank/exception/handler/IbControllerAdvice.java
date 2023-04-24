@@ -8,7 +8,6 @@ import org.hoongoin.interviewbank.exception.IbBadRequestException;
 import org.hoongoin.interviewbank.exception.IbEntityExistsException;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
-import org.hoongoin.interviewbank.exception.IbLoginFailedException;
 import org.hoongoin.interviewbank.exception.IbSoftDeleteException;
 import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.exception.IbValidationException;
@@ -44,7 +43,7 @@ public class IbControllerAdvice {
 			.body(exception.getMessage());
 	}
 
-	@ExceptionHandler({IbUnauthorizedException.class, IbLoginFailedException.class})
+	@ExceptionHandler(IbUnauthorizedException.class)
 	public ResponseEntity<Object> handleIbUnauthorizedException(Exception exception, HttpServletRequest request) {
 		discordHandler.send(exception, request);
 		return ResponseEntity
