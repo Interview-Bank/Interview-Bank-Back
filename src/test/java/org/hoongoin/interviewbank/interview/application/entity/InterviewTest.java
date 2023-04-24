@@ -38,10 +38,10 @@ class InterviewTest {
 		//when //then
 		assertThatThrownBy(() -> Interview.builder().title(englishTitle).build())
 			.isInstanceOf(IbValidationException.class)
-			.hasMessage("title Validation Failed");
+			.hasMessage("Title Validation Failed");
 		assertThatThrownBy(() -> Interview.builder().title(koreanTitle).build())
 			.isInstanceOf(IbValidationException.class)
-			.hasMessage("title Validation Failed");
+			.hasMessage("Title Validation Failed");
 
 	}
 }

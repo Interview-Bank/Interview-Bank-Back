@@ -120,6 +120,7 @@ public class AccountExternalService {
 			URI uri = new URI(url);
 			return uri.getPath().substring(1);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			throw new IbValidationException("invalid uri format");
 		}
 	}

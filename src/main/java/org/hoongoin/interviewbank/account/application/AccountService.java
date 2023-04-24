@@ -97,6 +97,7 @@ public class AccountService {
 		long requestingAccountId = passwordResetToken.getAccountId();
 
 		if (!Objects.equals(resetPasswordRequest.getNewPassword(), resetPasswordRequest.getNewPasswordCheck())) {
+			log.info("Password and Password Check is not same");
 			throw new IbValidationException("Password and Password Check is not same");
 		}
 
@@ -108,6 +109,7 @@ public class AccountService {
 	public void resetPasswordByRequestAndRequestingAccountId(ResetPasswordRequest resetPasswordRequest,
 		long requestingAccountId) {
 		if (!Objects.equals(resetPasswordRequest.getNewPassword(), resetPasswordRequest.getNewPasswordCheck())) {
+			log.info("Password and Password Check is not same");
 			throw new IbValidationException("Password and Password Check is not same");
 		}
 

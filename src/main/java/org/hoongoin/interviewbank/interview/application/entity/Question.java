@@ -8,7 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Setter
 @ToString
@@ -36,7 +38,8 @@ public class Question {
 
 	public void setContent(String content) {
 		if (validateContent(content)) {
-			throw new IbValidationException("Question");
+			log.info("Question Validation Failed");
+			throw new IbValidationException("Question Validation Failed");
 		}
 		this.content = content;
 	}

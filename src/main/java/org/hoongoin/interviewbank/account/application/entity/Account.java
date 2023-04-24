@@ -7,7 +7,9 @@ import org.hoongoin.interviewbank.exception.IbValidationException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Setter
 public class Account {
@@ -43,12 +45,15 @@ public class Account {
 
 	public void setNickname(String nickname) {
 		if (nickname == null) {
+			log.info("nickname null");
 			throw new IbValidationException("nickname null");
 		}
 		if (nickname.length() < 1) {
+			log.info("nickname length less than 1");
 			throw new IbValidationException("nickname length less than 1");
 		}
 		if (nickname.length() > 16) {
+			log.info("nickname length larger than 16");
 			throw new IbValidationException("nickname length larger than 16");
 		}
 		this.nickname = nickname;
@@ -56,9 +61,11 @@ public class Account {
 
 	public void setEmail(String email) {
 		if (email == null) {
+			log.info("email null");
 			throw new IbValidationException("email null");
 		}
 		if (email.length() > 320) {
+			log.info("email larger than 320 length");
 			throw new IbValidationException("email larger than 320 length");
 		}
 		this.email = email;
@@ -66,6 +73,7 @@ public class Account {
 
 	public void setImageUrl(String imageUrl) {
 		if (imageUrl != null && imageUrl.length() > 300) {
+			log.info("image url than 300 length");
 			throw new IbValidationException("image url than 300 length");
 		}
 		this.imageUrl = imageUrl;
