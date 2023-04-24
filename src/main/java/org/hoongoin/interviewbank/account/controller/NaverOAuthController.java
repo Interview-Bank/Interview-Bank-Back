@@ -49,6 +49,7 @@ public class NaverOAuthController {
 		}
 
 		if (sessionRepository.findById(state) == null) {
+			log.info("Invalid session id");
 			throw new IbUnauthorizedException("Invalid session id");
 		}
 		Account account = naverOAuthService.naverLoginOrRegister(authorizationCode, state);

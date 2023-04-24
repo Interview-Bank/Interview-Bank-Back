@@ -1,6 +1,7 @@
 package org.hoongoin.interviewbank.account.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.hoongoin.interviewbank.account.AccountMapper;
 import org.hoongoin.interviewbank.account.application.GoogleOAuthService;
@@ -18,6 +19,7 @@ import static org.hoongoin.interviewbank.utils.SecurityUtil.setAuthentication;
 
 import javax.servlet.http.HttpSession;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account/oauth/google")
@@ -39,6 +41,7 @@ public class GoogleOAuthController {
 	public ResponseEntity<Object> googleLoginOrRegister(HttpSession session,
 		@RequestParam(name = "code") String authorizationCode, @RequestParam(name = "state") String state){
 		if(sessionRepository.findById(state) == null) {
+			log.info("Invalid session id");
 			throw new IbUnauthorizedException("Invalid session id");
 		}
 		Account account = googleOAuthService.googleLoginOrRegister(authorizationCode);
