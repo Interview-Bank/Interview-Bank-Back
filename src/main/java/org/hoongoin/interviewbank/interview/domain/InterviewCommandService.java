@@ -14,7 +14,9 @@ import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InterviewCommandService {
@@ -58,11 +60,9 @@ public class InterviewCommandService {
 
 		isMatchInterviewAndAccount(accountId, interviewEntity);
 
-		JobCategoryEntity jobCategoryEntity = null;
-		if(interview.getJobCategoryId() != null) {
-			jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityById(
+		JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityById(
 				interview.getJobCategoryId());
-		}
+
 		interviewEntity.modifyEntity(
 			new InterviewModifyDto(interview.getTitle(), interview.getInterviewPeriod(), interview.getCareerYear(),
 		  		jobCategoryEntity));
@@ -72,7 +72,8 @@ public class InterviewCommandService {
 
 	private void isMatchInterviewAndAccount(long accountId, InterviewEntity interviewEntity) {
 		if (interviewEntity.getAccountEntity().getId() != accountId) {
-			throw new IbAccountNotMatchException("Interview");
+			log.info("Interview Writer Account And Request Account Do Not Match");
+			throw new IbAccountNotMatchException("Bad Request");
 		}
 	}
 }

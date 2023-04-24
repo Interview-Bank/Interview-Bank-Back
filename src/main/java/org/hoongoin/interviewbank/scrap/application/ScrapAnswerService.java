@@ -1,8 +1,6 @@
 package org.hoongoin.interviewbank.scrap.application;
 
-import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.exception.IbAccountNotMatchException;
-import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapAnswerRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapAnswerResponse;
@@ -17,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ScrapAnswerService {
@@ -55,7 +55,8 @@ public class ScrapAnswerService {
 
 	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId) {
 		if (scrapWriterAccountId != requestingAccountId) {
-			throw new IbAccountNotMatchException("Scrap");
+			log.info("Interview Writer Account And Request Account Do Not Match");
+			throw new IbAccountNotMatchException("Bad Request");
 		}
 	}
 }
