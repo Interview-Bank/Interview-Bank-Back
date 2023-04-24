@@ -28,7 +28,10 @@ public class InterviewCommandService {
 
 	public Interview insertInterview(Interview interview) {
 		AccountEntity selectedAccountEntity = accountRepository.findById(interview.getAccountId())
-			.orElseThrow(() -> new IbEntityNotFoundException("AccountEntity"));
+			.orElseThrow(() -> {
+				log.info("Account Not Found");
+				return new IbEntityNotFoundException("Account Not Found");
+			});
 
 		JobCategoryEntity jobCategoryEntity = jobCategoryQueryService.findJobCategoryEntityById(
 			interview.getJobCategoryId());
@@ -46,7 +49,10 @@ public class InterviewCommandService {
 
 	public long deleteInterview(long interviewId, long accountId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("InterviewEntity"));
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		isMatchInterviewAndAccount(accountId, interviewEntity);
 
@@ -56,7 +62,10 @@ public class InterviewCommandService {
 
 	public Interview updateInterview(Interview interview, long interviewId, long accountId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("InterviewEntity"));
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		isMatchInterviewAndAccount(accountId, interviewEntity);
 

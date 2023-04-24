@@ -14,7 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ScrapQueryService {
@@ -24,7 +26,10 @@ public class ScrapQueryService {
 
 	public Scrap findScrapByScrapId(long scrapId) {
 		ScrapEntity scrapEntity = scrapRepository.findById(scrapId)
-			.orElseThrow(() -> new IbEntityNotFoundException("Scrap"));
+			.orElseThrow(() -> {
+				log.info("Scrap Not Found");
+				return new IbEntityNotFoundException("Scrap Not Found");
+			});
 		return scrapMapper.scrapEntityToScrap(scrapEntity);
 	}
 

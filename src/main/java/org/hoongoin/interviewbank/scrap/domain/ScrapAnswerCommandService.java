@@ -23,7 +23,10 @@ public class ScrapAnswerCommandService {
 
 	public ScrapAnswer updateScrapAnswer(ScrapAnswer scrapAnswer) {
 		ScrapAnswerEntity scrapAnswerEntity = scrapAnswerRepository.findById(scrapAnswer.getScrapAnswerId())
-			.orElseThrow(() -> new IbEntityNotFoundException("ScrapAnswer"));
+			.orElseThrow(() -> {
+				log.info("Scrap Answer Not Found");
+				return new IbEntityNotFoundException("Scrap Answer Not Found");
+			});
 		ScrapQuestionEntity scrapQuestionEntity = scrapAnswerEntity.getScrapQuestionEntity();
 		ScrapEntity scrapEntity = scrapQuestionEntity.getScrapEntity();
 

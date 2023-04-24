@@ -10,7 +10,9 @@ import org.hoongoin.interviewbank.exception.IbSoftDeleteException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountQueryService {
@@ -21,7 +23,10 @@ public class AccountQueryService {
 	public Account findAccountByEmailAndAccountType(String email, AccountType accountType) throws
 		IbEntityNotFoundException, IbSoftDeleteException {
 		AccountEntity accountEntity = accountRepository.findByEmailAndAccountType(email, accountType)
-			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+			.orElseThrow(() -> {
+				log.info("Account Not Found");
+				return new IbEntityNotFoundException("Account Not Found");
+			});
 
 		isDeleted(accountEntity);
 
@@ -30,7 +35,10 @@ public class AccountQueryService {
 
 	public Account findAccountByAccountId(long accountId) {
 		AccountEntity accountEntity = accountRepository.findById(accountId)
-			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+			.orElseThrow(() -> {
+				log.info("Account Not Found");
+				return new IbEntityNotFoundException("Account Not Found");
+			});
 
 		isDeleted(accountEntity);
 

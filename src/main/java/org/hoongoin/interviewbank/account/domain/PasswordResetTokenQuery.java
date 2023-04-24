@@ -6,7 +6,9 @@ import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PasswordResetTokenQuery {
@@ -19,6 +21,9 @@ public class PasswordResetTokenQuery {
 
 	public PasswordResetToken findResetTokenByToken(String token) {
 		return passwordResetTokenRepository.findById(token)
-			.orElseThrow(() -> new IbEntityNotFoundException("Password Reset Token"));
+			.orElseThrow(() -> {
+				log.info("Password Reset Token Not Found");
+				return new IbEntityNotFoundException("Password Reset Token Not Found");
+			});
 	}
 }

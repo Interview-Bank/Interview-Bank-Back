@@ -39,7 +39,10 @@ public class AccountCommandService {
 
 	public void resetPassword(long requestingAccountId, String password) {
 		AccountEntity accountEntity = accountRepository.findById(requestingAccountId)
-			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+			.orElseThrow(() -> {
+				log.info("Account Not Found");
+				return new IbEntityNotFoundException("Account Not Found");
+			});
 
 		accountEntity.resetPassword(password);
 	}
@@ -60,14 +63,20 @@ public class AccountCommandService {
 
 	public Account modifyNickname(ModifyNicknameRequest modifyNicknameRequest, long requestingAccountId) {
 		AccountEntity accountEntity = accountRepository.findById(requestingAccountId)
-			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+			.orElseThrow(() -> {
+				log.info("Account Not Found");
+				return new IbEntityNotFoundException("Account Not Found");
+			});
 		accountEntity.editNickname(modifyNicknameRequest.getNickname());
 		return accountMapper.accountEntityToAccount(accountEntity);
 	}
 
 	public Account updateImageUrl(long requestedAccountId, String uploadedUrl) {
 		AccountEntity accountEntity = accountRepository.findById(requestedAccountId)
-			.orElseThrow(() -> new IbEntityNotFoundException("Account"));
+			.orElseThrow(() -> {
+				log.info("Account Not Found");
+				return new IbEntityNotFoundException("Account Not Found");
+			});
 
 		accountEntity.uploadImageUrl(uploadedUrl);
 

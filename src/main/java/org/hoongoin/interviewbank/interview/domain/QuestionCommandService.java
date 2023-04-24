@@ -17,7 +17,9 @@ import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QuestionCommandService {
@@ -33,7 +35,10 @@ public class QuestionCommandService {
 
 	public List<Question> insertQuestions(List<Question> questions, long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		return saveAllQuestions(questions, interviewEntity);
 	}
@@ -43,7 +48,10 @@ public class QuestionCommandService {
 
 		newQuestions.forEach(question -> {
 			QuestionEntity questionEntity = questionRepository.findById(question.getQuestionId())
-				.orElseThrow(() -> new IbEntityNotFoundException("question"));
+				.orElseThrow(() -> {
+					log.info("Question Not Found");
+					return new IbEntityNotFoundException("Question Not Found");
+				});
 
 			questionEntity.modifyContent(question.getContent());
 
@@ -55,7 +63,10 @@ public class QuestionCommandService {
 
 	public List<Long> deleteQuestionsByInterviewId(long interviewId) {
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> new IbEntityNotFoundException("interview"));
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		List<Long> deletedQuestions = new ArrayList<>();
 

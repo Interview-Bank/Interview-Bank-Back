@@ -21,7 +21,10 @@ public class ScrapAnswerQueryService {
 
 	public void deleteScrapAnswer(ScrapAnswerIdsDto scrapAnswerIdsDto) {
 		ScrapAnswerEntity scrapAnswerEntity = scrapAnswerRepository.findById(scrapAnswerIdsDto.getScrapAnswerId())
-			.orElseThrow(() -> new IbEntityNotFoundException("ScrapAnswer"));
+			.orElseThrow(() -> {
+				log.info("Scrap Answer Not Found");
+				return new IbEntityNotFoundException("Scrap Answer Not Found");
+			});
 
 		ScrapQuestionEntity scrapQuestionEntity = scrapAnswerEntity.getScrapQuestionEntity();
 		ScrapEntity scrapEntity = scrapQuestionEntity.getScrapEntity();

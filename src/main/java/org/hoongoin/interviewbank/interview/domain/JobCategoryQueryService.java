@@ -8,10 +8,6 @@ import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEnt
 
 public interface JobCategoryQueryService {
 
-	public Long findJobCategoryIdByJobCategoryName(String primaryJobCategory, String secondaryJobCategory);
-
-	public JobCategoryEntity findJobCategoryEntityByJobCategory(String primaryJobCategory, String secondaryJobCategory);
-
 	public List<JobCategoryWithHierarchy> findAllJobCategoriesWithHierarchy();
 
 	JobCategoryEntity findJobCategoryEntityById(Long jobCategoryId);
