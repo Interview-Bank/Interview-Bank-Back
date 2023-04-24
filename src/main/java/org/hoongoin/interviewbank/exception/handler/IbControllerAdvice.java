@@ -26,17 +26,9 @@ public class IbControllerAdvice {
 
 	private final DiscordHandler discordHandler;
 
-	@ExceptionHandler({IbBadRequestException.class, IbAccountNotMatchException.class})
+	@ExceptionHandler({IbBadRequestException.class, IbAccountNotMatchException.class, IbValidationException.class,
+		IbEntityExistsException.class})
 	public ResponseEntity<Object> handleBadRequestException(Exception exception, HttpServletRequest request) {
-		discordHandler.send(exception, request);
-		return ResponseEntity
-			.status(IbErrorCode.BAD_REQUEST.getHttpStatus())
-			.body("Bad Request");
-	}
-
-	@ExceptionHandler(IbEntityExistsException.class)
-	public ResponseEntity<Object> handleIbEntityExistsException(IbEntityExistsException exception,
-		HttpServletRequest request) {
 		discordHandler.send(exception, request);
 		return ResponseEntity
 			.status(IbErrorCode.BAD_REQUEST.getHttpStatus())
@@ -49,33 +41,14 @@ public class IbControllerAdvice {
 		discordHandler.send(exception, request);
 		return ResponseEntity
 			.status(IbErrorCode.NOT_FOUND.getHttpStatus())
-			.body("Not Found");
+			.body(exception.getMessage());
 	}
 
-	@ExceptionHandler(IbUnauthorizedException.class)
-	public ResponseEntity<Object> handleIbUnauthorizedException(IbUnauthorizedException exception,
-		HttpServletRequest request) {
+	@ExceptionHandler({IbUnauthorizedException.class, IbLoginFailedException.class})
+	public ResponseEntity<Object> handleIbUnauthorizedException(Exception exception, HttpServletRequest request) {
 		discordHandler.send(exception, request);
 		return ResponseEntity
 			.status(IbErrorCode.UNAUTHORIZED.getHttpStatus())
-			.body("Unauthorized");
-	}
-
-	@ExceptionHandler(IbLoginFailedException.class)
-	public ResponseEntity<Object> handleLoginFailedException(IbLoginFailedException exception,
-		HttpServletRequest request) {
-		discordHandler.send(exception, request);
-		return ResponseEntity
-			.status(IbErrorCode.UNAUTHORIZED.getHttpStatus())
-			.body("Email or Password is not correct");
-	}
-
-	@ExceptionHandler(IbValidationException.class)
-	public ResponseEntity<Object> handleIbValidationException(IbValidationException exception,
-		HttpServletRequest request) {
-		discordHandler.send(exception, request);
-		return ResponseEntity
-			.status(IbErrorCode.BAD_REQUEST.getHttpStatus())
 			.body(exception.getMessage());
 	}
 
