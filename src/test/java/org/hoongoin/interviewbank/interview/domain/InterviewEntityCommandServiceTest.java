@@ -66,6 +66,7 @@ class InterviewEntityCommandServiceTest {
 		assertThat(interview.getAccountId()).isEqualTo(testAccountEntity.getId());
 	}
 
+	@Sql(scripts = "classpath:/job-category-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Test
 	void updateInterview_Success() {
 		//given
@@ -115,7 +116,11 @@ class InterviewEntityCommandServiceTest {
 
 		//when
 		Interview updatedInterview = interviewCommandService.updateInterview(
-			Interview.builder().title(updateInterviewRequest.getTitle()).build(), savedInterviewEntity.getId(),
+			Interview.builder()
+				.title(updateInterviewRequest.getTitle())
+				.jobCategoryId(1L)
+				.build(),
+			savedInterviewEntity.getId(),
 			testAccountEntity.getId());
 
 		//then

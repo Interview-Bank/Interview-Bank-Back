@@ -38,19 +38,61 @@ public class QuestionCommandService {
 		return saveAllQuestions(questions, interviewEntity);
 	}
 
-	public List<Question> updateQuestions(List<Question> newQuestions) {
-		List<Question> questions = new ArrayList<>();
+	public List<Question> updateQuestions(long interviewId, List<Question> newQuestions) {
+		List<Question> updatedQuestions = new ArrayList<>();
 
-		newQuestions.forEach(question -> {
-			QuestionEntity questionEntity = questionRepository.findById(question.getQuestionId())
-				.orElseThrow(() -> new IbEntityNotFoundException("question"));
+		List<QuestionEntity> questionEntities = questionRepository.findAllByInterviewId(interviewId);
 
-			questionEntity.modifyContent(question.getContent());
+		if (questionEntities.size() < newQuestions.size()) {
+			for (int i = 0; i < questionEntities.size(); i++) {
+				QuestionEntity questionEntity = questionEntities.get(i);
+				Question question = newQuestions.get(i);
 
-			questions.add(interviewMapper.questionEntityToQuestion(questionEntity));
-		});
+				questionEntity.modifyContent(question.getContent());
 
-		return questions;
+				updatedQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity));
+			}
+
+			InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
+				.orElseThrow(() -> new IbEntityNotFoundException("interview"));
+
+			List<QuestionEntity> newQuestionEntities = new ArrayList<>();
+
+			for (Question question : newQuestions.subList(questionEntities.size(), newQuestions.size())) {
+				newQuestionEntities.add(QuestionEntity.builder()
+					.content(question.getContent())
+					.interviewEntity(interviewEntity)
+					.build());
+			}
+
+			List<QuestionEntity> savedQuestionEntities = saveAllQuestionWithBatch(newQuestionEntities);
+			savedQuestionEntities.forEach(
+				questionEntity -> updatedQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity)));
+
+		} else if (questionEntities.size() == newQuestions.size()) {
+			questionEntities.forEach(questionEntity -> {
+				Question question = newQuestions.get(questionEntities.indexOf(questionEntity));
+
+				questionEntity.modifyContent(question.getContent());
+
+				updatedQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity));
+			});
+
+		} else {
+			for (int i = 0; i < newQuestions.size(); i++) {
+				QuestionEntity questionEntity = questionEntities.get(i);
+				Question question = newQuestions.get(i);
+
+				questionEntity.modifyContent(question.getContent());
+
+				updatedQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity));
+			}
+
+			List<QuestionEntity> deletedQuestionEntities = questionEntities.subList(newQuestions.size(), questionEntities.size());
+			deletedQuestionEntities.forEach(SoftDeletedBaseEntity::deleteEntityByFlag);
+		}
+
+		return updatedQuestions;
 	}
 
 	public List<Long> deleteQuestionsByInterviewId(long interviewId) {
