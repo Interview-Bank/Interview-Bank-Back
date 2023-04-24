@@ -11,7 +11,7 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 
 import org.hoongoin.interviewbank.account.application.entity.Account;
-import org.hoongoin.interviewbank.exception.IbBadRequestException;
+import org.hoongoin.interviewbank.exception.IbInternalServerException;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,9 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountExternalService {
@@ -56,7 +58,8 @@ public class AccountExternalService {
 		try {
 			originalImage = ImageIO.read(multipartFile.getInputStream());
 		} catch (IOException e) {
-			throw new IbBadRequestException(e.getMessage());
+			log.info(e.getMessage());
+			throw new IbInternalServerException("Internal Server Error");
 		}
 
 		int resizedWidth = resize(originalImage.getWidth());
@@ -80,7 +83,8 @@ public class AccountExternalService {
 			ImageIO.write(image, getFormatName(contentType), bos);
 			return bos.toByteArray();
 		} catch (IOException e) {
-			throw new IbBadRequestException(e.getMessage());
+			log.info(e.getMessage());
+			throw new IbInternalServerException("Internal Server Error");
 		}
 	}
 

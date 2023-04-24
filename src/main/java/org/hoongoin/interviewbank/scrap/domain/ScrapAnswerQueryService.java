@@ -10,7 +10,9 @@ import org.hoongoin.interviewbank.scrap.application.dto.ScrapAnswerIdsDto;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ScrapAnswerQueryService {
@@ -25,7 +27,8 @@ public class ScrapAnswerQueryService {
 		ScrapEntity scrapEntity = scrapQuestionEntity.getScrapEntity();
 
 		if (isScrapAnswerBelongToScrap(scrapEntity, scrapQuestionEntity, scrapAnswerIdsDto)) {
-			throw new IbBadRequestException("");
+			log.info("ScrapAnswer Doesn't belong to Scrap");
+			throw new IbBadRequestException("Bad Request");
 		}
 
 		scrapAnswerRepository.deleteById(scrapAnswerIdsDto.getScrapAnswerId());

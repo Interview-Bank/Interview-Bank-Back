@@ -7,12 +7,13 @@ import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapAnswerEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapQuestionEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapAnswerRepository;
-import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapQuestionRepository;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapAnswer;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ScrapAnswerCommandService {
@@ -28,7 +29,8 @@ public class ScrapAnswerCommandService {
 
 		if (scrapQuestionEntity.getId() != scrapAnswer.getScrapQuestionId()
 			|| scrapEntity.getId() != scrapAnswer.getScrapId()) {
-			throw new IbBadRequestException("ScrapAnswer Id mismatch");
+			log.info("ScrapAnswer Doesn't belong to Scrap");
+			throw new IbBadRequestException("Bad Request");
 		}
 
 		scrapAnswerEntity.modifyEntity(scrapAnswer.getContent());
