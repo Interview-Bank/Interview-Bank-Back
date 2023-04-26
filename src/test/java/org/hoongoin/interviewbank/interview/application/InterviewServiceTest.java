@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
+import org.hoongoin.interviewbank.account.AccountTestFactory;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
@@ -12,12 +13,9 @@ import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
-import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
-import org.hoongoin.interviewbank.interview.enums.CareerYear;
-import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
@@ -37,17 +35,12 @@ class InterviewServiceTest {
 	@Autowired
 	private InterviewService interviewService;
 
-	private static final long testAccountId = 1L;
-	private static final String testNickname = "hunki";
-	private static final String testEmail = "gnsrl76@naver.com";
-	private static final String testPassword = "asdfasdf12!";
-
 	@Test
 	void createInterviewAndQuestionsByRequest_Success() {
 		//given
 		int questionSize = 2;
 
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			2);
@@ -71,7 +64,7 @@ class InterviewServiceTest {
 		//given
 		int questionSize = 1001;
 
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
@@ -87,7 +80,7 @@ class InterviewServiceTest {
 	void createInterviewAndQuestionsByRequest_Success_QuestionSizeIs1000() {
 		//given
 		int questionSize = 1000;
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
@@ -105,7 +98,7 @@ class InterviewServiceTest {
 		//given
 		int questionSize = 1000;
 
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
@@ -129,7 +122,7 @@ class InterviewServiceTest {
 		//given
 		int questionSize = 1000;
 
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
@@ -156,7 +149,7 @@ class InterviewServiceTest {
 		//given
 		int questionSize = 2;
 
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
@@ -180,7 +173,7 @@ class InterviewServiceTest {
 		//given
 		int questionSize = 2;
 
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
@@ -199,20 +192,5 @@ class InterviewServiceTest {
 		assertThat(findMyInterviewResponse.getInterviews()).hasSize(1);
 		assertThat(findMyInterviewResponse.getInterviews().get(0).getInterviewId()).isEqualTo(
 			createInterviewAndQuestionsResponse.getInterviewId());
-	}
-
-	private AccountEntity createTestAccountEntity() {
-		return AccountEntity.builder()
-			.id(testAccountId)
-			.password(testPassword)
-			.email(testEmail)
-			.nickname(testNickname)
-			.build();
-	}
-
-	private CreateInterviewAndQuestionsRequest getCreateInterviewAndQuestionsRequest(String title,
-		QuestionsRequest questionsRequest) {
-		return new CreateInterviewAndQuestionsRequest(
-			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
 	}
 }

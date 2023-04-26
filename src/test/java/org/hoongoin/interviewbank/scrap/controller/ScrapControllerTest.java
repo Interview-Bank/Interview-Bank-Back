@@ -2,15 +2,18 @@ package org.hoongoin.interviewbank.scrap.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.hoongoin.interviewbank.account.AccountTestFactory;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
+import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.JobCategoryRepository;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.QuestionRepository;
+import org.hoongoin.interviewbank.scrap.ScrapTestFactory;
 import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
@@ -19,8 +22,6 @@ import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapQuestionEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapQuestionRepository;
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,47 +50,24 @@ class ScrapControllerTest {
 
 	@Autowired
 	private ScrapQuestionRepository scrapQuestionRepository;
+
 	@Autowired
 	private JobCategoryRepository jobCategoryRepository;
-
-	@BeforeEach
-	void setUp() {
-	}
-
-	@AfterEach
-	void tearDown() {
-	}
 
 	@Test
 	void createScrap_Success() {
 		//given
-		AccountEntity interviewWriterAccountEntity = AccountEntity.builder()
-			.nickname("interview writer")
-			.email("interview@example.com")
-			.password("interview")
-			.build();
+		AccountEntity interviewWriterAccountEntity = AccountTestFactory.createAccountEntity();
 		accountRepository.saveAndFlush(interviewWriterAccountEntity);
 
-		JobCategoryEntity jobCategoryEntity = JobCategoryEntity.builder()
-			.name("job category")
-			.build();
-		jobCategoryRepository.saveAndFlush(jobCategoryEntity);
+		JobCategoryEntity jobCategoryEntity = jobCategoryRepository.saveAndFlush(InterviewTestFactory.createJobCategoryEntity());
 
-		InterviewEntity interviewEntity = InterviewEntity.builder()
-			.title("title")
-			.accountEntity(interviewWriterAccountEntity)
-			.jobCategoryEntity(jobCategoryEntity)
-			.build();
+		InterviewEntity interviewEntity = InterviewTestFactory.createInterviewEntity(interviewWriterAccountEntity,
+			jobCategoryEntity);
 		interviewRepository.saveAndFlush(interviewEntity);
 
-		QuestionEntity questionEntity1 = QuestionEntity.builder()
-			.content("question 1")
-			.interviewEntity(interviewEntity)
-			.build();
-		QuestionEntity questionEntity2 = QuestionEntity.builder()
-			.content("question 2")
-			.interviewEntity(interviewEntity)
-			.build();
+		QuestionEntity questionEntity1 = InterviewTestFactory.createQuestionEntity("content 1", interviewEntity);
+		QuestionEntity questionEntity2 = InterviewTestFactory.createQuestionEntity("content 2", interviewEntity);
 		questionRepository.saveAndFlush(questionEntity1);
 		questionRepository.saveAndFlush(questionEntity2);
 
@@ -124,47 +102,29 @@ class ScrapControllerTest {
 	@Test
 	void updateScrap_Success() {
 		//given
-		AccountEntity interviewWriterAccountEntity = AccountEntity.builder()
-			.nickname("interview writer")
-			.email("interview@example.com")
-			.password("interview")
-			.build();
+		AccountEntity interviewWriterAccountEntity = AccountTestFactory.createAccountEntity();
 		accountRepository.saveAndFlush(interviewWriterAccountEntity);
 
-		InterviewEntity interviewEntity = InterviewEntity.builder()
-			.title("title")
-			.accountEntity(interviewWriterAccountEntity)
-			.build();
+		JobCategoryEntity jobCategoryEntity = jobCategoryRepository.saveAndFlush(InterviewTestFactory.createJobCategoryEntity());
+
+		InterviewEntity interviewEntity = InterviewTestFactory.createInterviewEntity(interviewWriterAccountEntity,
+			jobCategoryEntity);
 		interviewRepository.saveAndFlush(interviewEntity);
 
-		QuestionEntity questionEntity1 = QuestionEntity.builder()
-			.content("question 1")
-			.interviewEntity(interviewEntity)
-			.build();
-		QuestionEntity questionEntity2 = QuestionEntity.builder()
-			.content("question 2")
-			.interviewEntity(interviewEntity)
-			.build();
+		QuestionEntity questionEntity1 = InterviewTestFactory.createQuestionEntity("content 1", interviewEntity);
+		QuestionEntity questionEntity2 = InterviewTestFactory.createQuestionEntity("content 2", interviewEntity);
 		questionRepository.saveAndFlush(questionEntity1);
 		questionRepository.saveAndFlush(questionEntity2);
 
 		AccountEntity scrapWriterAccountEntity = accountRepository.findById(1L).get();
 
-		ScrapEntity scrapEntity = ScrapEntity.builder()
-			.interviewEntity(interviewEntity)
-			.accountEntity(scrapWriterAccountEntity)
-			.title(interviewEntity.getTitle())
-			.build();
+		ScrapEntity scrapEntity = ScrapTestFactory.createScrapEntity(interviewEntity, scrapWriterAccountEntity);
 		scrapRepository.saveAndFlush(scrapEntity);
 
-		ScrapQuestionEntity scrapQuestionEntity1 = ScrapQuestionEntity.builder()
-			.scrapEntity(scrapEntity)
-			.content(questionEntity1.getContent())
-			.build();
-		ScrapQuestionEntity scrapQuestionEntity2 = ScrapQuestionEntity.builder()
-			.scrapEntity(scrapEntity)
-			.content(questionEntity2.getContent())
-			.build();
+		ScrapQuestionEntity scrapQuestionEntity1 = ScrapTestFactory.createScrapQuestionEntity(scrapEntity,
+			questionEntity1.getContent());
+		ScrapQuestionEntity scrapQuestionEntity2 = ScrapTestFactory.createScrapQuestionEntity(scrapEntity,
+			questionEntity2.getContent());
 		scrapQuestionRepository.saveAndFlush(scrapQuestionEntity1);
 		scrapQuestionRepository.saveAndFlush(scrapQuestionEntity2);
 

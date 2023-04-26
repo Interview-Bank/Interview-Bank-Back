@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hoongoin.interviewbank.account.AccountTestFactory;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.InterviewTestFactory;
@@ -68,12 +69,7 @@ class InterviewControllerTest {
 	@Test
 	void updateInterview_Success() {
 		//given
-		AccountEntity savedAccount = AccountEntity.builder()
-			.id(testAccountId)
-			.nickname(testNickname)
-			.password(testPassword)
-			.email(testEmail)
-			.build();
+		AccountEntity savedAccount = AccountTestFactory.createAccountEntity();
 
 		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(testTitle, savedAccount.getId());
 

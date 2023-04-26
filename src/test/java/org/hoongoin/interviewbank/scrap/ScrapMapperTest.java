@@ -2,8 +2,11 @@ package org.hoongoin.interviewbank.scrap;
 
 import static org.assertj.core.api.Assertions.*;
 
+import org.hoongoin.interviewbank.account.AccountTestFactory;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
+import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestion;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
@@ -11,6 +14,7 @@ import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapQuestionEntit
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.transaction.annotation.Transactional;
 
 class ScrapMapperTest {
 
@@ -22,33 +26,16 @@ class ScrapMapperTest {
 
 	@BeforeAll
 	public static void setUp() {
+		JobCategoryEntity jobCategoryEntity = InterviewTestFactory.createJobCategoryEntity();
 		scrapMapper = Mappers.getMapper(ScrapMapper.class);
-		accountEntity = AccountEntity.builder()
-			.id(12)
-			.nickname("nickname")
-			.email("test@test.com")
-			.password("password")
-			.build();
-		interviewEntity = InterviewEntity.builder()
-			.id(333)
-			.title("title")
-			.accountEntity(accountEntity)
-			.build();
-		scrapEntity = ScrapEntity.builder()
-			.id(9)
-			.accountEntity(accountEntity)
-			.interviewEntity(interviewEntity)
-			.title("scrap title")
-			.build();
-		scrapQuestionEntity = ScrapQuestionEntity.builder()
-			.id(29)
-			.scrapEntity(scrapEntity)
-			.content("scrap question content")
-			.build();
+		accountEntity = AccountTestFactory.createAccountEntity();
+		interviewEntity = InterviewTestFactory.createInterviewEntity(accountEntity, jobCategoryEntity);
+		scrapEntity = ScrapTestFactory.createScrapEntity(interviewEntity, accountEntity);
+		scrapQuestionEntity = ScrapTestFactory.createScrapQuestionEntity(scrapEntity, "content");
 	}
 
 	@Test
-	public void scrapEntityToScrap_Success() {
+	void scrapEntityToScrap_Success() {
 		//given
 
 		//when
@@ -62,7 +49,7 @@ class ScrapMapperTest {
 	}
 
 	@Test
-	public void scrapQuestionEntityToScrapQuestion_Success() {
+	void scrapQuestionEntityToScrapQuestion_Success() {
 		//given
 
 		//when
