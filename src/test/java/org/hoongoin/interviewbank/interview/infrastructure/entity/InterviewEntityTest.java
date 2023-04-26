@@ -50,11 +50,16 @@ class InterviewEntityTest {
 		//given
 		String title = "a".repeat(129);
 
-		JobCategoryEntity jobCategoryEntity = jobCategoryRepository.saveAndFlush(InterviewTestFactory.createJobCategoryEntity());
+		JobCategoryEntity jobCategoryEntity = jobCategoryRepository.saveAndFlush(
+			InterviewTestFactory.createJobCategoryEntity());
 
 		AccountEntity savedAccountEntity = accountRepository.saveAndFlush(AccountTestFactory.createAccountEntity());
 
-		InterviewEntity interviewEntity = InterviewTestFactory.createInterviewEntity(savedAccountEntity, jobCategoryEntity);
+		InterviewEntity interviewEntity = InterviewEntity.builder()
+			.title(title)
+			.jobCategoryEntity(jobCategoryEntity)
+			.accountEntity(savedAccountEntity)
+			.build();
 
 		//when //then
 		assertThatThrownBy(() -> interviewRepository.save(interviewEntity)).isInstanceOf(
