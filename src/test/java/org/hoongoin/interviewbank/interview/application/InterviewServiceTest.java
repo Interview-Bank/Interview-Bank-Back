@@ -2,22 +2,20 @@ package org.hoongoin.interviewbank.interview.application;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.hoongoin.interviewbank.account.AccountTestFactory;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.exception.IbValidationException;
+import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
-import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
-import org.hoongoin.interviewbank.interview.enums.CareerYear;
-import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
@@ -37,30 +35,15 @@ class InterviewServiceTest {
 	@Autowired
 	private InterviewService interviewService;
 
-	private static final long testAccountId = 1L;
-	private static final String testNickname = "hunki";
-	private static final String testEmail = "gnsrl76@naver.com";
-	private static final String testPassword = "asdfasdf12!";
-
 	@Test
 	void createInterviewAndQuestionsByRequest_Success() {
 		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		int questionSize = 2;
 
-		String title = "title";
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
-		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
-		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
-
-		List<QuestionsRequest.Question> questions = new ArrayList<>();
-
-		questions.add(question1);
-		questions.add(question2);
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			2);
 
 		//when
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
@@ -70,29 +53,21 @@ class InterviewServiceTest {
 		assertThat(createInterviewAndQuestionsResponse.getQuestions()).extracting("content")
 			.containsExactlyInAnyOrder("content1",
 				"content2");
-		assertThat(createInterviewAndQuestionsResponse.getTitle()).isEqualTo(title);
-		assertThat(createInterviewAndQuestionsResponse.getQuestions()).hasSize(questionsRequest.getQuestions().size());
+		assertThat(createInterviewAndQuestionsResponse.getTitle()).isEqualTo(
+			createInterviewAndQuestionsRequest.getTitle());
+		assertThat(createInterviewAndQuestionsResponse.getQuestions()).hasSize(questionSize);
 		assertThat(createInterviewAndQuestionsResponse.getInterviewId()).isNotNull();
-
 	}
 
 	@Test
 	void createInterviewAndQuestionsByRequest_Fail_QuestionSizeIs1001() {
 		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		int questionSize = 1001;
 
-		String title = "title";
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
-		List<QuestionsRequest.Question> questions = new ArrayList<>();
-
-		for (int i = 0; i < 1001; i++) {
-			questions.add(new QuestionsRequest.Question("content"));
-		}
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			questionSize);
 
 		//when //then
 		assertThatThrownBy(
@@ -104,20 +79,11 @@ class InterviewServiceTest {
 	@Test
 	void createInterviewAndQuestionsByRequest_Success_QuestionSizeIs1000() {
 		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		int questionSize = 1000;
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
-		String title = "title";
-
-		List<QuestionsRequest.Question> questions = new ArrayList<>();
-
-		for (int i = 0; i < 1000; i++) {
-			questions.add(new QuestionsRequest.Question("content"));
-		}
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			questionSize);
 
 		//when
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
@@ -130,20 +96,12 @@ class InterviewServiceTest {
 	@Test
 	void findInterviewPageByPageAndSize_Success_InterviewSoftDeleteSize() {
 		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		int questionSize = 1000;
 
-		String title = "title";
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
-		List<QuestionsRequest.Question> questions = new ArrayList<>();
-
-		for (int i = 0; i < 1000; i++) {
-			questions.add(new QuestionsRequest.Question("content"));
-		}
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			questionSize);
 
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
@@ -162,20 +120,12 @@ class InterviewServiceTest {
 	@Test
 	void findInterviewPageByPageAndSize_Success_QuestionSoftDeleteSize() {
 		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		int questionSize = 1000;
 
-		String title = "title";
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
-		List<QuestionsRequest.Question> questions = new ArrayList<>();
-
-		for (int i = 0; i < 1000; i++) {
-			questions.add(new QuestionsRequest.Question("content"));
-		}
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			questionSize);
 
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
@@ -197,22 +147,12 @@ class InterviewServiceTest {
 	@Test
 	void findInterviewsByAccountId_Success_Page1() {
 		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		int questionSize = 2;
 
-		String title = "title";
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
-		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
-		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
-
-		List<QuestionsRequest.Question> questions = new ArrayList<>();
-
-		questions.add(question1);
-		questions.add(question2);
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			questionSize);
 
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
@@ -231,22 +171,12 @@ class InterviewServiceTest {
 	@Test
 	void findInterviewsByAccountId_Success_Delete() {
 		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		int questionSize = 2;
 
-		String title = "title";
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
-		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
-		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
-
-		List<QuestionsRequest.Question> questions = new ArrayList<>();
-
-		questions.add(question1);
-		questions.add(question2);
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			questionSize);
 
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
@@ -262,14 +192,5 @@ class InterviewServiceTest {
 		assertThat(findMyInterviewResponse.getInterviews()).hasSize(1);
 		assertThat(findMyInterviewResponse.getInterviews().get(0).getInterviewId()).isEqualTo(
 			createInterviewAndQuestionsResponse.getInterviewId());
-	}
-
-	private AccountEntity createTestAccountEntity() {
-		return AccountEntity.builder()
-			.id(testAccountId)
-			.password(testPassword)
-			.email(testEmail)
-			.nickname(testNickname)
-			.build();
 	}
 }

@@ -5,18 +5,21 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hoongoin.interviewbank.account.AccountTestFactory;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
+import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
+import org.hoongoin.interviewbank.interview.infrastructure.repository.JobCategoryRepository;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.QuestionRepository;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.junit.jupiter.api.Test;
@@ -42,37 +45,25 @@ class QuestionCommandServiceTest {
 	@Autowired
 	private InterviewMapper interviewMapper;
 
-	private static final long testAccountId = 1L;
-	private static final String testNickname = "hunki";
-	private static final String testEmail = "gnsrl76@naver.com";
-	private static final String testPassword = "asdfasdf12!";
+	@Autowired
+	private JobCategoryRepository jobCategoryRepository;
+
+	private static final JobCategoryEntity testJobCategoryEntity = InterviewTestFactory.createJobCategoryEntity();
 
 	@Test
 	void insertQuestions_Success() {
 		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
-		String title = "title";
+		JobCategoryEntity savedTestJobCategoryEntity = jobCategoryRepository.saveAndFlush(testJobCategoryEntity);
+
+		int questionSize = 2;
 
 		InterviewEntity savedInterviewEntity = interviewRepository.save(
-			InterviewEntity.builder().accountEntity(testAccountEntity).title(title).build());
+			InterviewTestFactory.createInterviewEntity(testAccountEntity, savedTestJobCategoryEntity));
 
-		String content1 = "content1";
-		String content2 = "content2";
-
-		QuestionsRequest.Question innerQuestion1 = new QuestionsRequest.Question(content1);
-		QuestionsRequest.Question innerQuestion2 = new QuestionsRequest.Question(content2);
-
-		List<QuestionsRequest.Question> innerQuestions = new ArrayList<>();
-
-		innerQuestions.add(innerQuestion1);
-		innerQuestions.add(innerQuestion2);
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(innerQuestions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			savedInterviewEntity.getTitle(), 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR,
-			questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			questionSize);
 
 		//when
 		List<Question> questions = questionCommandService.insertQuestions(
@@ -81,33 +72,27 @@ class QuestionCommandServiceTest {
 			savedInterviewEntity.getId());
 
 		//then
-		assertThat(questions).hasSize(innerQuestions.size());
+		assertThat(questions).hasSize(questionSize);
 		assertThat(questions)
 			.extracting(Question::getContent)
-			.containsExactlyInAnyOrder(content1, content2);
+			.containsExactlyInAnyOrder("content1", "content2");
 	}
 
 	@Test
 	void updateQuestions_Success() {
 		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
-		String title = "title";
+		JobCategoryEntity savedTestJobCategoryEntity = jobCategoryRepository.saveAndFlush(testJobCategoryEntity);
 
 		InterviewEntity savedInterviewEntity = interviewRepository.save(
-			InterviewEntity.builder().accountEntity(testAccountEntity).title(title).build());
+			InterviewTestFactory.createInterviewEntity(testAccountEntity, savedTestJobCategoryEntity));
 
 		String content1 = "content1";
 		String content2 = "content2";
 
-		QuestionEntity question1 = QuestionEntity.builder()
-			.interviewEntity(savedInterviewEntity)
-			.content(content1)
-			.build();
-		QuestionEntity question2 = QuestionEntity.builder()
-			.interviewEntity(savedInterviewEntity)
-			.content(content2)
-			.build();
+		QuestionEntity question1 = InterviewTestFactory.createQuestionEntity(content1, savedInterviewEntity);
+		QuestionEntity question2 = InterviewTestFactory.createQuestionEntity(content2, savedInterviewEntity);
 
 		List<QuestionEntity> questions = new ArrayList<>();
 		questions.add(question1);
@@ -143,24 +128,18 @@ class QuestionCommandServiceTest {
 	@Test
 	void deleteQuestions_Success() {
 		//given
-		AccountEntity testAccountEntity = accountRepository.save(createTestAccountEntity());
+		AccountEntity testAccountEntity = accountRepository.saveAndFlush(AccountTestFactory.createAccountEntity());
 
-		String title = "title";
+		JobCategoryEntity savedTestJobCategoryEntity = jobCategoryRepository.saveAndFlush(testJobCategoryEntity);
 
 		InterviewEntity savedInterviewEntity = interviewRepository.save(
-			InterviewEntity.builder().accountEntity(testAccountEntity).title(title).build());
+			InterviewTestFactory.createInterviewEntity(testAccountEntity, savedTestJobCategoryEntity));
 
 		String content1 = "content1";
 		String content2 = "content2";
 
-		QuestionEntity question1 = QuestionEntity.builder()
-			.interviewEntity(savedInterviewEntity)
-			.content(content1)
-			.build();
-		QuestionEntity question2 = QuestionEntity.builder()
-			.interviewEntity(savedInterviewEntity)
-			.content(content2)
-			.build();
+		QuestionEntity question1 = InterviewTestFactory.createQuestionEntity(content1, savedInterviewEntity);
+		QuestionEntity question2 = InterviewTestFactory.createQuestionEntity(content2, savedInterviewEntity);
 
 		List<QuestionEntity> questions = new ArrayList<>();
 		questions.add(question1);
@@ -183,14 +162,5 @@ class QuestionCommandServiceTest {
 		long allQuestionsCount = questionRepository.findAll().size();
 
 		assertThat(deletedQuestionsCount).isEqualTo(allQuestionsCount);
-	}
-
-	private AccountEntity createTestAccountEntity() {
-		return AccountEntity.builder()
-			.id(testAccountId)
-			.password(testPassword)
-			.email(testEmail)
-			.nickname(testNickname)
-			.build();
 	}
 }

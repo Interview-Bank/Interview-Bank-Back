@@ -5,12 +5,13 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hoongoin.interviewbank.account.AccountTestFactory;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
+import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewRequest;
-import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
@@ -29,7 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @IbSpringBootTest
 @Transactional
-@Sql(scripts = {"classpath:/account-data.sql", "classpath:/job-category-data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = {"classpath:/account-data.sql",
+	"classpath:/job-category-data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class InterviewControllerTest {
 
 	@Autowired
@@ -50,18 +52,10 @@ class InterviewControllerTest {
 	@Test
 	void createInterview_Success() {
 		//given
-		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
-		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
+		int questionSize = 2;
 
-		List<QuestionsRequest.Question> questions = new ArrayList<>();
-
-		questions.add(question1);
-		questions.add(question2);
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			questionSize);
 
 		//when
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
@@ -75,12 +69,7 @@ class InterviewControllerTest {
 	@Test
 	void updateInterview_Success() {
 		//given
-		AccountEntity savedAccount = AccountEntity.builder()
-			.id(testAccountId)
-			.nickname(testNickname)
-			.password(testPassword)
-			.email(testEmail)
-			.build();
+		AccountEntity savedAccount = AccountTestFactory.createAccountEntity();
 
 		CreateInterviewRequest createInterviewRequest = new CreateInterviewRequest(testTitle, savedAccount.getId());
 
@@ -130,18 +119,10 @@ class InterviewControllerTest {
 	@Test
 	void findInterview_Success() {
 		//given
-		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
-		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
+		int questionSize = 2;
 
-		List<QuestionsRequest.Question> questions = new ArrayList<>();
-
-		questions.add(question1);
-		questions.add(question2);
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			questionSize);
 
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
 			createInterviewAndQuestionsRequest);
@@ -154,24 +135,18 @@ class InterviewControllerTest {
 		assertThat(findQuestionsByInterviewIdResponse.getBody().getInterviewId()).isEqualTo(
 			createInterviewAndQuestionsResponse.getBody().getInterviewId());
 		assertThat(findQuestionsByInterviewIdResponse.getBody().getQuestions()).extracting("content")
-			.containsExactlyInAnyOrder(question1.getContent(), question2.getContent());
+			.containsExactlyInAnyOrder(
+				createInterviewAndQuestionsRequest.getQuestionsRequest().getQuestions().get(0).getContent(),
+				createInterviewAndQuestionsRequest.getQuestionsRequest().getQuestions().get(1).getContent());
 	}
 
 	@Test
 	void findInterviewPage_Success() {
 		//given
-		QuestionsRequest.Question question1 = new QuestionsRequest.Question("content1");
-		QuestionsRequest.Question question2 = new QuestionsRequest.Question("content2");
+		int questionSize = 2;
 
-		List<QuestionsRequest.Question> questions = new ArrayList<>();
-
-		questions.add(question1);
-		questions.add(question2);
-
-		QuestionsRequest questionsRequest = new QuestionsRequest(questions);
-
-		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = new CreateInterviewAndQuestionsRequest(
-			testTitle, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
+			questionSize);
 
 		ResponseEntity<CreateInterviewAndQuestionsResponse> createInterviewAndQuestionsResponse = interviewController.createInterviewAndQuestions(
 			createInterviewAndQuestionsRequest);
@@ -184,6 +159,5 @@ class InterviewControllerTest {
 		interviewPage.getBody()
 			.getInterviews()
 			.forEach(interview -> assertThat(interview.getNickname()).isEqualTo(testNickname));
-
 	}
 }

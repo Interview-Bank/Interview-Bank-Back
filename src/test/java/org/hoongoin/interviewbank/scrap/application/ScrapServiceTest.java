@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
+import org.hoongoin.interviewbank.scrap.ScrapTestFactory;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestionWithScrapAnswers;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
@@ -48,8 +50,7 @@ class ScrapServiceTest {
 		//given
 		long scrapId = 1;
 		long requestingAccountId = 1;
-		Scrap scrap = Scrap.builder().scrapId(1).accountId(1).interviewId(1).title("title")
-			.createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
+		Scrap scrap = ScrapTestFactory.createScrap();
 		UpdateScrapRequest updateScrapRequest = new UpdateScrapRequest("New Title");
 		Scrap updatedScrap = Scrap.builder().scrapId(1).accountId(1).interviewId(1).title(updateScrapRequest.getTitle())
 			.createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
@@ -74,12 +75,7 @@ class ScrapServiceTest {
 		//given
 		long scrapId = 1;
 		long requestingAccountId = 1;
-		Scrap scrap = Scrap.builder()
-			.scrapId(scrapId)
-			.accountId(requestingAccountId)
-			.interviewId(1)
-			.title("title")
-			.build();
+		Scrap scrap = ScrapTestFactory.createScrap();
 
 		given(scrapQueryService.findScrapByScrapId(scrapId)).willReturn(scrap);
 
@@ -99,10 +95,10 @@ class ScrapServiceTest {
 		long scrapId = 1L;
 		long requestingAccountId = 2L;
 
-		Scrap scrap = Scrap.builder().scrapId(scrapId).title("title").build();
+		Scrap scrap = ScrapTestFactory.createScrap();
 		scrap.setAccountId(requestingAccountId);
-		Interview interview = Interview.builder().interviewId(3L).jobCategoryId(1L).title("title").build();
-		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers = Arrays.asList(
+		Interview interview = InterviewTestFactory.createInterview(requestingAccountId);
+		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers = List.of(
 			ScrapQuestionWithScrapAnswers.builder().build());
 
 		given(scrapQueryService.findScrapByScrapId(scrapId)).willReturn(scrap);
@@ -112,7 +108,7 @@ class ScrapServiceTest {
 		given(scrapMapper.scrapToScrapResponse(scrap)).willReturn(
 			new ScrapResponse(scrap.getScrapId(), scrap.getTitle(), LocalDate.now()));
 
-		List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = Arrays.asList(
+		List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = List.of(
 			new ScrapQuestionWithScrapAnswersResponse());
 		given(scrapMapper.scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(
 			scrapQuestionsWithScrapAnswers.get(0))).willReturn(scrapQuestionWithScrapAnswersResponses.get(0));
