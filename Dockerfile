@@ -4,4 +4,4 @@ COPY ./build/libs /app
 
 WORKDIR /app
 
-CMD ["java", "-jar", "interviewbank-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-Duser.timezone=Asia/Seoul", "-jar", "interviewbank-0.0.1-SNAPSHOT.jar"]
