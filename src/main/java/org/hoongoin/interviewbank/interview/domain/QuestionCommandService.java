@@ -21,10 +21,10 @@ import org.hoongoin.interviewbank.interview.infrastructure.repository.QuestionRe
 import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -126,6 +126,19 @@ public class QuestionCommandService {
 			questionEntity -> deletedQuestions.add(questionEntity.getId()));
 
 		return deletedQuestions;
+	}
+
+	@Async
+	@Transactional
+	public CompletableFuture<Void> getGptAnswersAsync(List<Question> questions) {
+		GptRequestBody.Message assistantMessage = new GptRequestBody.Message(MessageRole.ASSISTANT.getRole(), "You are a Interview Q&A Assistant.");
+		questions.forEach(question -> {
+			GptRequestBody.Message questionMessage = new GptRequestBody.Message(MessageRole.USER.getRole(), question.getContent());
+			GptResponseBody gptResponseBody = gptRequestHandler.sendChatCompletionRequest(List.of(assistantMessage, questionMessage));
+			this.udpateGptAnswerOfQuestion(question.getQuestionId(), gptResponseBody.getChoices().get(0).getMessage().getContent());
+		});
+
+		return CompletableFuture.completedFuture(null);
 	}
 
 	public Question udpateGptAnswerOfQuestion(Long questionId, String gptAnswer){

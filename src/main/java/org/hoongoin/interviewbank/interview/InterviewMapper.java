@@ -52,6 +52,11 @@ public interface InterviewMapper {
 			.questionId(questionEntity.getId())
 			.interviewId(questionEntity.getInterviewEntity().getId())
 			.content(questionEntity.getContent())
+			.gptAnswer(questionEntity.getGptAnswer())
+			.createdAt(questionEntity.getCreatedAt())
+			.updatedAt(questionEntity.getUpdatedAt())
+			.deletedAt(questionEntity.getDeletedAt())
+			.deletedFlag(questionEntity.getDeletedFlag())
 			.build();
 	}
 
@@ -97,6 +102,4 @@ public interface InterviewMapper {
 	JobCategoryResponse jobCategoryToJobCategoryRespnose(JobCategory jobCategory);
 
 	Interview updateInterviewRequestToInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId);
-
-    FindInterviewResponse.Question QuestionToFindInterviewResponseQuestion(Question question);
 }

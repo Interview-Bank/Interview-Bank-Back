@@ -71,24 +71,10 @@ public class InterviewService {
 
 		List<Question> insertedQuestions = questionCommandService.insertQuestions(questions, createdInterview.getInterviewId());
 
-		this.getGptAnswersAsync(insertedQuestions);
+		questionCommandService.getGptAnswersAsync(insertedQuestions);
 
 		return makeCreateInterviewAndQuestionsResponse(createdInterview, jobCategory, insertedQuestions);
 	}
-
-	@Async
-	@Transactional
-	public CompletableFuture<Void> getGptAnswersAsync(List<Question> questions) {
-		GptRequestBody.Message assistantMessage = new GptRequestBody.Message(MessageRole.ASSISTANT.getRole(), "You are a Interview Q&A Assistant.");
-		questions.forEach(question -> {
-			GptRequestBody.Message questionMessage = new GptRequestBody.Message(MessageRole.USER.getRole(), question.getContent());
-			GptResponseBody gptResponseBody = gptRequestHandler.sendChatCompletionRequest(List.of(assistantMessage, questionMessage));
-			questionCommandService.udpateGptAnswerOfQuestion(question.getQuestionId(), gptResponseBody.getChoices().get(0).getMessage().getContent());
-		});
-
-		return CompletableFuture.completedFuture(null);
-	}
-
 	@Transactional
 	public UpdateInterviewResponse updateInterviewResponseByRequestAndInterviewId(
 		UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId) {
@@ -191,7 +177,8 @@ public class InterviewService {
 
 		List<FindInterviewResponse.Question> findInterviewResponseQuestions = new ArrayList<>();
 		questions.forEach(question -> findInterviewResponseQuestions.add(
-				interviewMapper.QuestionToFindInterviewResponseQuestion(question)));
+			new FindInterviewResponse.Question(question.getQuestionId(), question.getContent(), question.getGptAnswer(),
+				question.getCreatedAt(), question.getUpdatedAt(), question.getDeletedAt(), question.getDeletedFlag())));
 
 		return FindInterviewResponse.builder()
 			.interviewId(interview.getInterviewId())

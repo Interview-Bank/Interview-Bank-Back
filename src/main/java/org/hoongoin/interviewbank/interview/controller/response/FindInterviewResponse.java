@@ -28,6 +28,7 @@ public class FindInterviewResponse {
 	private JobCategoryResponse jobCategory;
 
 	@Getter
+	@AllArgsConstructor
 	public static class Question {
 
 		private Long questionId;
