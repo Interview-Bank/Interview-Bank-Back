@@ -30,10 +30,10 @@ public class QuestionEntity extends SoftDeletedBaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(columnDefinition = "TEXT")
+	@Column(nullable = false, length = 65535)
 	private String content;
 
-	@Column
+	@Column(length = 65535)
 	private String gptAnswer;
 
 	@ManyToOne(fetch = FetchType.LAZY)

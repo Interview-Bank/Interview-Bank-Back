@@ -38,11 +38,8 @@ public class ScrapQuestionEntity extends BaseEntity {
 	@JoinColumn(nullable = false, name = "scrap_id")
 	private ScrapEntity scrapEntity;
 
-	@Column(columnDefinition = "TEXT")
+	@Column(nullable = false, length = 65535)
 	private String content;
-
-	@Column
-	private String gptAnswer;
 
 	@OneToMany(mappedBy = "scrapQuestionEntity")
 	List<ScrapAnswerEntity> scrapAnswerEntities;

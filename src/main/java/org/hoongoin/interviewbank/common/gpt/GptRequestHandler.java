@@ -2,6 +2,7 @@ package org.hoongoin.interviewbank.common.gpt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hoongoin.interviewbank.exception.IbInternalServerException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Async;
@@ -24,7 +25,6 @@ public class GptRequestHandler {
     private String gptKey;
     private final RestTemplate restTemplate;
 
-//    @Async
     public GptResponseBody sendChatCompletionRequest(List<GptRequestBody.Message> messages) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -36,10 +36,9 @@ public class GptRequestHandler {
 
         ResponseEntity<GptResponseBody> response = restTemplate.exchange(gptUri, HttpMethod.POST, entity, GptResponseBody.class);
         if(response.getStatusCode() != HttpStatus.OK) {
-            throw new RuntimeException("GPT Request Failed");
+            log.error("GPT request failed.");
+            throw new IbInternalServerException("GPT request failed.");
         }
-        log.info("{}", response.getStatusCode());
-        log.info("{}", response.toString());
         return response.getBody();
     }
 }

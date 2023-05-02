@@ -156,7 +156,7 @@ public class InterviewService {
 		JobCategory jobCategory, List<Question> questions) {
 		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
 		questions.forEach(question -> createInterviewAndQuestionsResponseQuiestions.add(
-			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), null, question.getInterviewId())));
+			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getGptAnswer(), question.getInterviewId())));
 
 		return CreateInterviewAndQuestionsResponse.builder()
 			.title(createdInterview.getTitle())

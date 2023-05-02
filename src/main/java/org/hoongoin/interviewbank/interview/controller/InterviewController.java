@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-@Slf4j
 @RestController
 @RequestMapping("interview")
 @RequiredArgsConstructor
@@ -46,7 +45,6 @@ public class InterviewController {
 		@RequestBody CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest) {
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, getRequestingAccountId());
-		log.info("createInterviewAndQuestionsResponse: {}", createInterviewAndQuestionsResponse);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createInterviewAndQuestionsResponse);
 	}
 
