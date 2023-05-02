@@ -50,6 +50,7 @@ CREATE TABLE `question`
     `deleted_flag` BIT DEFAULT 0 NOT NULL,
     `updated_at` DATETIME(6),
     `content` TEXT NOT NULL,
+    `gpt_answer` TEXT,
     `interview_id` BIGINT NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT FOREIGN KEY (`interview_id`) REFERENCES `interview` (`id`)
@@ -76,6 +77,7 @@ CREATE TABLE `scrap_question`
     `created_at` DATETIME(6),
     `updated_at` DATETIME(6),
     `content` TEXT NOT NULL,
+    `gpt_answer` TEXT,
     `scrap_id` BIGINT NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT FOREIGN KEY (`scrap_id`) REFERENCES `scrap` (`id`)

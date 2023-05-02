@@ -3,9 +3,14 @@ package org.hoongoin.interviewbank.interview.application;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.common.gpt.GptRequestBody;
+import org.hoongoin.interviewbank.common.gpt.GptRequestHandler;
+import org.hoongoin.interviewbank.common.gpt.GptResponseBody;
+import org.hoongoin.interviewbank.common.gpt.MessageRole;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.common.dto.PageDto;
@@ -27,6 +32,7 @@ import org.hoongoin.interviewbank.interview.domain.QuestionCommandService;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +51,7 @@ public class InterviewService {
 	private final QuestionQueryService questionQueryService;
 	private final AccountQueryService accountQueryService;
 	private final JobCategoryQueryService jobCategoryQueryService;
+	private final GptRequestHandler gptRequestHandler;
 
 	@Transactional
 	public CreateInterviewAndQuestionsResponse createInterviewAndQuestionsByRequest(
@@ -59,11 +66,27 @@ public class InterviewService {
 		JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(
 			createInterviewAndQuestionsRequest.getJobCategoryId());
 
-		List<Question> questions = questionCommandService.insertQuestions(
-			interviewMapper.createInterviewAndQuestionsRequestToQuestions(createInterviewAndQuestionsRequest,
-				createdInterview.getInterviewId()), createdInterview.getInterviewId());
+		List<Question> questions = interviewMapper.createInterviewAndQuestionsRequestToQuestions(
+				createInterviewAndQuestionsRequest, createdInterview.getInterviewId());
 
-		return makeCreateInterviewAndQuestionsResponse(createdInterview, jobCategory, questions);
+		List<Question> insertedQuestions = questionCommandService.insertQuestions(questions, createdInterview.getInterviewId());
+
+		this.getGptAnswersAsync(insertedQuestions);
+
+		return makeCreateInterviewAndQuestionsResponse(createdInterview, jobCategory, insertedQuestions);
+	}
+
+	@Async
+	@Transactional
+	public CompletableFuture<Void> getGptAnswersAsync(List<Question> questions) {
+		GptRequestBody.Message assistantMessage = new GptRequestBody.Message(MessageRole.ASSISTANT.getRole(), "You are a Interview Q&A Assistant.");
+		questions.forEach(question -> {
+			GptRequestBody.Message questionMessage = new GptRequestBody.Message(MessageRole.USER.getRole(), question.getContent());
+			GptResponseBody gptResponseBody = gptRequestHandler.sendChatCompletionRequest(List.of(assistantMessage, questionMessage));
+			questionCommandService.udpateGptAnswerOfQuestion(question.getQuestionId(), gptResponseBody.getChoices().get(0).getMessage().getContent());
+		});
+
+		return CompletableFuture.completedFuture(null);
 	}
 
 	@Transactional
@@ -133,7 +156,7 @@ public class InterviewService {
 		JobCategory jobCategory, List<Question> questions) {
 		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
 		questions.forEach(question -> createInterviewAndQuestionsResponseQuiestions.add(
-			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getInterviewId())));
+			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), null, question.getInterviewId())));
 
 		return CreateInterviewAndQuestionsResponse.builder()
 			.title(createdInterview.getTitle())
@@ -168,8 +191,7 @@ public class InterviewService {
 
 		List<FindInterviewResponse.Question> findInterviewResponseQuestions = new ArrayList<>();
 		questions.forEach(question -> findInterviewResponseQuestions.add(
-			new FindInterviewResponse.Question(question.getQuestionId(), question.getContent(), question.getCreatedAt(),
-				question.getUpdatedAt(), question.getDeletedAt(), question.getDeletedFlag())));
+				interviewMapper.QuestionToFindInterviewResponseQuestion(question)));
 
 		return FindInterviewResponse.builder()
 			.interviewId(interview.getInterviewId())

@@ -30,8 +30,11 @@ public class QuestionEntity extends SoftDeletedBaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(nullable = false, length = 65535)
+	@Column(columnDefinition = "TEXT")
 	private String content;
+
+	@Column
+	private String gptAnswer;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "interview_id")
@@ -39,6 +42,10 @@ public class QuestionEntity extends SoftDeletedBaseEntity {
 
 	public void modifyContent(String content) {
 		this.content = content;
+	}
+
+	public void modifyGptAnswer(String gptAnswer) {
+		this.gptAnswer = gptAnswer;
 	}
 
 	@Override

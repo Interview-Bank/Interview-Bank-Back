@@ -2,11 +2,16 @@ package org.hoongoin.interviewbank.interview.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
+import org.hoongoin.interviewbank.common.gpt.GptRequestBody;
+import org.hoongoin.interviewbank.common.gpt.GptRequestHandler;
+import org.hoongoin.interviewbank.common.gpt.GptResponseBody;
+import org.hoongoin.interviewbank.common.gpt.MessageRole;
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
@@ -14,10 +19,12 @@ import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.QuestionRepository;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -27,6 +34,7 @@ public class QuestionCommandService {
 	private final InterviewRepository interviewRepository;
 	private final QuestionRepository questionRepository;
 	private final InterviewMapper interviewMapper;
+	private final GptRequestHandler gptRequestHandler;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -118,6 +126,18 @@ public class QuestionCommandService {
 			questionEntity -> deletedQuestions.add(questionEntity.getId()));
 
 		return deletedQuestions;
+	}
+
+	public Question udpateGptAnswerOfQuestion(Long questionId, String gptAnswer){
+		QuestionEntity questionEntity = questionRepository.findById(questionId)
+			.orElseThrow(() -> {
+				log.info("Question Not Found");
+				return new IbEntityNotFoundException("Question Not Found");
+			});
+
+		questionEntity.modifyGptAnswer(gptAnswer);
+
+		return interviewMapper.questionEntityToQuestion(questionEntity);
 	}
 
 	private List<Question> saveAllQuestions(List<Question> questions, InterviewEntity interviewEntity) {

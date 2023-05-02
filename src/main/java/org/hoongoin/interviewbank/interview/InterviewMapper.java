@@ -8,6 +8,7 @@ import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
+import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
@@ -96,4 +97,6 @@ public interface InterviewMapper {
 	JobCategoryResponse jobCategoryToJobCategoryRespnose(JobCategory jobCategory);
 
 	Interview updateInterviewRequestToInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId);
+
+    FindInterviewResponse.Question QuestionToFindInterviewResponseQuestion(Question question);
 }

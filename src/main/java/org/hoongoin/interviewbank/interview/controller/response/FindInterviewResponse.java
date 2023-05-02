@@ -30,18 +30,9 @@ public class FindInterviewResponse {
 	@Getter
 	public static class Question {
 
-		public Question(Long questionId, String content, LocalDateTime createdAt, LocalDateTime updatedAt,
-			LocalDateTime deletedAt, Boolean deletedFlag) {
-			this.questionId = questionId;
-			this.content = content;
-			this.createdAt = createdAt;
-			this.updatedAt = updatedAt;
-			this.deletedAt = deletedAt;
-			this.deletedFlag = deletedFlag;
-		}
-
 		private Long questionId;
 		private String content;
+		private String gptAnswer;
 		private LocalDateTime createdAt;
 		private LocalDateTime updatedAt;
 		private LocalDateTime deletedAt;

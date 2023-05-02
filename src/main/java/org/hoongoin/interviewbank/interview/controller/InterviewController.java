@@ -5,6 +5,7 @@ import static org.hoongoin.interviewbank.utils.SecurityUtil.*;
 import java.util.Date;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @RestController
 @RequestMapping("interview")
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class InterviewController {
 		@RequestBody CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest) {
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, getRequestingAccountId());
-
+		log.info("createInterviewAndQuestionsResponse: {}", createInterviewAndQuestionsResponse);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createInterviewAndQuestionsResponse);
 	}
 
