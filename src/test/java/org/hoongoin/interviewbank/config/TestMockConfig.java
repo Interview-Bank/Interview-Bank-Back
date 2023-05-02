@@ -3,6 +3,7 @@ package org.hoongoin.interviewbank.config;
 import static org.mockito.Mockito.*;
 
 import org.hoongoin.interviewbank.common.discord.DiscordCreator;
+import org.hoongoin.interviewbank.common.gpt.GptRequestHandler;
 import org.hoongoin.interviewbank.exception.handler.IbControllerAdvice;
 import org.springframework.boot.test.context.TestConfiguration;
 
@@ -27,6 +28,11 @@ public class TestMockConfig {
 	@Bean
 	public JavaMailSender javaMailSender() {
 		return mock(JavaMailSender.class);
+	}
+
+	@Bean
+	public GptRequestHandler gptRequestHandler() {
+		return mock(GptRequestHandler.class);
 	}
 
 	@Bean
