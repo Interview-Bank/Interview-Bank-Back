@@ -1,14 +1,19 @@
 package org.hoongoin.interviewbank.interview.application;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import java.util.List;
 
 import org.hoongoin.interviewbank.account.AccountTestFactory;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
+import org.hoongoin.interviewbank.common.gpt.GptRequestHandler;
+import org.hoongoin.interviewbank.common.gpt.GptResponseBody;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
 import org.hoongoin.interviewbank.exception.IbValidationException;
+import org.hoongoin.interviewbank.gpt.GptResponseBodyFactory;
 import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
@@ -18,6 +23,7 @@ import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPag
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +41,9 @@ class InterviewServiceTest {
 	@Autowired
 	private InterviewService interviewService;
 
+	@MockBean
+	private GptRequestHandler gptRequestHandler;
+
 	@Test
 	void createInterviewAndQuestionsByRequest_Success() {
 		//given
@@ -44,6 +53,10 @@ class InterviewServiceTest {
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			2);
+
+		GptResponseBody gptResponseBody = GptResponseBodyFactory.createMockGptResponseBody();
+		given(gptRequestHandler.sendChatCompletionRequest(any())).willReturn(gptResponseBody);
+
 
 		//when
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
@@ -85,6 +98,9 @@ class InterviewServiceTest {
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
 
+		GptResponseBody gptResponseBody = GptResponseBodyFactory.createMockGptResponseBody();
+		given(gptRequestHandler.sendChatCompletionRequest(any())).willReturn(gptResponseBody);
+
 		//when
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
@@ -99,6 +115,9 @@ class InterviewServiceTest {
 		int questionSize = 1000;
 
 		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
+
+		GptResponseBody gptResponseBody = GptResponseBodyFactory.createMockGptResponseBody();
+		given(gptRequestHandler.sendChatCompletionRequest(any())).willReturn(gptResponseBody);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
@@ -123,6 +142,9 @@ class InterviewServiceTest {
 		int questionSize = 1000;
 
 		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
+
+		GptResponseBody gptResponseBody = GptResponseBodyFactory.createMockGptResponseBody();
+		given(gptRequestHandler.sendChatCompletionRequest(any())).willReturn(gptResponseBody);
 
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
@@ -151,6 +173,9 @@ class InterviewServiceTest {
 
 		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
+		GptResponseBody gptResponseBody = GptResponseBodyFactory.createMockGptResponseBody();
+		given(gptRequestHandler.sendChatCompletionRequest(any())).willReturn(gptResponseBody);
+
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
 
@@ -158,6 +183,7 @@ class InterviewServiceTest {
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse2 = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
+
 		//when
 		FindInterviewPageResponse findMyInterviewResponse = interviewService.findInterviewsByAccountId(
 			testAccountEntity.getId(), 0, 10);
@@ -175,6 +201,9 @@ class InterviewServiceTest {
 
 		AccountEntity testAccountEntity = accountRepository.save(AccountTestFactory.createAccountEntity());
 
+		GptResponseBody gptResponseBody = GptResponseBodyFactory.createMockGptResponseBody();
+		given(gptRequestHandler.sendChatCompletionRequest(any())).willReturn(gptResponseBody);
+
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest = InterviewTestFactory.createCreateInterviewAndQuestionsRequest(
 			questionSize);
 
@@ -184,6 +213,7 @@ class InterviewServiceTest {
 			createInterviewAndQuestionsRequest, testAccountEntity.getId());
 		interviewService.deleteInterviewById(createInterviewAndQuestionsResponse2.getInterviewId(),
 			testAccountEntity.getId());
+
 		//when
 		FindInterviewPageResponse findMyInterviewResponse = interviewService.findInterviewsByAccountId(
 			testAccountEntity.getId(), 0, 10);
