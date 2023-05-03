@@ -1,0 +1,62 @@
+version: "3"
+
+networks:
+  backend:
+
+services:
+  app:
+    build: ../
+    restart: always
+    env_file:
+      - ../local.env
+    ports:
+      - "8084:8084"
+    volumes:
+      - ../logs:/app/logs
+    depends_on:
+      - db
+      - redis
+    networks:
+      backend:
+
+  db:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3304:3306"
+    env_file:
+      - ../local.env
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ../datadir/mysql:/var/lib/mysql
+    networks:
+      backend:
+        aliases:
+          - db.interviewbank
+
+  redis:
+    image: redis:7.0
+    container_name: redis
+    ports:
+      - "6378:6379"
+    command:
+     - redis-server
+    volumes:
+      - ../datadir/redis:/data
+    networks:
+      backend:
+        aliases:
+        - redis.interviewbank
+
+  backup:
+    build: ../db-backup
+    volumes:
+      - ../db-backup:/backup
+    env_file:
+      - ../db-backup/backup.env
+    depends_on:
+      - db
+    networks:
+      backend:

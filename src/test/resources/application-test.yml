@@ -1,0 +1,90 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+  redis:
+    host: localhost
+    port: 6377
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    database: h2
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+
+    properties:
+      format_sql: true
+      show_sql: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testes;MODE=MySQL;
+    username: interview_bank
+
+  sql:
+    init:
+      mode: never
+      schema-locations: schema-test.sql
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  mail:
+    username: test
+
+  swagger:
+    server:
+      url: http://localhost:8084
+
+  oauth2:
+    client:
+      registration:
+        google:
+          auth-uri: https://accounts.google.com/o/oauth2/v2/auth
+          token-uri: https://oauth2.googleapis.com/token
+          profile-uri: https://www.googleapis.com/auth/userinfo
+          redirect-uri: https://localhost:3000/oauth2/google/redirect
+          client-id: test
+          client-secret: test
+          scopes: >
+            openid,
+            email,
+            profile
+        naver:
+          auth-uri: https://nid.naver.com/oauth2.0/authorize
+          token-uri: https://nid.naver.com/oauth2.0/token
+          profile-uri: https://openapi.naver.com/v1/nid/me
+          redirect-uri: https://localhost:3000/oauth2/naver/redirect
+          client-id: test
+          client-secret: test
+          scope: test
+        kakao:
+          auth-uri: https://kauth.kakao.com/oauth/authorize
+          token-uri: https://kauth.kakao.com/oauth/token
+          profile-uri: https://kapi.kakao.com/v2/user/me
+          redirect-uri: https://localhost:3000/oauth2/kakao/redirect
+          client-id: test
+          client-secret: test
+
+discord:
+  token: test-token
+  channelId: 1234
+
+aws:
+  credentials:
+    accessKeyId: test
+    secretAccessKey: test
+  region:
+    static: test-region
+  s3:
+    bucket: testbank
+
+cloud:
+  aws:
+    stack:
+      auto: false
