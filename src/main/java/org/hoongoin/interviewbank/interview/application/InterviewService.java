@@ -3,14 +3,10 @@ package org.hoongoin.interviewbank.interview.application;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
-import org.hoongoin.interviewbank.common.gpt.GptRequestBody;
 import org.hoongoin.interviewbank.common.gpt.GptRequestHandler;
-import org.hoongoin.interviewbank.common.gpt.GptResponseBody;
-import org.hoongoin.interviewbank.common.gpt.MessageRole;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.common.dto.PageDto;
@@ -32,7 +28,6 @@ import org.hoongoin.interviewbank.interview.domain.QuestionCommandService;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,14 +62,16 @@ public class InterviewService {
 			createInterviewAndQuestionsRequest.getJobCategoryId());
 
 		List<Question> questions = interviewMapper.createInterviewAndQuestionsRequestToQuestions(
-				createInterviewAndQuestionsRequest, createdInterview.getInterviewId());
+			createInterviewAndQuestionsRequest, createdInterview.getInterviewId());
 
-		List<Question> insertedQuestions = questionCommandService.insertQuestions(questions, createdInterview.getInterviewId());
+		List<Question> insertedQuestions = questionCommandService.insertQuestions(questions,
+			createdInterview.getInterviewId());
 
 		questionCommandService.getGptAnswersAsync(insertedQuestions);
 
 		return makeCreateInterviewAndQuestionsResponse(createdInterview, jobCategory, insertedQuestions);
 	}
+
 	@Transactional
 	public UpdateInterviewResponse updateInterviewResponseByRequestAndInterviewId(
 		UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId) {
@@ -132,7 +129,8 @@ public class InterviewService {
 
 	@Transactional(readOnly = true)
 	public FindInterviewPageResponse findInterviewsByAccountId(long requestingAccountId, int page, int size) {
-		PageDto<Interview> interviews = interviewQueryService.findInterviewsByAccountIdAndPageAndSize(requestingAccountId,
+		PageDto<Interview> interviews = interviewQueryService.findInterviewsByAccountIdAndPageAndSize(
+			requestingAccountId,
 			page, size);
 
 		return getFindInterviewPageResponse(interviews);
@@ -142,7 +140,8 @@ public class InterviewService {
 		JobCategory jobCategory, List<Question> questions) {
 		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
 		questions.forEach(question -> createInterviewAndQuestionsResponseQuiestions.add(
-			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getGptAnswer(), question.getInterviewId())));
+			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getGptAnswer(),
+				question.getInterviewId())));
 
 		return CreateInterviewAndQuestionsResponse.builder()
 			.title(createdInterview.getTitle())
@@ -204,7 +203,8 @@ public class InterviewService {
 				interviewMapper.interviewAndNicknameToFindInterviewPageResponseInterview(interview,
 					findAccountByInterview(interview), jobCategoryResponse));
 		}
-		return new FindInterviewPageResponse(interviewPageDto.getTotalPages(), interviewPageDto.getTotalElements(), findInterviewPageResponseInterview);
+		return new FindInterviewPageResponse(interviewPageDto.getTotalPages(), interviewPageDto.getTotalElements(),
+			findInterviewPageResponseInterview);
 	}
 
 	private Account findAccountByInterview(Interview interview) {
