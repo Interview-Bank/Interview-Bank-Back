@@ -46,7 +46,6 @@ public class InterviewService {
 	private final QuestionQueryService questionQueryService;
 	private final AccountQueryService accountQueryService;
 	private final JobCategoryQueryService jobCategoryQueryService;
-	private final GptRequestHandler gptRequestHandler;
 
 	@Transactional
 	public CreateInterviewAndQuestionsResponse createInterviewAndQuestionsByRequest(
