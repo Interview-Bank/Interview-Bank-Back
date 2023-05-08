@@ -2,6 +2,7 @@ package org.hoongoin.interviewbank.interview.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import javax.persistence.EntityManager;
@@ -12,6 +13,7 @@ import org.hoongoin.interviewbank.common.gpt.GptRequestBody;
 import org.hoongoin.interviewbank.common.gpt.GptRequestHandler;
 import org.hoongoin.interviewbank.common.gpt.GptResponseBody;
 import org.hoongoin.interviewbank.common.gpt.MessageRole;
+
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
@@ -51,61 +53,51 @@ public class QuestionCommandService {
 		return saveAllQuestions(questions, interviewEntity);
 	}
 
-	public List<Question> updateQuestions(long interviewId, List<Question> newQuestions) {
-		List<Question> updatedQuestions = new ArrayList<>();
+	public List<Question> updateQuestions(long interviewId, List<Question> questions) {
+		List<Question> newQuestions = new ArrayList<>();
+		List<Question> questionsToUpdateGptAnswer = new ArrayList<>();
 
 		List<QuestionEntity> questionEntities = questionRepository.findAllByInterviewId(interviewId);
-
-		if (questionEntities.size() < newQuestions.size()) {
-			for (int i = 0; i < questionEntities.size(); i++) {
-				QuestionEntity questionEntity = questionEntities.get(i);
-				Question question = newQuestions.get(i);
-
-				questionEntity.modifyContent(question.getContent());
-
-				updatedQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity));
-			}
-
-			InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-				.orElseThrow(() -> new IbEntityNotFoundException("interview"));
-
-			List<QuestionEntity> newQuestionEntities = new ArrayList<>();
-
-			for (Question question : newQuestions.subList(questionEntities.size(), newQuestions.size())) {
-				newQuestionEntities.add(QuestionEntity.builder()
-					.content(question.getContent())
-					.interviewEntity(interviewEntity)
-					.build());
-			}
-
-			List<QuestionEntity> savedQuestionEntities = saveAllQuestionWithBatch(newQuestionEntities);
-			savedQuestionEntities.forEach(
-				questionEntity -> updatedQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity)));
-
-		} else if (questionEntities.size() == newQuestions.size()) {
-			questionEntities.forEach(questionEntity -> {
-				Question question = newQuestions.get(questionEntities.indexOf(questionEntity));
-
-				questionEntity.modifyContent(question.getContent());
-
-				updatedQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity));
+		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
 			});
 
-		} else {
-			for (int i = 0; i < newQuestions.size(); i++) {
-				QuestionEntity questionEntity = questionEntities.get(i);
-				Question question = newQuestions.get(i);
+		questions.forEach(question -> {
+			QuestionEntity questionEntity;
 
-				questionEntity.modifyContent(question.getContent());
+			if (question.getQuestionId() != null) {
+				questionEntity = questionEntities.stream()
+					.filter(questionEntityInner -> question.getQuestionId().equals(questionEntityInner.getId()))
+					.findFirst().orElseThrow(() -> {
+						log.info("Question Not Found");
+						return new IbEntityNotFoundException("Question Not Found");
+					});
 
-				updatedQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity));
+				if (this.isContentUpdated(question, questionEntity)) {
+					questionEntity.modifyContent(question.getContent());
+					questionsToUpdateGptAnswer.add(interviewMapper.questionEntityToQuestion(questionEntity));
+				}
+
+			} else {
+				questionEntity = QuestionEntity.builder()
+					.interviewEntity(interviewEntity)
+					.content(question.getContent())
+					.build();
+				questionRepository.save(questionEntity);
+				questionsToUpdateGptAnswer.add(interviewMapper.questionEntityToQuestion(questionEntity));
 			}
+			newQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity));
+		});
 
-			List<QuestionEntity> deletedQuestionEntities = questionEntities.subList(newQuestions.size(), questionEntities.size());
-			deletedQuestionEntities.forEach(SoftDeletedBaseEntity::deleteEntityByFlag);
-		}
+		updateGptAnswersAsync(questionsToUpdateGptAnswer);
 
-		return updatedQuestions;
+		return newQuestions;
+	}
+
+	private boolean isContentUpdated(Question question, QuestionEntity questionEntity) {
+		return !Objects.equals(question.getContent(), questionEntity.getContent());
 	}
 
 	public List<Long> deleteQuestionsByInterviewId(long interviewId) {
@@ -130,18 +122,22 @@ public class QuestionCommandService {
 
 	@Async
 	@Transactional
-	public CompletableFuture<Void> getGptAnswersAsync(List<Question> questions) {
-		GptRequestBody.Message assistantMessage = new GptRequestBody.Message(MessageRole.ASSISTANT.getRole(), "You are a Interview Q&A Assistant.");
+	public CompletableFuture<Void> updateGptAnswersAsync(List<Question> questions) {
+		GptRequestBody.Message assistantMessage = new GptRequestBody.Message(MessageRole.ASSISTANT.getRole(),
+			"You are a Interview Q&A Assistant.");
 		questions.forEach(question -> {
-			GptRequestBody.Message questionMessage = new GptRequestBody.Message(MessageRole.USER.getRole(), question.getContent());
-			GptResponseBody gptResponseBody = gptRequestHandler.sendChatCompletionRequest(List.of(assistantMessage, questionMessage));
-			this.udpateGptAnswerOfQuestion(question.getQuestionId(), gptResponseBody.getChoices().get(0).getMessage().getContent());
+			GptRequestBody.Message questionMessage = new GptRequestBody.Message(MessageRole.USER.getRole(),
+				question.getContent());
+			GptResponseBody gptResponseBody = gptRequestHandler.sendChatCompletionRequest(
+				List.of(assistantMessage, questionMessage));
+			this.udpateGptAnswerOfQuestion(question.getQuestionId(),
+				gptResponseBody.getChoices().get(0).getMessage().getContent());
 		});
 
 		return CompletableFuture.completedFuture(null);
 	}
 
-	public Question udpateGptAnswerOfQuestion(Long questionId, String gptAnswer){
+	public Question udpateGptAnswerOfQuestion(Long questionId, String gptAnswer) {
 		QuestionEntity questionEntity = questionRepository.findById(questionId)
 			.orElseThrow(() -> {
 				log.info("Question Not Found");

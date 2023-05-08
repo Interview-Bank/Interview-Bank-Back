@@ -42,6 +42,7 @@ public class QuestionEntity extends SoftDeletedBaseEntity {
 
 	public void modifyContent(String content) {
 		this.content = content;
+		this.gptAnswer = "GPT가 답변을 생성중입니다.";
 	}
 
 	public void modifyGptAnswer(String gptAnswer) {

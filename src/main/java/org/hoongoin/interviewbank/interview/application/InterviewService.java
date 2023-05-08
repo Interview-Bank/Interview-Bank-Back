@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
-import org.hoongoin.interviewbank.common.gpt.GptRequestHandler;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.common.dto.PageDto;
@@ -66,7 +65,7 @@ public class InterviewService {
 		List<Question> insertedQuestions = questionCommandService.insertQuestions(questions,
 			createdInterview.getInterviewId());
 
-		questionCommandService.getGptAnswersAsync(insertedQuestions);
+		questionCommandService.updateGptAnswersAsync(insertedQuestions);
 
 		return makeCreateInterviewAndQuestionsResponse(createdInterview, jobCategory, insertedQuestions);
 	}
