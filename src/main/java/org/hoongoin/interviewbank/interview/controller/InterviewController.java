@@ -44,7 +44,6 @@ public class InterviewController {
 		@RequestBody CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest) {
 		CreateInterviewAndQuestionsResponse createInterviewAndQuestionsResponse = interviewService.createInterviewAndQuestionsByRequest(
 			createInterviewAndQuestionsRequest, getRequestingAccountId());
-
 		return ResponseEntity.status(HttpStatus.CREATED).body(createInterviewAndQuestionsResponse);
 	}
 

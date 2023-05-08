@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.hoongoin.interviewbank.utils.MessageFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import discord4j.common.util.Snowflake;
@@ -28,15 +27,6 @@ public class DiscordHandler {
 			String prefixMessage = MessageFactory.createHttpMessage(request);
 			String bodyMessage = MessageFactory.createStackTraceMessage(exception);
 			this.sendMessageToDiscord(prefixMessage + "\n" + bodyMessage);
-		} catch (Exception messageException) {
-			log.error(messageException.getMessage(), messageException);
-		}
-	}
-
-	public void send(Exception exception){
-		try {
-			String bodyMessage = MessageFactory.createStackTraceMessage(exception);
-			this.sendMessageToDiscord(bodyMessage);
 		} catch (Exception messageException) {
 			log.error(messageException.getMessage(), messageException);
 		}

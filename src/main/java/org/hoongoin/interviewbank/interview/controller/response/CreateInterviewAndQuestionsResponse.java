@@ -32,6 +32,7 @@ public class CreateInterviewAndQuestionsResponse {
 	public static class Question {
 
 		private String content;
+		private String gptAnswer;
 		private long questionId;
 	}
 }

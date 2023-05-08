@@ -50,6 +50,7 @@ CREATE TABLE `question`
     `deleted_flag` BIT DEFAULT 0 NOT NULL,
     `updated_at` DATETIME(6),
     `content` TEXT NOT NULL,
+    `gpt_answer` TEXT DEFAULT 'GPT가 답변을 생성중입니다.',
     `interview_id` BIGINT NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT FOREIGN KEY (`interview_id`) REFERENCES `interview` (`id`)

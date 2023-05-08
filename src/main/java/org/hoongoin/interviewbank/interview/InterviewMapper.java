@@ -8,6 +8,7 @@ import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
+import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
@@ -51,6 +52,11 @@ public interface InterviewMapper {
 			.questionId(questionEntity.getId())
 			.interviewId(questionEntity.getInterviewEntity().getId())
 			.content(questionEntity.getContent())
+			.gptAnswer(questionEntity.getGptAnswer())
+			.createdAt(questionEntity.getCreatedAt())
+			.updatedAt(questionEntity.getUpdatedAt())
+			.deletedAt(questionEntity.getDeletedAt())
+			.deletedFlag(questionEntity.getDeletedFlag())
 			.build();
 	}
 

@@ -17,11 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 public class Question {
 
 	@Builder
-	public Question(Long questionId, long interviewId, String content, LocalDateTime createdAt,
+	public Question(Long questionId, long interviewId, String content, String gptAnswer, LocalDateTime createdAt,
 		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag) {
 		this.setQuestionId(questionId);
 		this.setInterviewId(interviewId);
 		this.setContent(content);
+		this.setGptAnswer(gptAnswer);
 		this.setCreatedAt(createdAt);
 		this.setUpdatedAt(updatedAt);
 		this.setDeletedAt(deletedAt);
@@ -31,6 +32,7 @@ public class Question {
 	private Long questionId;
 	private Long interviewId;
 	private String content;
+	private String gptAnswer;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;

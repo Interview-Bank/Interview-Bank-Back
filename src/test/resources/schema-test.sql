@@ -52,6 +52,7 @@ CREATE TABLE question
     deleted_flag BOOLEAN DEFAULT FALSE NOT NULL,
     updated_at TIMESTAMP(6),
     content VARCHAR NOT NULL,
+    gpt_answer VARCHAR DEFAULT 'GPT가 답변을 생성중입니다.',
     interview_id BIGINT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_interview_id FOREIGN KEY (interview_id) REFERENCES interview (id)
