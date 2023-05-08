@@ -140,7 +140,7 @@ public class InterviewService {
 		List<CreateInterviewAndQuestionsResponse.Question> createInterviewAndQuestionsResponseQuiestions = new ArrayList<>();
 		questions.forEach(question -> createInterviewAndQuestionsResponseQuiestions.add(
 			new CreateInterviewAndQuestionsResponse.Question(question.getContent(), question.getGptAnswer(),
-				question.getInterviewId())));
+				question.getQuestionId())));
 
 		return CreateInterviewAndQuestionsResponse.builder()
 			.title(createdInterview.getTitle())
