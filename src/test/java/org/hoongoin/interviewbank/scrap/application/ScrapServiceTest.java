@@ -108,8 +108,8 @@ class ScrapServiceTest {
 		given(scrapMapper.scrapToScrapResponse(scrap)).willReturn(
 			new ScrapResponse(scrap.getScrapId(), scrap.getTitle(), LocalDate.now()));
 
-		List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = List.of(
-			new ScrapQuestionWithScrapAnswersResponse());
+		List<ReadScrapDetailResponse.ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = List.of(
+			new ReadScrapDetailResponse.ScrapQuestionWithScrapAnswersResponse());
 		given(scrapMapper.scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(
 			scrapQuestionsWithScrapAnswers.get(0))).willReturn(scrapQuestionWithScrapAnswersResponses.get(0));
 

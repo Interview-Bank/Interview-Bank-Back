@@ -6,7 +6,6 @@ import java.util.List;
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbBadRequestException;
-import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.common.dto.PageDto;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
@@ -24,7 +23,6 @@ import org.hoongoin.interviewbank.scrap.controller.response.OriginalInterviewRes
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapPageResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionAndScrapAnswerResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
@@ -183,7 +181,7 @@ public class ScrapService {
 		OriginalInterviewResponse interviewResponse = new OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());
 
-		List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = new ArrayList<>();
+		List<ReadScrapDetailResponse.ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = new ArrayList<>();
 		scrapQuestionsWithScrapAnswers.forEach(
 			scrapQuestionWithScrapAnswers -> scrapQuestionWithScrapAnswersResponses.add(
 				scrapMapper.scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(
