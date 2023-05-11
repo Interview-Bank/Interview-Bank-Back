@@ -54,6 +54,7 @@ public class QuestionEntity extends SoftDeletedBaseEntity {
 		return "QuestionEntity{" +
 			"id=" + id +
 			", content='" + content + '\'' +
+			", gptAnswer='" + gptAnswer + '\'' +
 			", interviewEntity=" + interviewEntity +
 			'}';
 	}

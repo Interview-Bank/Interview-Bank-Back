@@ -2,17 +2,15 @@ package org.hoongoin.interviewbank.interview.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
-import org.hoongoin.interviewbank.common.gpt.GptRequestBody;
-import org.hoongoin.interviewbank.common.gpt.GptRequestHandler;
-import org.hoongoin.interviewbank.common.gpt.GptResponseBody;
-import org.hoongoin.interviewbank.common.gpt.MessageRole;
 
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
@@ -21,9 +19,8 @@ import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity
 import org.hoongoin.interviewbank.interview.infrastructure.repository.InterviewRepository;
 import org.hoongoin.interviewbank.interview.infrastructure.repository.QuestionRepository;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
-import org.springframework.scheduling.annotation.Async;
+
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class QuestionCommandService {
 
+	private final QuestionCommandServiceAsync questionCommandServiceAsync;
 	private final InterviewRepository interviewRepository;
 	private final QuestionRepository questionRepository;
 	private final InterviewMapper interviewMapper;
-	private final GptRequestHandler gptRequestHandler;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -44,20 +41,21 @@ public class QuestionCommandService {
 	private static final String GET_BATCH_SIZE = "javax.persistence.jdbc.batch_size";
 
 	public List<Question> insertQuestions(List<Question> questions, long interviewId) {
-		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
-			.orElseThrow(() -> {
-				log.info("Interview Not Found");
-				return new IbEntityNotFoundException("Interview Not Found");
-			});
+		InterviewEntity interviewEntity = getInterviewEntity(interviewId);
 
 		return saveAllQuestions(questions, interviewEntity);
 	}
 
 	public List<Question> updateQuestions(long interviewId, List<Question> questions) {
-		List<Question> newQuestions = new ArrayList<>();
-		List<Question> questionsToUpdateGptAnswer = new ArrayList<>();
+		List<Question> allUpdatedQuestions = new ArrayList<>();
 
-		List<QuestionEntity> questionEntities = questionRepository.findAllByInterviewId(interviewId);
+		List<QuestionEntity> originalQuestionEntities = questionRepository.findAllByInterviewId(interviewId);
+		Map<Long, QuestionEntity> originalQuestionEntityMap = originalQuestionEntities.stream()
+			.collect(Collectors.toMap(QuestionEntity::getId, Function.identity()));
+
+		List<QuestionEntity> newQuestionEntities = new ArrayList<>();
+		List<QuestionEntity> modifiedQuestionEntities = new ArrayList<>();
+
 		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
 			.orElseThrow(() -> {
 				log.info("Interview Not Found");
@@ -68,36 +66,36 @@ public class QuestionCommandService {
 			QuestionEntity questionEntity;
 
 			if (question.getQuestionId() != null) {
-				questionEntity = questionEntities.stream()
-					.filter(questionEntityInner -> question.getQuestionId().equals(questionEntityInner.getId()))
-					.findFirst().orElseThrow(() -> {
-						log.info("Question Not Found");
-						return new IbEntityNotFoundException("Question Not Found");
-					});
+				questionEntity = originalQuestionEntityMap.remove(question.getQuestionId());
+				if (questionEntity == null) {
+					log.info("Question Not Found");
+					throw new IbEntityNotFoundException("Question Not Found");
+				}
 
 				if (this.isContentUpdated(question, questionEntity)) {
 					questionEntity.modifyContent(question.getContent());
-					questionsToUpdateGptAnswer.add(interviewMapper.questionEntityToQuestion(questionEntity));
+					modifiedQuestionEntities.add(questionEntity);
 				}
 
 			} else {
 				questionEntity = QuestionEntity.builder()
 					.interviewEntity(interviewEntity)
 					.content(question.getContent())
+					.gptAnswer("GPT가 답변을 생성중입니다.")
 					.build();
-				questionRepository.save(questionEntity);
-				questionsToUpdateGptAnswer.add(interviewMapper.questionEntityToQuestion(questionEntity));
+				newQuestionEntities.add(questionEntity);
 			}
-			newQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity));
+
+			allUpdatedQuestions.add(interviewMapper.questionEntityToQuestion(questionEntity));
 		});
 
-		updateGptAnswersAsync(questionsToUpdateGptAnswer);
+		questionRepository.saveAll(newQuestionEntities);
+		originalQuestionEntityMap.values().forEach(SoftDeletedBaseEntity::deleteEntityByFlag);
 
-		return newQuestions;
-	}
+		modifiedQuestionEntities.addAll(newQuestionEntities);
+		questionCommandServiceAsync.updateGptAnswersAsync(modifiedQuestionEntities);
 
-	private boolean isContentUpdated(Question question, QuestionEntity questionEntity) {
-		return !Objects.equals(question.getContent(), questionEntity.getContent());
+		return allUpdatedQuestions;
 	}
 
 	public List<Long> deleteQuestionsByInterviewId(long interviewId) {
@@ -120,35 +118,6 @@ public class QuestionCommandService {
 		return deletedQuestions;
 	}
 
-	@Async
-	@Transactional
-	public CompletableFuture<Void> updateGptAnswersAsync(List<Question> questions) {
-		GptRequestBody.Message assistantMessage = new GptRequestBody.Message(MessageRole.ASSISTANT.getRole(),
-			"You are a Interview Q&A Assistant.");
-		questions.forEach(question -> {
-			GptRequestBody.Message questionMessage = new GptRequestBody.Message(MessageRole.USER.getRole(),
-				question.getContent());
-			GptResponseBody gptResponseBody = gptRequestHandler.sendChatCompletionRequest(
-				List.of(assistantMessage, questionMessage));
-			this.udpateGptAnswerOfQuestion(question.getQuestionId(),
-				gptResponseBody.getChoices().get(0).getMessage().getContent());
-		});
-
-		return CompletableFuture.completedFuture(null);
-	}
-
-	public Question udpateGptAnswerOfQuestion(Long questionId, String gptAnswer) {
-		QuestionEntity questionEntity = questionRepository.findById(questionId)
-			.orElseThrow(() -> {
-				log.info("Question Not Found");
-				return new IbEntityNotFoundException("Question Not Found");
-			});
-
-		questionEntity.modifyGptAnswer(gptAnswer);
-
-		return interviewMapper.questionEntityToQuestion(questionEntity);
-	}
-
 	private List<Question> saveAllQuestions(List<Question> questions, InterviewEntity interviewEntity) {
 		List<QuestionEntity> questionEntities = new ArrayList<>();
 
@@ -160,6 +129,8 @@ public class QuestionCommandService {
 		}
 
 		List<QuestionEntity> savedQuestionEntities = saveAllQuestionWithBatch(questionEntities);
+
+		questionCommandServiceAsync.updateGptAnswersAsync(savedQuestionEntities);
 
 		List<Question> returnQuestions = new ArrayList<>();
 
@@ -182,5 +153,17 @@ public class QuestionCommandService {
 		entityManager.setProperty(GET_BATCH_SIZE, originalBatchSize);
 
 		return savedEntities;
+	}
+
+	private InterviewEntity getInterviewEntity(long interviewId) {
+		return interviewRepository.findById(interviewId)
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
+	}
+
+	private boolean isContentUpdated(Question question, QuestionEntity questionEntity) {
+		return !Objects.equals(question.getContent(), questionEntity.getContent());
 	}
 }

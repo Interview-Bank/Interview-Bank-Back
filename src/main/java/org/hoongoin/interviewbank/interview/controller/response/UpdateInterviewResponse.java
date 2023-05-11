@@ -18,23 +18,20 @@ import lombok.Setter;
 public class UpdateInterviewResponse {
 
 	private String title;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 	private List<UpdateInterviewResponse.Question> questions;
 	private Long jobCategoryId;
 	private InterviewPeriod interviewPeriod;
 	private CareerYear careerYear;
 	private JobCategoryResponse jobCategory;
 
+	@AllArgsConstructor
 	@Getter
 	public static class Question {
 
-		public Question(long questionId, String content, LocalDateTime updatedAt) {
-			this.questionId = questionId;
-			this.content = content;
-			this.updatedAt = updatedAt;
-		}
-
 		private long questionId;
 		private String content;
-		private LocalDateTime updatedAt;
+		private String gptAnswer;
 	}
 }
