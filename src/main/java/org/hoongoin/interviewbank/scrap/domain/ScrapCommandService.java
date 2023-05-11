@@ -42,6 +42,7 @@ public class ScrapCommandService {
 			ScrapQuestionEntity scrapQuestionEntity = ScrapQuestionEntity.builder()
 				.scrapEntity(scrapEntity)
 				.content(scrapQuestion.getContent())
+				.gptAnswer(scrapQuestion.getGptAnswer())
 				.build();
 			scrapQuestionEntity = scrapQuestionRepository.save(scrapQuestionEntity);
 			ScrapAnswerEntity scrapAnswerEntity = ScrapAnswerEntity.builder()

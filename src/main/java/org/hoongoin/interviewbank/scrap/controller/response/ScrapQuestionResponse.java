@@ -11,4 +11,5 @@ public class ScrapQuestionResponse {
 
 	private long scrapQuestionId;
 	private String content;
+	private String gptAnswer;
 }

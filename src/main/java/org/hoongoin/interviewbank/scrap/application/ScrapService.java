@@ -75,7 +75,11 @@ public class ScrapService {
 		List<ScrapQuestion> scrapQuestions = new ArrayList<>();
 		for (Question question : originalQuestionsInInterview) {
 			scrapQuestions.add(
-				ScrapQuestion.builder().scrapId(scrap.getScrapId()).content(question.getContent()).build());
+				ScrapQuestion.builder()
+					.scrapId(scrap.getScrapId())
+					.content(question.getContent())
+					.gptAnswer(question.getGptAnswer())
+					.build());
 		}
 
 		ScrapWithScrapQuestionAndScrapAnswerList scrapWithScrapQuestionAndScrapAnswerList = scrapCommandService.insertScrapAndScrapQuestions(
