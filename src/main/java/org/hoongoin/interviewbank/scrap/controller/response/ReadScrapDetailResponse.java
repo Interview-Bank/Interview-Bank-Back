@@ -1,5 +1,6 @@
 package org.hoongoin.interviewbank.scrap.controller.response;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -14,6 +15,26 @@ public class ReadScrapDetailResponse {
 	private ScrapResponse scrap;
 	private OriginalInterviewResponse originalInterview;
 	private List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersList;
+
+	@AllArgsConstructor
+	@Getter
+	@Setter
+	public static class ScrapResponse {
+
+		private long scrapId;
+		private String title;
+		private LocalDate createdAt;
+	}
+
+	@AllArgsConstructor
+	@Getter
+	@Setter
+	public static class OriginalInterviewResponse {
+
+		private long interviewId;
+		private String title;
+	}
+
 
 	@NoArgsConstructor
 	@AllArgsConstructor

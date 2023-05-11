@@ -13,6 +13,7 @@ public class ScrapQuestionWithScrapAnswers {
 	private long scrapQuestionId;
 	private long scrapId;
 	private String content;
+	private String gptAnswer;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private List<ScrapAnswer> scrapAnswers;

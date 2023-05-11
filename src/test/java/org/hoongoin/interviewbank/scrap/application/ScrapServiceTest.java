@@ -105,8 +105,8 @@ class ScrapServiceTest {
 		given(interviewQueryService.findInterviewById(scrap.getInterviewId())).willReturn(interview);
 		given(scrapQuestionQueryService.findAllScrapQuestionWithScrapAnswersByScrapId(scrapId)).willReturn(
 			scrapQuestionsWithScrapAnswers);
-		given(scrapMapper.scrapToScrapResponse(scrap)).willReturn(
-			new ScrapResponse(scrap.getScrapId(), scrap.getTitle(), LocalDate.now()));
+		given(scrapMapper.scrapToReadScrapDetailResponseOfScrapResponse(scrap)).willReturn(
+			new ReadScrapDetailResponse.ScrapResponse(scrap.getScrapId(), scrap.getTitle(), LocalDate.now()));
 
 		List<ReadScrapDetailResponse.ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = List.of(
 			new ReadScrapDetailResponse.ScrapQuestionWithScrapAnswersResponse());
