@@ -41,7 +41,11 @@ public class QuestionCommandService {
 	private static final String GET_BATCH_SIZE = "javax.persistence.jdbc.batch_size";
 
 	public List<Question> insertQuestions(List<Question> questions, long interviewId) {
-		InterviewEntity interviewEntity = getInterviewEntity(interviewId);
+		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
 
 		return saveAllQuestions(questions, interviewEntity);
 	}
@@ -153,14 +157,6 @@ public class QuestionCommandService {
 		entityManager.setProperty(GET_BATCH_SIZE, originalBatchSize);
 
 		return savedEntities;
-	}
-
-	private InterviewEntity getInterviewEntity(long interviewId) {
-		return interviewRepository.findById(interviewId)
-			.orElseThrow(() -> {
-				log.info("Interview Not Found");
-				return new IbEntityNotFoundException("Interview Not Found");
-			});
 	}
 
 	private boolean isContentUpdated(Question question, QuestionEntity questionEntity) {

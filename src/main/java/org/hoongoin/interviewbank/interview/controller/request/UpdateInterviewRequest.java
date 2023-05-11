@@ -22,8 +22,12 @@ public class UpdateInterviewRequest {
 
 	@Getter
 	@Setter
-	@AllArgsConstructor
 	public static class Question {
+
+		public Question(String content, Long questionId) {
+			this.content = content;
+			this.questionId = questionId;
+		}
 
 		private String content;
 		private Long questionId;
