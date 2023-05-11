@@ -24,7 +24,6 @@ import org.hoongoin.interviewbank.interview.domain.InterviewCommandService;
 import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
 import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
 import org.hoongoin.interviewbank.interview.domain.QuestionCommandService;
-import org.hoongoin.interviewbank.interview.domain.QuestionCommandServiceAsync;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
@@ -43,7 +42,6 @@ public class InterviewService {
 	private final InterviewQueryService interviewQueryService;
 	private final InterviewMapper interviewMapper;
 	private final QuestionCommandService questionCommandService;
-	private final QuestionCommandServiceAsync questionCommandServiceAsync;
 	private final QuestionQueryService questionQueryService;
 	private final AccountQueryService accountQueryService;
 	private final JobCategoryQueryService jobCategoryQueryService;
