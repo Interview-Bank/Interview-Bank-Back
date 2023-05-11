@@ -158,7 +158,7 @@ public class InterviewService {
 
 		questions.forEach(question -> updateInterviewResponseQuestions.add(
 			new UpdateInterviewResponse.Question(question.getQuestionId(), question.getContent(),
-				question.getGptAnswer())));
+				question.getCreatedAt(), question.getUpdatedAt(), question.getGptAnswer())));
 
 		return UpdateInterviewResponse.builder()
 			.title(interview.getTitle())

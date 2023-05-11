@@ -32,6 +32,7 @@ public class UpdateInterviewResponse {
 
 		private long questionId;
 		private String content;
+		private LocalDateTime createdAt;
 		private LocalDateTime updatedAt;
 		private String gptAnswer;
 	}
