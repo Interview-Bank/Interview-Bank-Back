@@ -78,6 +78,7 @@ CREATE TABLE scrap_question
     created_at TIMESTAMP(6),
     updated_at TIMESTAMP(6),
     content VARCHAR NOT NULL,
+    gpt_answer TEXT,
     scrap_id BIGINT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_scrap_id FOREIGN KEY (scrap_id) REFERENCES scrap (id)
