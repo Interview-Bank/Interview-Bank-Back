@@ -16,11 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ScrapQuestion {
 
 	@Builder
-	public ScrapQuestion(long scrapQuestionId, long scrapId, String content, LocalDateTime createdAt,
+	public ScrapQuestion(long scrapQuestionId, long scrapId, String content, String gptAnswer, LocalDateTime createdAt,
 		LocalDateTime updatedAt) {
 		this.setScrapQuestionId(scrapQuestionId);
 		this.setScrapId(scrapId);
 		this.setContent(content);
+		this.setGptAnswer(gptAnswer);
 		this.setCreatedAt(createdAt);
 		this.setUpdatedAt(updatedAt);
 	}
@@ -28,6 +29,7 @@ public class ScrapQuestion {
 	private long scrapQuestionId;
 	private long scrapId;
 	private String content;
+	private String gptAnswer;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
