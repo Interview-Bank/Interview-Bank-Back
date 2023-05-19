@@ -26,7 +26,7 @@ public class QuestionCommandServiceAsync {
 
 	@Async
 	@Transactional
-	public void updateAllGptAnswerByQuestionIdAsync(List<QuestionEntity> questionEntities) {
+	public void updateAllGptAnswer(List<QuestionEntity> questionEntities) {
 		//TODO: N+1 problem
 
 		log.info("QuestionCommandServiceAsync.updateGptAnswersAsync() is called.");

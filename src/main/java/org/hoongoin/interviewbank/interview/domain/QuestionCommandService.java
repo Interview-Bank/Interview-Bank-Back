@@ -99,7 +99,7 @@ public class QuestionCommandService {
 		originalQuestionEntityMap.values().forEach(SoftDeletedBaseEntity::deleteEntityByFlag);
 
 		modifiedQuestionEntities.addAll(newQuestionEntities);
-		questionCommandServiceAsync.updateAllGptAnswerByQuestionIdAsync(modifiedQuestionEntities);
+		questionCommandServiceAsync.updateAllGptAnswer(modifiedQuestionEntities);
 
 		return allUpdatedQuestions;
 	}
@@ -137,7 +137,7 @@ public class QuestionCommandService {
 
 		List<QuestionEntity> savedQuestionEntities = saveAllQuestionWithBatch(questionEntities);
 
-		questionCommandServiceAsync.updateAllGptAnswerByQuestionIdAsync(savedQuestionEntities);
+		questionCommandServiceAsync.updateAllGptAnswer(savedQuestionEntities);
 
 		List<Question> returnQuestions = new ArrayList<>();
 
