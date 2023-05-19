@@ -51,6 +51,8 @@ public class QuestionCommandService {
 	}
 
 	public List<Question> updateQuestions(long interviewId, List<Question> questions) {
+		//TODO: separate method
+
 		List<Question> allUpdatedQuestions = new ArrayList<>();
 
 		List<QuestionEntity> originalQuestionEntities = questionRepository.findAllByInterviewId(interviewId);
@@ -97,7 +99,7 @@ public class QuestionCommandService {
 		originalQuestionEntityMap.values().forEach(SoftDeletedBaseEntity::deleteEntityByFlag);
 
 		modifiedQuestionEntities.addAll(newQuestionEntities);
-		questionCommandServiceAsync.updateGptAnswersAsync(modifiedQuestionEntities);
+		questionCommandServiceAsync.updateAllGptAnswerByQuestionIdAsync(modifiedQuestionEntities);
 
 		return allUpdatedQuestions;
 	}
@@ -128,13 +130,14 @@ public class QuestionCommandService {
 		for (Question question : questions) {
 			questionEntities.add(QuestionEntity.builder()
 				.content(question.getContent())
+				.gptAnswer("GPT가 답변을 생성중입니다.")
 				.interviewEntity(interviewEntity)
 				.build());
 		}
 
 		List<QuestionEntity> savedQuestionEntities = saveAllQuestionWithBatch(questionEntities);
 
-		questionCommandServiceAsync.updateGptAnswersAsync(savedQuestionEntities);
+		questionCommandServiceAsync.updateAllGptAnswerByQuestionIdAsync(savedQuestionEntities);
 
 		List<Question> returnQuestions = new ArrayList<>();
 
