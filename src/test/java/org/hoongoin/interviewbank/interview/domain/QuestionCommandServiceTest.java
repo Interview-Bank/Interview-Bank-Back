@@ -1,6 +1,8 @@
 package org.hoongoin.interviewbank.interview.domain;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +10,10 @@ import java.util.List;
 import org.hoongoin.interviewbank.account.AccountTestFactory;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.account.infrastructure.repository.AccountRepository;
+import org.hoongoin.interviewbank.common.gpt.GptRequestHandler;
+import org.hoongoin.interviewbank.common.gpt.GptResponseBody;
 import org.hoongoin.interviewbank.config.IbSpringBootTest;
+import org.hoongoin.interviewbank.gpt.GptResponseBodyFactory;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
@@ -24,6 +29,7 @@ import org.hoongoin.interviewbank.interview.infrastructure.repository.QuestionRe
 import org.hoongoin.interviewbank.interview.application.entity.Question;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @IbSpringBootTest
@@ -47,6 +53,9 @@ class QuestionCommandServiceTest {
 
 	@Autowired
 	private JobCategoryRepository jobCategoryRepository;
+
+	@MockBean
+	private GptRequestHandler gptRequestHandler;
 
 	private static final JobCategoryEntity testJobCategoryEntity = InterviewTestFactory.createJobCategoryEntity();
 
@@ -111,6 +120,9 @@ class QuestionCommandServiceTest {
 
 		updatingQuestions.get(0).setContent(updatedContent1);
 		updatingQuestions.get(1).setContent(updatedContent2);
+
+		GptResponseBody gptResponseBody = GptResponseBodyFactory.createMockGptResponseBody();
+		given(gptRequestHandler.sendChatCompletionRequest(any())).willReturn(gptResponseBody);
 
 		//when
 		List<Question> updatedQuestions = questionCommandService.updateQuestions(

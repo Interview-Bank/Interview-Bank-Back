@@ -118,6 +118,9 @@ class InterviewControllerTest {
 		UpdateInterviewRequest updateInterviewRequest = new UpdateInterviewRequest(questions, updatedTitle, 1L,
 			InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR);
 
+		GptResponseBody gptResponseBody = GptResponseBodyFactory.createMockGptResponseBody();
+		given(gptRequestHandler.sendChatCompletionRequest(any())).willReturn(gptResponseBody);
+
 		//when
 		ResponseEntity<UpdateInterviewResponse> updateInterviewResponse = interviewController.updateInterview(
 			updateInterviewRequest, savedInterviewEntity.getId());
