@@ -27,7 +27,6 @@ public class QuestionCommandServiceAsync {
 	@Async
 	@Transactional
 	public void updateAllGptAnswer(List<QuestionEntity> questionEntities) {
-		//TODO: N+1 problem
 
 		log.info("QuestionCommandServiceAsync.updateGptAnswersAsync() is called.");
 
@@ -40,11 +39,10 @@ public class QuestionCommandServiceAsync {
 			GptResponseBody gptResponseBody = gptRequestHandler.sendChatCompletionRequest(
 				List.of(assistantMessage, questionMessage));
 
-			questionEntity.modifyGptAnswer(gptResponseBody.getChoices().get(0).getMessage().getContent());
+			questionRepository.updateGptAnswer(questionEntity.getId(), gptResponseBody.getChoices().get(0).getMessage().getContent());
 			log.info(gptResponseBody.getChoices().get(0).getMessage().getContent());
 		});
 
-		questionRepository.saveAll(questionEntities);
 		log.info("QuestionCommandServiceAsync.updateGptAnswersAsync() is finished.");
 		CompletableFuture.completedFuture(null);
 	}
