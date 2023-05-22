@@ -6,7 +6,6 @@ import java.util.List;
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbBadRequestException;
-import org.hoongoin.interviewbank.exception.IbUnauthorizedException;
 import org.hoongoin.interviewbank.common.dto.PageDto;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
@@ -20,12 +19,8 @@ import org.hoongoin.interviewbank.scrap.application.entity.ScrapWithScrapQuestio
 import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.OriginalInterviewResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapPageResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionAndScrapAnswerResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestion;
@@ -75,7 +70,11 @@ public class ScrapService {
 		List<ScrapQuestion> scrapQuestions = new ArrayList<>();
 		for (Question question : originalQuestionsInInterview) {
 			scrapQuestions.add(
-				ScrapQuestion.builder().scrapId(scrap.getScrapId()).content(question.getContent()).build());
+				ScrapQuestion.builder()
+					.scrapId(scrap.getScrapId())
+					.content(question.getContent())
+					.gptAnswer(question.getGptAnswer())
+					.build());
 		}
 
 		ScrapWithScrapQuestionAndScrapAnswerList scrapWithScrapQuestionAndScrapAnswerList = scrapCommandService.insertScrapAndScrapQuestions(
@@ -157,16 +156,16 @@ public class ScrapService {
 
 	private CreateScrapResponse makeCreateScrapResponse(Interview interview,
 		ScrapWithScrapQuestionAndScrapAnswerList scrapWithScrapQuestionAndScrapAnswerList) {
-		OriginalInterviewResponse originalInterviewResponse = new OriginalInterviewResponse(
+		CreateScrapResponse.OriginalInterviewResponse originalInterviewResponse = new CreateScrapResponse.OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());
 
-		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(
+		CreateScrapResponse.ScrapResponse scrapResponse = scrapMapper.scrapToCreateScrapResponseOfScrapResponse(
 			scrapWithScrapQuestionAndScrapAnswerList.getScrap());
 
-		List<ScrapQuestionAndScrapAnswerResponse> scrapQuestionAndScrapAnswerResponseList = new ArrayList<>();
+		List<CreateScrapResponse.ScrapQuestionAndScrapAnswerResponse> scrapQuestionAndScrapAnswerResponseList = new ArrayList<>();
 		scrapWithScrapQuestionAndScrapAnswerList.getScrapQuestionAndScrapAnswerList().forEach(
 			scrapQuestionAndScrapAnswer -> scrapQuestionAndScrapAnswerResponseList.add(
-				new ScrapQuestionAndScrapAnswerResponse(
+				new CreateScrapResponse.ScrapQuestionAndScrapAnswerResponse(
 					scrapMapper.scrapQuestionToScrapQuestionResponse(scrapQuestionAndScrapAnswer.getScrapQuestion()),
 					scrapMapper.scrapAnswerToScrapAnswerResponse(scrapQuestionAndScrapAnswer.getScrapAnswer()))));
 		return new CreateScrapResponse(originalInterviewResponse, scrapResponse,
@@ -175,11 +174,11 @@ public class ScrapService {
 
 	private ReadScrapDetailResponse makeReadScrapResponse(Scrap scrap, Interview interview,
 		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers) {
-		ScrapResponse scrapResponse = scrapMapper.scrapToScrapResponse(scrap);
-		OriginalInterviewResponse interviewResponse = new OriginalInterviewResponse(
+		ReadScrapDetailResponse.ScrapResponse scrapResponse = scrapMapper.scrapToReadScrapDetailResponseOfScrapResponse(scrap);
+		ReadScrapDetailResponse.OriginalInterviewResponse interviewResponse = new ReadScrapDetailResponse.OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());
 
-		List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = new ArrayList<>();
+		List<ReadScrapDetailResponse.ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = new ArrayList<>();
 		scrapQuestionsWithScrapAnswers.forEach(
 			scrapQuestionWithScrapAnswers -> scrapQuestionWithScrapAnswersResponses.add(
 				scrapMapper.scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(

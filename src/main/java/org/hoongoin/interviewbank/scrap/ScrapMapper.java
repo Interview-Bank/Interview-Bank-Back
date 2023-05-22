@@ -7,11 +7,8 @@ import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
-import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
-import org.hoongoin.interviewbank.scrap.controller.response.ScrapAnswerResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ScrapQuestionWithScrapAnswersResponse;
-import org.hoongoin.interviewbank.scrap.controller.response.ScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapAnswerEntity;
@@ -61,9 +58,9 @@ public interface ScrapMapper {
 	@Mapping(target = "scrapId", source = "scrapEntity.id")
 	ScrapQuestion scrapQuestionEntityToScrapQuestion(ScrapQuestionEntity scrapQuestionEntity);
 
-	ScrapResponse scrapToScrapResponse(Scrap scrap);
+	ReadScrapDetailResponse.ScrapResponse scrapToReadScrapDetailResponseOfScrapResponse(Scrap scrap);
 
-	ScrapQuestionResponse scrapQuestionToScrapQuestionResponse(ScrapQuestion scrapQuestion);
+	CreateScrapResponse.ScrapQuestionAndScrapAnswerResponse.ScrapQuestionResponse scrapQuestionToScrapQuestionResponse(ScrapQuestion scrapQuestion);
 
 	UpdateScrapResponse scrapToUpdateScrapResponse(Scrap scrap);
 
@@ -94,8 +91,11 @@ public interface ScrapMapper {
 	}
 
 	@Mapping(target = "scrapAnswerResponseList", source = "scrapAnswers")
-	ScrapQuestionWithScrapAnswersResponse scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(
+	ReadScrapDetailResponse.ScrapQuestionWithScrapAnswersResponse scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(
 		ScrapQuestionWithScrapAnswers scrapQuestionWithScrapAnswers);
 
-	ScrapAnswerResponse scrapAnswerToScrapAnswerResponse(ScrapAnswer scrapAnswer);
+	CreateScrapResponse.ScrapQuestionAndScrapAnswerResponse.ScrapAnswerResponse scrapAnswerToScrapAnswerResponse(ScrapAnswer scrapAnswer);
+
+	CreateScrapResponse.ScrapResponse scrapToCreateScrapResponseOfScrapResponse(Scrap scrap);
+
 }

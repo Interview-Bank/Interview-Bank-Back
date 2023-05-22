@@ -1,6 +1,5 @@
 package org.hoongoin.interviewbank.scrap.infrastructure.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -41,6 +40,9 @@ public class ScrapQuestionEntity extends BaseEntity {
 	@Column(nullable = false, length = 65535)
 	private String content;
 
+	@Column(length = 65535)
+	private String gptAnswer;
+
 	@OneToMany(mappedBy = "scrapQuestionEntity")
 	List<ScrapAnswerEntity> scrapAnswerEntities;
 
@@ -50,6 +52,7 @@ public class ScrapQuestionEntity extends BaseEntity {
 			"id=" + id +
 			", scrapEntity=" + scrapEntity +
 			", content='" + content + '\'' +
+			", gptAnswer='" + gptAnswer + '\'' +
 			'}';
 	}
 }
