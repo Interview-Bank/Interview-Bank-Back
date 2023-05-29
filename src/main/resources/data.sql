@@ -18,4 +18,17 @@ INSERT INTO job_category (id, name, parent_id) VALUES (17, 'UX', 3);
 INSERT INTO job_category (id, name, parent_id) VALUES (18, '웹 디자인', 3);
 INSERT INTO job_category (id, name, parent_id) VALUES (19, '그래픽 디자인', 3);
 INSERT INTO job_category (id, name, parent_id) VALUES (20, '아트 디자인', 3);
-INSERT INTO job_category (id, name, parent_id) VALUES (21, '제품 디자인', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (21, '모바일 디자인', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (22, '광고 디자인', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (23, 'BI/BX 디자인', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (24, '모션 디자인', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (25, '3D 디자인', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (26, '컨텐츠 디자인', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (27, '아트디렉터', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (28, '공간 디자인', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (29, '캐릭터 디자인', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (30, '편집 디자인', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (31, '기타', 3);
+INSERT INTO job_category (id, name, parent_id) VALUES (32, 'DBA', 1);
+INSERT INTO job_category (id, name, parent_id) VALUES (33, '기타', 1);
+
