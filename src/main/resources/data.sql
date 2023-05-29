@@ -32,4 +32,3 @@ INSERT INTO job_category (id, name, parent_id) VALUES (31, '편집 디자인', 3
 INSERT INTO job_category (id, name, parent_id) VALUES (32, '기타', 3);
 INSERT INTO job_category (id, name, parent_id) VALUES (33, 'DBA', 1);
 INSERT INTO job_category (id, name, parent_id) VALUES (34, '기타', 1);
-
