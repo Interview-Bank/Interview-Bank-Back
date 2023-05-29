@@ -11,14 +11,7 @@ import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.application.ScrapService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -62,5 +55,12 @@ public class ScrapController {
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, "application/json")
 			.body(scrapService.updateScrapByRequestAndScrapId(updateScrapRequest, scrapId, requestingAccountId));
+	}
+
+	@DeleteMapping("/{scrap-id}")
+	public ResponseEntity<Void> deleteScrap(@PathVariable("scrap-id") long scrapId) {
+		long requestingAccountId = getRequestingAccountId();
+		scrapService.deleteScrapByScrapIdAndRequestingAccountId(scrapId, requestingAccountId);
+		return ResponseEntity.noContent().build();
 	}
 }

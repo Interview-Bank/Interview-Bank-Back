@@ -147,6 +147,15 @@ public class ScrapService {
 			readScrapPageResponseScraps);
 	}
 
+	@Transactional
+	public void deleteScrapByScrapIdAndRequestingAccountId(long scrapId, long requestingAccountId) {
+		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
+		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
+
+		scrapCommandService.deleteScrapById(scrapId);
+		scrapAnswerCommandService.deleteAllScrapAnswerByScrapId(scrapId);
+	}
+
 	private void checkScrapAuthority(long scrapWriterAccountId, long requestingAccountId) {
 		if (scrapWriterAccountId != requestingAccountId) {
 			log.info("Bad Request");
