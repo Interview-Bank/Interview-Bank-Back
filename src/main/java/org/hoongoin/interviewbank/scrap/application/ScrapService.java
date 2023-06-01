@@ -64,6 +64,7 @@ public class ScrapService {
 		Scrap scrap = Scrap.builder()
 			.interviewId(originalInterview.getInterviewId())
 			.title(originalInterview.getTitle())
+				.isPublic(false)
 			.jobCategoryId(originalInterview.getJobCategoryId())
 			.build();
 
@@ -90,6 +91,7 @@ public class ScrapService {
 		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 
 		scrap.setTitle(updateScrapRequest.getTitle());
+		scrap.setIsPublic(updateScrapRequest.getIsPublic());
 		Scrap updatedScrap = scrapCommandService.updateScrap(scrap);
 		return scrapMapper.scrapToUpdateScrapResponse(updatedScrap);
 	}
