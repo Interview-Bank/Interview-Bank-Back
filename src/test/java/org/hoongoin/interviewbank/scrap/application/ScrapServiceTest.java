@@ -51,7 +51,7 @@ class ScrapServiceTest {
 		long scrapId = 1;
 		long requestingAccountId = 1;
 		Scrap scrap = ScrapTestFactory.createScrap();
-		UpdateScrapRequest updateScrapRequest = new UpdateScrapRequest("New Title");
+		UpdateScrapRequest updateScrapRequest = new UpdateScrapRequest("New Title", false);
 		Scrap updatedScrap = Scrap.builder().scrapId(1).accountId(1).interviewId(1).title(updateScrapRequest.getTitle())
 			.createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
 
