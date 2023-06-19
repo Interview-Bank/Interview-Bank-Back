@@ -15,6 +15,8 @@ public class ReadScrapPageResponse {
 
 	private int totalPages;
 	private long totalElements;
+	private int currentPage;
+	private int currentElements;
 	private List<Scrap> scraps;
 
 	@Getter

@@ -146,7 +146,7 @@ public class ScrapService {
 		);
 
 		return new ReadScrapPageResponse(scrapPageDto.getTotalPages(), scrapPageDto.getTotalElements(),
-			readScrapPageResponseScraps);
+				scrapPageDto.getCurrentPage(), scrapPageDto.getCurrentElements(), readScrapPageResponseScraps);
 	}
 
 	@Transactional
