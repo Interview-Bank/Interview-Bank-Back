@@ -41,6 +41,8 @@ public class ScrapQueryService {
 		PageDto<Scrap> scrapPageDto = new PageDto<>();
 		scrapPageDto.setTotalPages(scrapEntities.getTotalPages());
 		scrapPageDto.setTotalElements(scrapEntities.getTotalElements());
+		scrapPageDto.setCurrentPage(scrapEntities.getNumber());
+		scrapPageDto.setCurrentElements(scrapEntities.getNumberOfElements());
 
 		List<Scrap> scraps = new ArrayList<>();
 		scrapEntities.forEach(scrapEntity -> scraps.add(scrapMapper.scrapEntityToScrap(scrapEntity)));

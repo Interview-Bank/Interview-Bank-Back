@@ -79,6 +79,8 @@ public class InterviewQueryService {
 		PageDto<Interview> interviewPageDto = new PageDto<>();
 		interviewPageDto.setTotalPages(interviewEntityPage.getTotalPages());
 		interviewPageDto.setTotalElements(interviewEntityPage.getTotalElements());
+		interviewPageDto.setCurrentPage(interviewEntityPage.getNumber());
+		interviewPageDto.setCurrentElements(interviewEntityPage.getNumberOfElements());
 		interviewPageDto.setContent(interviews);
 		return interviewPageDto;
 	}
