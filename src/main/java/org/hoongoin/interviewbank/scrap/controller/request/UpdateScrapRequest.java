@@ -8,4 +8,9 @@ import lombok.Getter;
 public class UpdateScrapRequest {
 
 	private String title;
+	private boolean isPublic;
+
+	public boolean getIsPublic() {
+		return this.isPublic;
+	}
 }

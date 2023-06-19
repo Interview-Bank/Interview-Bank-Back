@@ -16,11 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 public class Scrap {
 
 	@Builder
-	public Scrap(long scrapId, long accountId, long interviewId, String title, Long jobCategoryId,
+	public Scrap(long scrapId, long accountId, long interviewId, String title, boolean isPublic, Long jobCategoryId,
 		LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.setScrapId(scrapId);
 		this.setAccountId(accountId);
 		this.setInterviewId(interviewId);
+		this.setIsPublic(isPublic);
 		this.setTitle(title);
 		this.setJobCategoryId(jobCategoryId);
 		this.setCreatedAt(createdAt);
@@ -31,9 +32,18 @@ public class Scrap {
 	private long accountId;
 	private long interviewId;
 	private String title;
+	private boolean isPublic;
 	private Long jobCategoryId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+
+	public boolean getIsPublic() {
+		return this.isPublic;
+	}
+
+	public void setIsPublic(boolean isPublic) {
+		this.isPublic = isPublic;
+	}
 
 	public void setTitle(String title) {
 		if (title.getBytes(StandardCharsets.UTF_8).length > 128) {

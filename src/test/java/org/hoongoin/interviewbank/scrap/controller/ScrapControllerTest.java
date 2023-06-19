@@ -128,7 +128,7 @@ class ScrapControllerTest {
 		scrapQuestionRepository.saveAndFlush(scrapQuestionEntity1);
 		scrapQuestionRepository.saveAndFlush(scrapQuestionEntity2);
 
-		UpdateScrapRequest updateScrapRequest = new UpdateScrapRequest("update title");
+		UpdateScrapRequest updateScrapRequest = new UpdateScrapRequest("update title", false);
 
 		//when
 		ResponseEntity<UpdateScrapResponse> updateScrapResponse = scrapController.updateScrap(updateScrapRequest,
