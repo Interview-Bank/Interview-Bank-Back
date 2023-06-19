@@ -12,5 +12,7 @@ public class PageDto<T> {
 
 	private int totalPages;
 	private long totalElements;
+	private int currentPage;
+	private int currentElements;
 	private List<T> content;
 }
