@@ -202,7 +202,7 @@ public class InterviewService {
 					findAccountByInterview(interview), jobCategoryResponse));
 		}
 		return new FindInterviewPageResponse(interviewPageDto.getTotalPages(), interviewPageDto.getTotalElements(),
-			findInterviewPageResponseInterview);
+				interviewPageDto.getCurrentPage(), interviewPageDto.getCurrentElements(), findInterviewPageResponseInterview);
 	}
 
 	private Account findAccountByInterview(Interview interview) {

@@ -17,6 +17,8 @@ public class FindInterviewPageResponse {
 
 	private int totalPages;
 	private long totalElements;
+	private int currentPage;
+	private int currentElements;
 	private List<Interview> interviews;
 
 	@Getter
