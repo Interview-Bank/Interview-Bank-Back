@@ -21,12 +21,12 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 public interface InterviewRepository extends JpaRepository<InterviewEntity, Long>,
 	QuerydslPredicateExecutor<InterviewEntity> {
 
-	@Query("SELECT interview FROM InterviewEntity interview ORDER BY interview.createdAt DESC")
-	Page<InterviewEntity> findAllByPageableOrderByCreateTimeDesc(Pageable pageable);
+	Page<InterviewEntity> findByDeletedFlagOrderByCreatedAtDesc(Boolean deletedFlag, Pageable pageable);
 
 	@EntityGraph(attributePaths = {"accountEntity"})
 	@Query("SELECT interview FROM InterviewEntity interview "
-		+ "WHERE (COALESCE(:job_category_ids, NULL) IS NULL OR interview.jobCategoryEntity.id IN :job_category_ids OR interview.jobCategoryEntity.parentJobCategory.id IN :job_category_ids) "
+		+ "WHERE interview.deletedFlag = false "
+		+ "AND (COALESCE(:job_category_ids, NULL) IS NULL OR interview.jobCategoryEntity.id IN :job_category_ids OR interview.jobCategoryEntity.parentJobCategory.id IN :job_category_ids) "
 		+ "AND (:query IS NULL OR interview.title LIKE %:query%) "
 		+ "AND (:start_date IS NULL OR interview.createdAt >= TIMESTAMP(:start_date)) "
 		+ "AND (:end_date IS NULL OR interview.createdAt <= TIMESTAMP(:end_date)) "

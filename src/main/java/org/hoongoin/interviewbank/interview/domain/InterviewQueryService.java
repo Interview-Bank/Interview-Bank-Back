@@ -44,8 +44,8 @@ public class InterviewQueryService {
 	}
 
 	public PageDto<Interview> findInterviewListByPageAndSize(int page, int size) {
-		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByPageableOrderByCreateTimeDesc(
-			PageRequest.of(page, size));
+		Page<InterviewEntity> interviewEntityPage = interviewRepository.findByDeletedFlagOrderByCreatedAtDesc(
+				false, PageRequest.of(page, size));
 
 		return getInterviews(interviewEntityPage);
 	}
@@ -70,10 +70,8 @@ public class InterviewQueryService {
 
 		interviewEntityPage.forEach(
 			interviewEntity -> {
-				if (Boolean.FALSE.equals(interviewEntity.getDeletedFlag())) {
-					interviews.add(interviewMapper.interviewEntityToInterview(interviewEntity,
-						interviewEntity.getAccountEntity().getId()));
-				}
+				interviews.add(interviewMapper.interviewEntityToInterview(interviewEntity,
+					interviewEntity.getAccountEntity().getId()));
 			});
 
 		PageDto<Interview> interviewPageDto = new PageDto<>();
