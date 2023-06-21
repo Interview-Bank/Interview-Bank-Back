@@ -5,6 +5,7 @@ import static org.hoongoin.interviewbank.utils.SecurityUtil.*;
 import java.util.Date;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
@@ -47,6 +48,7 @@ public class InterviewController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(createInterviewAndQuestionsResponse);
 	}
 
+	@Operation(summary = "인터뷰 최근 생일 기준 조회")
 	@GetMapping
 	public ResponseEntity<FindInterviewPageResponse> findInterviewPage(
 		@RequestParam(name = "page", defaultValue = "0") int page,
