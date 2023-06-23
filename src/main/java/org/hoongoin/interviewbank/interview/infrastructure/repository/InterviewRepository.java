@@ -29,8 +29,8 @@ public interface InterviewRepository extends JpaRepository<InterviewEntity, Long
 		+ "WHERE interview.deletedFlag = false "
 		+ "AND (COALESCE(:job_category_ids, NULL) IS NULL OR interview.jobCategoryEntity.id IN :job_category_ids OR interview.jobCategoryEntity.parentJobCategory.id IN :job_category_ids) "
 		+ "AND (:query IS NULL OR interview.title LIKE %:query%) "
-		+ "AND (:start_date IS NULL OR interview.createdAt >= :start_date_time) "
-		+ "AND (:end_date IS NULL OR interview.createdAt <= :end_date_time) "
+		+ "AND (:start_date_time IS NULL OR interview.createdAt >= :start_date_time) "
+		+ "AND (:end_date_time IS NULL OR interview.createdAt <= :end_date_time) "
 		+ "AND (:interview_period IS NULL OR interview.interviewPeriod = :interview_period) "
 		+ "AND (:career_year IS NULL OR interview.careerYear = :career_year) "
 		+ "ORDER BY interview.createdAt DESC")

@@ -52,17 +52,8 @@ public class InterviewQueryService {
 		return getInterviews(interviewEntityPage);
 	}
 
-	public PageDto<Interview> searchInterview(String query, List<Long> jobCategoryIds, Date startDate, Date endDate,
-		InterviewPeriod interviewPeriod, CareerYear careerYear, int page, int size) {
-		LocalDateTime startDateTime = startDate == null ? null : startDate.toInstant()
-				.atZone(ZoneId.systemDefault())
-				.toLocalDate()
-				.atStartOfDay();
-		LocalDateTime endDateTime = endDate == null ? null : endDate.toInstant()
-				.atZone(ZoneId.systemDefault())
-				.toLocalDate()
-				.atTime(23, 59, 59);
-
+	public PageDto<Interview> searchInterview(String query, List<Long> jobCategoryIds, LocalDateTime startDateTime,
+	    LocalDateTime endDateTime, InterviewPeriod interviewPeriod, CareerYear careerYear, int page, int size) {
 		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdsAndStartDateAndEndDatePageableOrderByCreateTimeDesc(
 			query, jobCategoryIds, startDateTime, endDateTime, interviewPeriod, careerYear, PageRequest.of(page, size));
 
