@@ -1,5 +1,7 @@
 package org.hoongoin.interviewbank.interview.domain;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,10 +52,10 @@ public class InterviewQueryService {
 		return getInterviews(interviewEntityPage);
 	}
 
-	public PageDto<Interview> searchInterview(String query, List<Long> jobCategoryIds, Date startDate, Date endDate,
-		InterviewPeriod interviewPeriod, CareerYear careerYear, int page, int size) {
+	public PageDto<Interview> searchInterview(String query, List<Long> jobCategoryIds, LocalDateTime startDateTime,
+	    LocalDateTime endDateTime, InterviewPeriod interviewPeriod, CareerYear careerYear, int page, int size) {
 		Page<InterviewEntity> interviewEntityPage = interviewRepository.findAllByTitleAndJobCategoryIdsAndStartDateAndEndDatePageableOrderByCreateTimeDesc(
-			query, jobCategoryIds, startDate, endDate, interviewPeriod, careerYear, PageRequest.of(page, size));
+			query, jobCategoryIds, startDateTime, endDateTime, interviewPeriod, careerYear, PageRequest.of(page, size));
 
 		return getInterviews(interviewEntityPage);
 	}

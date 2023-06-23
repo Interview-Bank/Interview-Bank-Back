@@ -1,5 +1,7 @@
 package org.hoongoin.interviewbank.interview.application;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -117,8 +119,16 @@ public class InterviewService {
 	@Transactional(readOnly = true)
 	public FindInterviewPageResponse searchInterview(String query, List<Long> jobCategories, Date startDate,
 		Date endDate, InterviewPeriod interviewPeriod, CareerYear careerYear, int page, int size) {
-		PageDto<Interview> interviews = interviewQueryService.searchInterview(query, jobCategories, startDate, endDate,
-			interviewPeriod, careerYear, page, size);
+		LocalDateTime startDateTime = startDate == null ? null : startDate.toInstant()
+				.atZone(ZoneId.systemDefault())
+				.toLocalDate()
+				.atStartOfDay();
+		LocalDateTime endDateTime = endDate == null ? null : endDate.toInstant()
+				.atZone(ZoneId.systemDefault())
+				.toLocalDate()
+				.atTime(23, 59, 59);
+		PageDto<Interview> interviews = interviewQueryService.searchInterview(query, jobCategories, startDateTime,
+			endDateTime, interviewPeriod, careerYear, page, size);
 
 		return getFindInterviewPageResponse(interviews);
 	}
