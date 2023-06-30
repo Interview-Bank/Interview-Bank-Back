@@ -20,6 +20,8 @@ public class FindInterviewResponse {
 	private Long interviewId;
 	private String title;
 	private Long accountId;
+	private String writerNickname;
+	private Long view;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private List<Question> questions;

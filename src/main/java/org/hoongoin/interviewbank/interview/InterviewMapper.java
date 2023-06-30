@@ -31,6 +31,7 @@ public interface InterviewMapper {
 				.deletedFlag(interviewEntity.getDeletedFlag())
 				.interviewPeriod(interviewEntity.getInterviewPeriod())
 				.careerYear(interviewEntity.getCareerYear())
+				.view(interviewEntity.getView())
 				.build();
 		}
 		return Interview.builder()
@@ -44,6 +45,7 @@ public interface InterviewMapper {
 			.jobCategoryId(interviewEntity.getJobCategoryEntity().getId())
 			.interviewPeriod(interviewEntity.getInterviewPeriod())
 			.careerYear(interviewEntity.getCareerYear())
+			.view(interviewEntity.getView())
 			.build();
 	}
 
