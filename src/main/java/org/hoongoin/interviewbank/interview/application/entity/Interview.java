@@ -19,12 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 public class Interview {
 
 	@Builder
-	public Interview(Long interviewId, String title, Long accountId, LocalDateTime createdAt,
+	public Interview(Long interviewId, String title, Long accountId, Long view, LocalDateTime createdAt,
 		LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean deletedFlag, Long jobCategoryId,
 		InterviewPeriod interviewPeriod, CareerYear careerYear) {
 		this.setInterviewId(interviewId);
 		this.setTitle(title);
 		this.setAccountId(accountId);
+		this.setView(view);
 		this.setCreatedAt(createdAt);
 		this.setUpdatedAt(updatedAt);
 		this.setDeletedAt(deletedAt);
@@ -37,6 +38,7 @@ public class Interview {
 	private Long interviewId;
 	private String title;
 	private Long accountId;
+	private Long view;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;

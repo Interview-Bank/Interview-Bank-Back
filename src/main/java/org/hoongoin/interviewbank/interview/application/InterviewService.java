@@ -107,7 +107,9 @@ public class InterviewService {
 		List<Question> questions = questionQueryService.findQuestionsByInterviewId(
 			interview.getInterviewId());
 
-		return makeFindInterviewResponse(interview, jobCategory, questions);
+		Account account = accountQueryService.findAccountByAccountId(interview.getAccountId());
+
+		return makeFindInterviewResponse(interview, jobCategory, questions, account);
 	}
 
 	@Transactional(readOnly = true)
@@ -180,7 +182,7 @@ public class InterviewService {
 	}
 
 	private FindInterviewResponse makeFindInterviewResponse(Interview interview, JobCategory jobCategory,
-		List<Question> questions) {
+		List<Question> questions, Account account) {
 
 		List<FindInterviewResponse.Question> findInterviewResponseQuestions = new ArrayList<>();
 		questions.forEach(question -> findInterviewResponseQuestions.add(
@@ -197,6 +199,8 @@ public class InterviewService {
 			.interviewPeriod(interview.getInterviewPeriod())
 			.careerYear(interview.getCareerYear())
 			.jobCategory(interviewMapper.jobCategoryToJobCategoryRespnose(jobCategory))
+			.view(interview.getView())
+			.writerNickname(account.getNickname())
 			.build();
 	}
 

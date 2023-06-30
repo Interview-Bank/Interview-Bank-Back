@@ -53,6 +53,9 @@ public class InterviewEntity extends SoftDeletedBaseEntity {
 	@Enumerated(EnumType.STRING)
 	private CareerYear careerYear;
 
+	@Column(nullable = false)
+	private long view;
+
 	public void modifyEntity(InterviewModifyDto interviewModifyDto) {
 		this.title = interviewModifyDto.getTitle();
 		this.interviewPeriod = interviewModifyDto.getInterviewPeriod();
