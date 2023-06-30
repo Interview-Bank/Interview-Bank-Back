@@ -37,6 +37,7 @@ CREATE TABLE `interview`
     `job_category_id` BIGINT NOT NULL,
     `interview_period` CHAR(32) DEFAULT 'ETC',
     `career_year` CHAR(16) DEFAULT 'ETC',
+    `view` BIGINT NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     CONSTRAINT FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
     CONSTRAINT FOREIGN KEY (`job_category_id`) REFERENCES `job_category` (`id`)
