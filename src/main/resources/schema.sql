@@ -100,8 +100,8 @@ CREATE TABLE `inquiry` (
     `title` CHAR(128) NOT NULL,
     `email` CHAR(120) NOT NULL,
     `content` TEXT NOT NULL,
-    `attachedFileUrl` CHAR(255),
-    `isAnswered` BOOLEAN NOT NULL,
+    `attached_file_url` CHAR(255),
+    `is_answered` BOOLEAN NOT NULL,
     `created_at` DATETIME(6) NOT NULL,
     `updated_at` DATETIME(6) NOT NULL
 );
