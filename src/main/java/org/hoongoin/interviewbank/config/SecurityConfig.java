@@ -19,10 +19,9 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-			.antMatchers("/account/logout").authenticated()
-			.antMatchers("/account/me").authenticated()
-			.antMatchers("/account/reset-password").authenticated()
+			.antMatchers("/account/logout", "/account/me", "/account/reset-password").authenticated()
 			.antMatchers("/account/**").permitAll()
+			.antMatchers(HttpMethod.GET, "/scraps/{scrap-id}").permitAll()
 			.antMatchers("/scraps/**").authenticated()
 			.antMatchers("/").permitAll()
 			.antMatchers(HttpMethod.POST, "/interview").authenticated()
