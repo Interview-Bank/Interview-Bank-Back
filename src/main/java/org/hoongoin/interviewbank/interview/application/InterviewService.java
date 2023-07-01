@@ -158,6 +158,7 @@ public class InterviewService {
 			.interviewPeriod(createdInterview.getInterviewPeriod())
 			.careerYear(createdInterview.getCareerYear())
 			.jobCategory(interviewMapper.jobCategoryToJobCategoryRespnose(jobCategory))
+			.view(createdInterview.getView())
 			.build();
 	}
 
