@@ -25,6 +25,7 @@ public class CreateInterviewAndQuestionsResponse {
 	private CareerYear careerYear;
 
 	private JobCategoryResponse jobCategory;
+	private long view;
 
 	@Getter
 	@Setter
