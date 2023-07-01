@@ -10,4 +10,13 @@ import lombok.Setter;
 public class UpdateScrapResponse {
 
 	private String title;
+	private boolean isPublic;
+
+	public void setIsPublic(boolean isPublic){
+		this.isPublic = isPublic;
+	}
+
+	public boolean getIsPublic(){
+		return this.isPublic;
+	}
 }

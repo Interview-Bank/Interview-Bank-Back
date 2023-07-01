@@ -64,7 +64,7 @@ class ScrapServiceTest {
 		given(scrapCommandService.updateScrap(scrap)).willReturn(updatedScrap);
 
 		given(scrapMapper.scrapToUpdateScrapResponse(updatedScrap)).willReturn(
-			new UpdateScrapResponse(updateScrapRequest.getTitle()));
+			new UpdateScrapResponse(updateScrapRequest.getTitle(), updateScrapRequest.getIsPublic()));
 
 		//when
 		UpdateScrapResponse updateScrapResponse = scrapService.updateScrapByRequestAndScrapId(updateScrapRequest,
