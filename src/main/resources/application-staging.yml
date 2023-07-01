@@ -84,3 +84,6 @@ management:
 gpt:
   uri: https://api.openai.com/v1/chat/completions
   model: gpt-3.5-turbo
+
+react:
+  base-url: https://fstaging.interviewbank.net
