@@ -64,7 +64,7 @@ public class ScrapService {
 		Scrap scrap = Scrap.builder()
 			.interviewId(originalInterview.getInterviewId())
 			.title(originalInterview.getTitle())
-				.isPublic(false)
+			.isPublic(false)
 			.jobCategoryId(originalInterview.getJobCategoryId())
 			.build();
 
@@ -109,7 +109,9 @@ public class ScrapService {
 	@Transactional(readOnly = true)
 	public ReadScrapDetailResponse readScrapDetailById(long scrapId, long requestingAccountId) {
 		Scrap scrap = scrapQueryService.findScrapByScrapId(scrapId);
-		checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
+		if (!scrap.getIsPublic()) {
+			checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
+		}
 
 		Interview interview = interviewQueryService.findInterviewById(scrap.getInterviewId());
 
@@ -146,7 +148,7 @@ public class ScrapService {
 		);
 
 		return new ReadScrapPageResponse(scrapPageDto.getTotalPages(), scrapPageDto.getTotalElements(),
-				scrapPageDto.getCurrentPage(), scrapPageDto.getCurrentElements(), readScrapPageResponseScraps);
+			scrapPageDto.getCurrentPage(), scrapPageDto.getCurrentElements(), readScrapPageResponseScraps);
 	}
 
 	@Transactional
@@ -185,7 +187,8 @@ public class ScrapService {
 
 	private ReadScrapDetailResponse makeReadScrapResponse(Scrap scrap, Interview interview,
 		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers) {
-		ReadScrapDetailResponse.ScrapResponse scrapResponse = scrapMapper.scrapToReadScrapDetailResponseOfScrapResponse(scrap);
+		ReadScrapDetailResponse.ScrapResponse scrapResponse = scrapMapper.scrapToReadScrapDetailResponseOfScrapResponse(
+			scrap);
 		ReadScrapDetailResponse.OriginalInterviewResponse interviewResponse = new ReadScrapDetailResponse.OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());
 

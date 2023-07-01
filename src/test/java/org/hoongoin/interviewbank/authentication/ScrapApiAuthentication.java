@@ -64,9 +64,9 @@ class ScrapApiAuthentication {
 
 	@WithAnonymousUser
 	@Test
-	void readScrapDetail_Fail_Unauthorized() throws Exception {
+	void readScrapDetail_Success_WithAnonymousUser() throws Exception {
 		mockMvc.perform(get("/scraps/3"))
-			.andExpect(status().isUnauthorized());
+			.andExpect(status().isOk());
 	}
 
 	@IbWithMockUser
