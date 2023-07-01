@@ -67,6 +67,7 @@ CREATE TABLE `scrap`
     `interview_id` BIGINT NOT NULL,
     `job_category_id` BIGINT NOT NULL,
     `is_public` BOOLEAN NOT NULL DEFAULT 0,
+    `view` BIGINT NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     CONSTRAINT FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
     CONSTRAINT FOREIGN KEY (`interview_id`) REFERENCES `interview` (`id`)

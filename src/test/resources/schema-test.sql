@@ -39,6 +39,7 @@ CREATE TABLE interview
     job_category_id BIGINT NOT NULL,
     interview_period CHAR(32) DEFAULT 'ETC',
     career_year CHAR(16) DEFAULT 'ETC',
+    view BIGINT NOT NULL DEFAULT 0,
     PRIMARY KEY (id),
     CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES account (id),
     CONSTRAINT FK_job_category_id FOREIGN KEY (job_category_id) REFERENCES `job_category` (id)
@@ -68,6 +69,7 @@ CREATE TABLE scrap
     interview_id BIGINT NOT NULL,
     job_category_id BIGINT NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT 0,
+    view BIGINT NOT NULL DEFAULT 0,
     PRIMARY KEY (id),
     CONSTRAINT FK_account_id_2 FOREIGN KEY (account_id) REFERENCES account (id),
     CONSTRAINT FK_interview_id_2 FOREIGN KEY (interview_id) REFERENCES interview (id)

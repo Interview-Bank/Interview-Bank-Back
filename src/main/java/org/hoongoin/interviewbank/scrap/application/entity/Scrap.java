@@ -17,7 +17,7 @@ public class Scrap {
 
 	@Builder
 	public Scrap(long scrapId, long accountId, long interviewId, String title, boolean isPublic, Long jobCategoryId,
-		LocalDateTime createdAt, LocalDateTime updatedAt) {
+		LocalDateTime createdAt, LocalDateTime updatedAt, long view) {
 		this.setScrapId(scrapId);
 		this.setAccountId(accountId);
 		this.setInterviewId(interviewId);
@@ -26,6 +26,7 @@ public class Scrap {
 		this.setJobCategoryId(jobCategoryId);
 		this.setCreatedAt(createdAt);
 		this.setUpdatedAt(updatedAt);
+		this.setView(view);
 	}
 
 	private long scrapId;
@@ -36,6 +37,7 @@ public class Scrap {
 	private Long jobCategoryId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	private long view;
 
 	public boolean getIsPublic() {
 		return this.isPublic;
