@@ -6,9 +6,9 @@ import static org.mockito.Mockito.verify;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
+import org.hoongoin.interviewbank.exception.IbBadRequestException;
 import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
@@ -122,5 +122,23 @@ class ScrapServiceTest {
 		assertThat(response.getOriginalInterview().getInterviewId()).isEqualTo(interview.getInterviewId());
 		assertThat(response.getScrapQuestionWithScrapAnswersList().get(0)).isEqualTo(
 			scrapQuestionWithScrapAnswersResponses.get(0));
+	}
+
+	@Test
+	void readScrapDetailById_Fail_WhenReadingPrivateScrapOfAnotherUser(){
+		// given
+		long scrapId = 1L;
+		long scrapWriterAccountId = 1L;
+		long requestingAccountId = 2L;
+
+		Scrap scrap = ScrapTestFactory.createScrap();
+
+		given(scrapQueryService.findScrapByScrapId(scrapId)).willReturn(scrap);
+
+		// when //then
+		assertThatThrownBy(() -> {
+			scrapService.readScrapDetailById(scrapId, requestingAccountId);
+		}).isInstanceOf(IbBadRequestException.class)
+			.hasMessage("Bad Request");
 	}
 }
