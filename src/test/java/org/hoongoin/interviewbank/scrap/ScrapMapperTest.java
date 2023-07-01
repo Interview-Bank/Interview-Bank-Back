@@ -23,14 +23,15 @@ class ScrapMapperTest {
 	private static InterviewEntity interviewEntity;
 	private static ScrapEntity scrapEntity;
 	private static ScrapQuestionEntity scrapQuestionEntity;
+	private static JobCategoryEntity jobCategoryEntity;
 
 	@BeforeAll
 	public static void setUp() {
-		JobCategoryEntity jobCategoryEntity = InterviewTestFactory.createJobCategoryEntity();
+		jobCategoryEntity = InterviewTestFactory.createJobCategoryEntity();
 		scrapMapper = Mappers.getMapper(ScrapMapper.class);
 		accountEntity = AccountTestFactory.createAccountEntity();
 		interviewEntity = InterviewTestFactory.createInterviewEntity(accountEntity, jobCategoryEntity);
-		scrapEntity = ScrapTestFactory.createScrapEntity(interviewEntity, accountEntity);
+		scrapEntity = ScrapTestFactory.createScrapEntity(interviewEntity, accountEntity, jobCategoryEntity);
 		scrapQuestionEntity = ScrapTestFactory.createScrapQuestionEntity(scrapEntity, "content");
 	}
 

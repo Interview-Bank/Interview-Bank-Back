@@ -67,4 +67,12 @@ public class ScrapEntity extends BaseEntity {
 			", title='" + title + '\'' +
 			'}';
 	}
+
+	public boolean getIsPublic() {
+		return this.isPublic;
+	}
+
+	public void setIsPublic(boolean isPublic) {
+		this.isPublic = isPublic;
+	}
 }

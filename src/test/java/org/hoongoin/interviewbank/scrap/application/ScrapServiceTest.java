@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hoongoin.interviewbank.account.AccountTestFactory;
+import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.exception.IbBadRequestException;
 import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
@@ -43,6 +45,8 @@ class ScrapServiceTest {
 	@Mock
 	private ScrapQuestionQueryService scrapQuestionQueryService;
 	@Mock
+	private AccountQueryService accountQueryService;
+	@Mock
 	private ScrapMapper scrapMapper;
 
 	@Test
@@ -60,7 +64,7 @@ class ScrapServiceTest {
 		given(scrapCommandService.updateScrap(scrap)).willReturn(updatedScrap);
 
 		given(scrapMapper.scrapToUpdateScrapResponse(updatedScrap)).willReturn(
-			new UpdateScrapResponse(updateScrapRequest.getTitle()));
+			new UpdateScrapResponse(updateScrapRequest.getTitle(), updateScrapRequest.getIsPublic()));
 
 		//when
 		UpdateScrapResponse updateScrapResponse = scrapService.updateScrapByRequestAndScrapId(updateScrapRequest,
@@ -93,20 +97,18 @@ class ScrapServiceTest {
 	void readScrapDetailById_Success() {
 		// given
 		long scrapId = 1L;
-		long requestingAccountId = 2L;
 
 		Scrap scrap = ScrapTestFactory.createScrap();
-		scrap.setAccountId(requestingAccountId);
-		Interview interview = InterviewTestFactory.createInterview(requestingAccountId);
+		Account requestingAndScrapWriterAccount = AccountTestFactory.createAccount();
+		Interview interview = InterviewTestFactory.createInterview(requestingAndScrapWriterAccount.getAccountId());
 		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers = List.of(
 			ScrapQuestionWithScrapAnswers.builder().build());
 
 		given(scrapQueryService.findScrapByScrapId(scrapId)).willReturn(scrap);
+		given(accountQueryService.findAccountByAccountId(requestingAndScrapWriterAccount.getAccountId())).willReturn(requestingAndScrapWriterAccount);
 		given(interviewQueryService.findInterviewById(scrap.getInterviewId())).willReturn(interview);
 		given(scrapQuestionQueryService.findAllScrapQuestionWithScrapAnswersByScrapId(scrapId)).willReturn(
 			scrapQuestionsWithScrapAnswers);
-		given(scrapMapper.scrapToReadScrapDetailResponseOfScrapResponse(scrap)).willReturn(
-			new ReadScrapDetailResponse.ScrapResponse(scrap.getScrapId(), scrap.getTitle(), LocalDate.now()));
 
 		List<ReadScrapDetailResponse.ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersResponses = List.of(
 			new ReadScrapDetailResponse.ScrapQuestionWithScrapAnswersResponse());
@@ -114,7 +116,7 @@ class ScrapServiceTest {
 			scrapQuestionsWithScrapAnswers.get(0))).willReturn(scrapQuestionWithScrapAnswersResponses.get(0));
 
 		// when
-		ReadScrapDetailResponse response = scrapService.readScrapDetailById(scrapId, requestingAccountId);
+		ReadScrapDetailResponse response = scrapService.readScrapDetailById(scrapId, requestingAndScrapWriterAccount.getAccountId());
 
 		// then
 		assertThat(response).isNotNull();

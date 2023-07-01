@@ -24,11 +24,19 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ScrapMapper {
 
-	@Mapping(target = "jobCategoryId", source = "jobCategoryEntity.id")
-	@Mapping(target = "scrapId", source = "id")
-	@Mapping(target = "accountId", source = "accountEntity.id")
-	@Mapping(target = "interviewId", source = "interviewEntity.id")
-	Scrap scrapEntityToScrap(ScrapEntity scrapEntity);
+	default Scrap scrapEntityToScrap(ScrapEntity scrapEntity){
+		return Scrap.builder()
+			.scrapId(scrapEntity.getId())
+			.accountId(scrapEntity.getAccountEntity().getId())
+			.interviewId(scrapEntity.getInterviewEntity().getId())
+			.title(scrapEntity.getTitle())
+			.isPublic(scrapEntity.getIsPublic())
+			.jobCategoryId(scrapEntity.getJobCategoryEntity().getId())
+			.createdAt(scrapEntity.getCreatedAt())
+			.updatedAt(scrapEntity.getUpdatedAt())
+			.view(scrapEntity.getView())
+			.build();
+	}
 
 	default ScrapEntity scrapToScrapEntity(Scrap scrap, Account account, Interview interview) {
 		AccountEntity accountEntity = AccountEntity.builder()
@@ -59,8 +67,6 @@ public interface ScrapMapper {
 	@Mapping(target = "scrapQuestionId", source = "id")
 	@Mapping(target = "scrapId", source = "scrapEntity.id")
 	ScrapQuestion scrapQuestionEntityToScrapQuestion(ScrapQuestionEntity scrapQuestionEntity);
-
-	ReadScrapDetailResponse.ScrapResponse scrapToReadScrapDetailResponseOfScrapResponse(Scrap scrap);
 
 	CreateScrapResponse.ScrapQuestionAndScrapAnswerResponse.ScrapQuestionResponse scrapQuestionToScrapQuestionResponse(ScrapQuestion scrapQuestion);
 

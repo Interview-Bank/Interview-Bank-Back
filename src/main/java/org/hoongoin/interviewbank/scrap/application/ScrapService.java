@@ -64,7 +64,7 @@ public class ScrapService {
 		Scrap scrap = Scrap.builder()
 			.interviewId(originalInterview.getInterviewId())
 			.title(originalInterview.getTitle())
-			.isPublic(false)
+			.isPublic(createScrapRequest.getIsPublic() != null && createScrapRequest.getIsPublic())
 			.jobCategoryId(originalInterview.getJobCategoryId())
 			.build();
 
@@ -113,12 +113,14 @@ public class ScrapService {
 			checkScrapAuthority(scrap.getAccountId(), requestingAccountId);
 		}
 
+		Account writerAccount = accountQueryService.findAccountByAccountId(scrap.getAccountId());
+
 		Interview interview = interviewQueryService.findInterviewById(scrap.getInterviewId());
 
 		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers = scrapQuestionQueryService
 			.findAllScrapQuestionWithScrapAnswersByScrapId(scrapId);
 
-		return makeReadScrapResponse(scrap, interview, scrapQuestionsWithScrapAnswers);
+		return makeReadScrapResponse(scrap, writerAccount, interview, scrapQuestionsWithScrapAnswers);
 	}
 
 	@Transactional(readOnly = true)
@@ -185,10 +187,16 @@ public class ScrapService {
 			scrapQuestionAndScrapAnswerResponseList);
 	}
 
-	private ReadScrapDetailResponse makeReadScrapResponse(Scrap scrap, Interview interview,
+	private ReadScrapDetailResponse makeReadScrapResponse(Scrap scrap, Account account, Interview interview,
 		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers) {
-		ReadScrapDetailResponse.ScrapResponse scrapResponse = scrapMapper.scrapToReadScrapDetailResponseOfScrapResponse(
-			scrap);
+		ReadScrapDetailResponse.ScrapResponse scrapResponse = ReadScrapDetailResponse.ScrapResponse.builder()
+			.scrapId(scrap.getScrapId())
+			.title(scrap.getTitle())
+			.createdAt(scrap.getCreatedAt())
+			.writerNickname(account.getNickname())
+			.writerAccountId(account.getAccountId())
+			.isPublic(scrap.getIsPublic())
+			.build();
 		ReadScrapDetailResponse.OriginalInterviewResponse interviewResponse = new ReadScrapDetailResponse.OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());
 

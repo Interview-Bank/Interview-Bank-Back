@@ -63,6 +63,7 @@ public class ScrapCommandService {
 			return new IbEntityNotFoundException("Scrap Not Found");
 		});
 		scrapEntity.modifyEntity(scrap.getTitle());
+		scrapEntity.setIsPublic(scrap.getIsPublic());
 		return scrapMapper.scrapEntityToScrap(scrapEntity);
 	}
 

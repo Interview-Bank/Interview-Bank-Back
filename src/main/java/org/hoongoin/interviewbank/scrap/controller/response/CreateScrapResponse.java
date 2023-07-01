@@ -33,6 +33,8 @@ public class CreateScrapResponse {
 		private long scrapId;
 		private String title;
 		private LocalDate createdAt;
+		private boolean isPublic;
+		private long view;
 	}
 
 	@Getter
