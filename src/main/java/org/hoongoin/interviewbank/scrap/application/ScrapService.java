@@ -195,6 +195,7 @@ public class ScrapService {
 			.createdAt(scrap.getCreatedAt())
 			.writerNickname(account.getNickname())
 			.writerAccountId(account.getAccountId())
+			.isPublic(scrap.getIsPublic())
 			.build();
 		ReadScrapDetailResponse.OriginalInterviewResponse interviewResponse = new ReadScrapDetailResponse.OriginalInterviewResponse(
 			interview.getInterviewId(), interview.getTitle());

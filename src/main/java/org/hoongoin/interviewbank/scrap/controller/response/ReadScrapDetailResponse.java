@@ -28,6 +28,15 @@ public class ReadScrapDetailResponse {
 		private String writerNickname;
 		private long writerAccountId;
 		private long view;
+		private boolean isPublic;
+
+		public void setIsPublic(boolean isPublic){
+			this.isPublic = isPublic;
+		}
+
+		public boolean getIsPublic(){
+			return this.isPublic;
+		}
 	}
 
 	@AllArgsConstructor
