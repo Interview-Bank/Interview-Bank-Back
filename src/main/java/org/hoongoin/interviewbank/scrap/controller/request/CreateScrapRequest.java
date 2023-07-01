@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class CreateScrapRequest {
 
 	private long interviewId;
+	private Boolean isPublic;
 }

@@ -1,10 +1,10 @@
 package org.hoongoin.interviewbank.account;
 
+import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 
 public class AccountTestFactory {
 
-	private static final String testTitle = "title";
 	private static final long testAccountId = 1L;
 	private static final String testNickname = "hunki";
 	private static final String testEmail = "gnsrl76@naver.com";
@@ -16,6 +16,15 @@ public class AccountTestFactory {
 			.nickname(testNickname)
 			.password(testPassword)
 			.email(testEmail)
+			.build();
+	}
+
+	public static Account createAccount(){
+		return Account.builder()
+			.accountId(testAccountId)
+			.nickname(testNickname)
+			.email(testEmail)
+			.password(testPassword)
 			.build();
 	}
 }
