@@ -71,7 +71,7 @@ class ScrapControllerTest {
 		questionRepository.saveAndFlush(questionEntity1);
 		questionRepository.saveAndFlush(questionEntity2);
 
-		CreateScrapRequest createScrapRequest = new CreateScrapRequest(interviewEntity.getId());
+		CreateScrapRequest createScrapRequest = new CreateScrapRequest(interviewEntity.getId(), null);
 
 		//when
 		ResponseEntity<CreateScrapResponse> createScrapResponse = scrapController.createScrap(createScrapRequest);
@@ -118,7 +118,7 @@ class ScrapControllerTest {
 
 		AccountEntity scrapWriterAccountEntity = accountRepository.findById(1L).get();
 
-		ScrapEntity scrapEntity = ScrapTestFactory.createScrapEntity(interviewEntity, scrapWriterAccountEntity);
+		ScrapEntity scrapEntity = ScrapTestFactory.createScrapEntity(interviewEntity, scrapWriterAccountEntity, jobCategoryEntity);
 		scrapRepository.saveAndFlush(scrapEntity);
 
 		ScrapQuestionEntity scrapQuestionEntity1 = ScrapTestFactory.createScrapQuestionEntity(scrapEntity,
