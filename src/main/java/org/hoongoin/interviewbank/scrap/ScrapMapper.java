@@ -51,7 +51,8 @@ public interface ScrapMapper {
 			.interviewEntity(interviewEntity)
 			.jobCategoryEntity(jobCategoryEntity)
 			.title(scrap.getTitle())
-				.isPublic(scrap.getIsPublic())
+			.isPublic(scrap.getIsPublic())
+			.view(scrap.getView())
 			.build();
 	}
 

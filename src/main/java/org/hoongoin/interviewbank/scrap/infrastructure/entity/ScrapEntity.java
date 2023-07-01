@@ -51,6 +51,9 @@ public class ScrapEntity extends BaseEntity {
 	@Column(nullable = false)
 	private boolean isPublic;
 
+	@Column(nullable = false)
+	private long view;
+
 	public void modifyEntity(String title) {
 		this.title = title;
 	}
