@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hoongoin.interviewbank.account.application.entity.Account;
+import org.hoongoin.interviewbank.interview.application.entity.InterviewLike;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
@@ -11,6 +12,7 @@ import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPag
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewLikeEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.QuestionEntity;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
@@ -104,4 +106,13 @@ public interface InterviewMapper {
 	JobCategoryResponse jobCategoryToJobCategoryRespnose(JobCategory jobCategory);
 
 	Interview updateInterviewRequestToInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId, long accountId);
+
+	default InterviewLike interviewLikeEntityToInterviewLike(InterviewLikeEntity interviewLikeEntity){
+		return InterviewLike.builder()
+			.interviewLikeId(interviewLikeEntity.getId())
+			.interviewId(interviewLikeEntity.getInterviewEntity().getId())
+			.accountId(interviewLikeEntity.getAccountEntity().getId())
+			.like(interviewLikeEntity.isLike())
+			.build();
+	}
 }

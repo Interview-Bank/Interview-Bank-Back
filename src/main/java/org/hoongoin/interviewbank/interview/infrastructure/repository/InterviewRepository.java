@@ -3,7 +3,6 @@ package org.hoongoin.interviewbank.interview.infrastructure.repository;
 import static org.hoongoin.interviewbank.interview.infrastructure.entity.QInterviewEntity.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
