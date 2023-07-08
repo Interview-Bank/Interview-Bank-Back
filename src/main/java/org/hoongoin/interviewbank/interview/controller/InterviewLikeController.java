@@ -22,9 +22,10 @@ public class InterviewLikeController {
 
 	@PostMapping("/{interview-id}/like")
 	public ResponseEntity<LikeInterviewResponse> likeInterview(@PathVariable("interview-id") long interviewId,
-		@RequestBody LikeInterviewRequest likeInterviewRequest){
+		@RequestBody LikeInterviewRequest likeInterviewRequest) {
 		long requestingAccountId = SecurityUtil.getRequestingAccountId();
-		LikeInterviewResponse likeInterviewResponse = interviewLikeService.likeInterview(interviewId, likeInterviewRequest, requestingAccountId);
+		LikeInterviewResponse likeInterviewResponse = interviewLikeService.likeInterview(interviewId,
+			likeInterviewRequest, requestingAccountId);
 		return ResponseEntity.ok().body(likeInterviewResponse);
 	}
 
