@@ -76,3 +76,10 @@ management:
     export:
       prometheus:
         enabled: true
+
+gpt:
+  uri: https://api.openai.com/v1/chat/completions
+  model: gpt-3.5-turbo
+
+react:
+  base-url: https://bproduction.interviewbank.net
