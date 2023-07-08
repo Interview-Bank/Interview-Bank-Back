@@ -7,10 +7,8 @@ import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.CreateTemporaryInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
-import org.hoongoin.interviewbank.interview.controller.response.CreateTemporaryInterviewAndQuestionResponse;
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
@@ -99,13 +97,5 @@ public class InterviewController {
 		return ResponseEntity.ok()
 			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.body(interviewService.findInterviewsByAccountId(requestingAccountId, page, size));
-	}
-
-	@PostMapping("/temporary")
-	public ResponseEntity<CreateTemporaryInterviewAndQuestionResponse> createTemporaryInterviewAndQuestion(
-		CreateTemporaryInterviewAndQuestionsRequest request) {
-		CreateTemporaryInterviewAndQuestionResponse createTemporaryInterviewAndQuestionResponse = interviewService.createTemporaryInterviewAndQuestion(
-			request, getRequestingAccountId());
-		return ResponseEntity.ok(createTemporaryInterviewAndQuestionResponse);
 	}
 }

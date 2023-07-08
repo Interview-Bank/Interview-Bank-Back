@@ -5,10 +5,7 @@ import java.util.List;
 
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
-import org.hoongoin.interviewbank.interview.application.entity.TemporaryInterview;
-import org.hoongoin.interviewbank.interview.application.entity.TemporaryQuestion;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.CreateTemporaryInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
@@ -101,22 +98,6 @@ public interface InterviewMapper {
 		return questions;
 	}
 
-	default List<TemporaryQuestion> createTemporaryInterviewAndQuestionsToTemporaryQuestions(
-		CreateTemporaryInterviewAndQuestionsRequest createTemporaryInterviewAndQuestionsRequest,
-		long temporaryInterviewId) {
-		List<TemporaryQuestion> temporaryQuestions = new ArrayList<>();
-
-		createTemporaryInterviewAndQuestionsRequest.getQuestionsRequest()
-			.getQuestions()
-			.forEach(question -> temporaryQuestions.add(
-				TemporaryQuestion.builder()
-					.temporaryQuestionId(temporaryInterviewId)
-					.content(question.getContent())
-					.build()));
-
-		return temporaryQuestions;
-	}
-
 	Interview createInterviewAndQuestionsRequestToInterview(
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest, long accountId);
 
@@ -124,7 +105,4 @@ public interface InterviewMapper {
 
 	Interview updateInterviewRequestToInterview(UpdateInterviewRequest updateInterviewRequest, long interviewId,
 		long accountId);
-
-	TemporaryInterview createTemporaryInterviewAndQuestionRequestToTemporaryInterview(
-		CreateTemporaryInterviewAndQuestionsRequest createTemporaryInterviewAndQuestionRequest, long accountId);
 }

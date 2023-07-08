@@ -1,4 +1,4 @@
-package org.hoongoin.interviewbank.interview.application.entity;
+package org.hoongoin.interviewbank.tempororay.application.entity;
 
 import java.time.LocalDateTime;
 

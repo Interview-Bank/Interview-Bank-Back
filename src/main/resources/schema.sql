@@ -81,8 +81,6 @@ CREATE TABLE `scrap`
     `account_id` BIGINT NOT NULL,
     `interview_id` BIGINT NOT NULL,
     `job_category_id` BIGINT NOT NULL,
-    `is_public` BOOLEAN NOT NULL DEFAULT 0,
-    `view` BIGINT NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     CONSTRAINT FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
     CONSTRAINT FOREIGN KEY (`interview_id`) REFERENCES `interview` (`id`)
@@ -132,8 +130,34 @@ CREATE TABLE `inquiry` (
     `title` CHAR(128) NOT NULL,
     `email` CHAR(120) NOT NULL,
     `content` TEXT NOT NULL,
-    `attached_file_url` CHAR(255),
-    `is_answered` BOOLEAN NOT NULL,
+    `attachedFileUrl` CHAR(255),
+    `isAnswered` BOOLEAN NOT NULL,
     `created_at` DATETIME(6) NOT NULL,
     `updated_at` DATETIME(6) NOT NULL
+);
+
+CREATE TABLE `temporary_interview`
+(
+    `id`               BIGINT NOT NULL AUTO_INCREMENT,
+    `title`            VARCHAR(128),
+    `account_id`       BIGINT NOT NULL,
+    `job_category_id`  BIGINT,
+    `interview_period` CHAR(32) DEFAULT 'ETC',
+    `career_year`      CHAR(16) DEFAULT 'ETC', -- Enum values should be replaced with your actual values
+    `created_at`       DATETIME(6) NOT NULL,
+    `updated_at`       DATETIME(6) NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
+    FOREIGN KEY (`job_category_id`) REFERENCES `job_category` (`id`)
+);
+
+CREATE TABLE `temporary_question`
+(
+    `id`                     BIGINT NOT NULL AUTO_INCREMENT,
+    `content`                TEXT ,
+    `temporary_interview_id` BIGINT NOT NULL,
+    `created_at`             DATETIME(6) NOT NULL,
+    `updated_at`             DATETIME(6) NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`temporary_interview_id`) REFERENCES `temporary_interview` (`id`)
 );

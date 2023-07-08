@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.junit.jupiter.api.Test;
 
-class QuestionTest {
+class TemporaryTemporaryQuestionTest {
 
 	@Test
 	void setContent_Success_ContentLengthIs100000Byte() {
@@ -27,7 +27,7 @@ class QuestionTest {
 
 		//when //then
 		assertThatThrownBy(() -> Question.builder().questionId(1L).interviewId(1L).content(content).build())
-			.hasMessage("Question Validation Failed")
+			.hasMessage("TemporaryQuestion Validation Failed")
 			.isInstanceOf(IbValidationException.class);
 	}
 
@@ -38,7 +38,7 @@ class QuestionTest {
 
 		//when //then
 		assertThatThrownBy(() -> Question.builder().questionId(1L).interviewId(1L).content(content).build())
-			.hasMessage("Question Validation Failed")
+			.hasMessage("TemporaryQuestion Validation Failed")
 			.isInstanceOf(IbValidationException.class);
 	}
 }

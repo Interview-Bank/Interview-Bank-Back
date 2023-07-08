@@ -1,4 +1,4 @@
-package org.hoongoin.interviewbank.interview.controller.response;
+package org.hoongoin.interviewbank.tempororay.controller.response;
 
 import java.util.List;
 

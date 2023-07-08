@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @IbSpringBootTest
 @Transactional
-class QuestionCommandServiceTest {
+class TemporaryTemporaryQuestionCommandServiceTest {
 
 	@Autowired
 	private AccountRepository accountRepository;

@@ -12,13 +12,9 @@ import org.hoongoin.interviewbank.exception.IbValidationException;
 import org.hoongoin.interviewbank.interview.InterviewMapper;
 import org.hoongoin.interviewbank.common.dto.PageDto;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
-import org.hoongoin.interviewbank.interview.application.entity.TemporaryInterview;
-import org.hoongoin.interviewbank.interview.application.entity.TemporaryQuestion;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
-import org.hoongoin.interviewbank.interview.controller.request.CreateTemporaryInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.response.CreateInterviewAndQuestionsResponse;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
-import org.hoongoin.interviewbank.interview.controller.response.CreateTemporaryInterviewAndQuestionResponse;
 import org.hoongoin.interviewbank.interview.controller.response.DeleteInterviewResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
@@ -31,8 +27,6 @@ import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
 import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
 import org.hoongoin.interviewbank.interview.domain.QuestionCommandService;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
-import org.hoongoin.interviewbank.interview.domain.TemporaryInterviewCommandService;
-import org.hoongoin.interviewbank.interview.domain.TemporaryQuestionCommandService;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
 import org.springframework.stereotype.Service;
@@ -53,8 +47,6 @@ public class InterviewService {
 	private final QuestionQueryService questionQueryService;
 	private final AccountQueryService accountQueryService;
 	private final JobCategoryQueryService jobCategoryQueryService;
-	private final TemporaryInterviewCommandService temporaryInterviewCommandService;
-	private final TemporaryQuestionCommandService temporaryQuestionCommandService;
 
 	@Transactional
 	public CreateInterviewAndQuestionsResponse createInterviewAndQuestionsByRequest(
@@ -234,28 +226,8 @@ public class InterviewService {
 
 	private void validateQuestionsSize(int questionSize) {
 		if (questionSize > 1000 || questionSize < 1) {
-			log.info("Question Size Validation Failed");
-			throw new IbValidationException("Question Size Validation Failed");
+			log.info("TemporaryQuestion Size Validation Failed");
+			throw new IbValidationException("TemporaryQuestion Size Validation Failed");
 		}
-	}
-
-	@Transactional
-	public CreateTemporaryInterviewAndQuestionResponse createTemporaryInterviewAndQuestion(
-		CreateTemporaryInterviewAndQuestionsRequest createTemporaryInterviewAndQuestionRequest,
-		long requestingAccountId) {
-
-		TemporaryInterview temporaryInterview = interviewMapper.createTemporaryInterviewAndQuestionRequestToTemporaryInterview(
-			createTemporaryInterviewAndQuestionRequest, requestingAccountId);
-
-		Long createdTemporaryInterviewId = temporaryInterviewCommandService.insertTemporaryInterview(
-			temporaryInterview);
-
-		List<TemporaryQuestion> temporaryQuestions = interviewMapper.createTemporaryInterviewAndQuestionsToTemporaryQuestions(
-			createTemporaryInterviewAndQuestionRequest, createdTemporaryInterviewId);
-
-		List<Long> insertedTemporaryQuestions = temporaryQuestionCommandService.insertTemporaryQuestions(
-			temporaryQuestions, createdTemporaryInterviewId);
-
-		return new CreateTemporaryInterviewAndQuestionResponse(createdTemporaryInterviewId, insertedTemporaryQuestions);
 	}
 }

@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 @IbSpringBootTest
 @Sql(scripts = {"classpath:/account-data.sql",
 	"classpath:/job-category-data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class QuestionQueryServiceTest {
+class TemporaryTemporaryQuestionQueryServiceTest {
 
 	@Autowired
 	private QuestionQueryService questionQueryService;

@@ -1,5 +1,6 @@
-package org.hoongoin.interviewbank.interview.infrastructure.entity;
+package org.hoongoin.interviewbank.tempororay.infrastructure.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,14 +33,10 @@ public class TemporaryQuestionEntity extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(nullable = false, length = 65535)
+	@Column(nullable = false, columnDefinition = "TEXT")
 	private String content;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false, name = "temporary_interview_id")
 	private TemporaryInterviewEntity temporaryInterviewEntity;
-
-	public void modifyContent(String content) {
-		this.content = content;
-	}
 }

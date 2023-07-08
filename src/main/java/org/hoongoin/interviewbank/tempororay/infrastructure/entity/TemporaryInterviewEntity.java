@@ -1,4 +1,4 @@
-package org.hoongoin.interviewbank.interview.infrastructure.entity;
+package org.hoongoin.interviewbank.tempororay.infrastructure.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +17,7 @@ import org.hoongoin.interviewbank.common.entity.BaseEntity;
 import org.hoongoin.interviewbank.interview.application.dto.InterviewModifyDto;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -54,11 +55,4 @@ public class TemporaryInterviewEntity extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	private CareerYear careerYear;
-
-	public void modifyEntity(InterviewModifyDto interviewModifyDto) {
-		this.title = interviewModifyDto.getTitle();
-		this.interviewPeriod = interviewModifyDto.getInterviewPeriod();
-		this.careerYear = interviewModifyDto.getCareerYear();
-		this.jobCategoryEntity = interviewModifyDto.getJobCategoryEntity();
-	}
 }
