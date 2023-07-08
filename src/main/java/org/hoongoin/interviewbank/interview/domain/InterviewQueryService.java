@@ -1,9 +1,7 @@
 package org.hoongoin.interviewbank.interview.domain;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
@@ -71,10 +69,8 @@ public class InterviewQueryService {
 		List<Interview> interviews = new ArrayList<>();
 
 		interviewEntityPage.forEach(
-			interviewEntity -> {
-				interviews.add(interviewMapper.interviewEntityToInterview(interviewEntity,
-					interviewEntity.getAccountEntity().getId()));
-			});
+			interviewEntity -> interviews.add(interviewMapper.interviewEntityToInterview(interviewEntity,
+				interviewEntity.getAccountEntity().getId())));
 
 		PageDto<Interview> interviewPageDto = new PageDto<>();
 		interviewPageDto.setTotalPages(interviewEntityPage.getTotalPages());
