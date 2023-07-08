@@ -14,7 +14,7 @@ CREATE TABLE account
     PRIMARY KEY (id)
 );
 
-CREATE TABLE `job_category` (
+CREATE TABLE job_category (
     id BIGINT NOT NULL AUTO_INCREMENT,
     name CHAR(16) NOT NULL,
     parent_id BIGINT,
@@ -23,9 +23,9 @@ CREATE TABLE `job_category` (
     PRIMARY KEY (id)
 );
 
-ALTER TABLE `job_category`
-    ADD CONSTRAINT `fk_job_category_parent_id`
-    FOREIGN KEY (parent_id) REFERENCES `job_category` (id);
+ALTER TABLE job_category
+    ADD CONSTRAINT fk_job_category_parent_id
+    FOREIGN KEY (parent_id) REFERENCES job_category (id);
 
 CREATE TABLE interview
 (
@@ -42,7 +42,7 @@ CREATE TABLE interview
     view BIGINT NOT NULL DEFAULT 0,
     PRIMARY KEY (id),
     CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES account (id),
-    CONSTRAINT FK_job_category_id FOREIGN KEY (job_category_id) REFERENCES `job_category` (id)
+    CONSTRAINT FK_job_category_id FOREIGN KEY (job_category_id) REFERENCES job_category (id)
 );
 
 CREATE TABLE question
@@ -59,7 +59,7 @@ CREATE TABLE question
     CONSTRAINT FK_interview_id FOREIGN KEY (interview_id) REFERENCES interview (id)
 );
 
-CREATE TABLE `interview_like`
+CREATE TABLE interview_like
 (
     id BIGINT NOT NULL AUTO_INCREMENT,
     created_at TIMESTAMP(6),
@@ -70,7 +70,8 @@ CREATE TABLE `interview_like`
     interview_id BIGINT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES account (id),
-    CONSTRAINT FK_interview_id FOREIGN KEY (interview_id) REFERENCES interview (id)
+    CONSTRAINT FK_interview_id FOREIGN KEY (interview_id) REFERENCES interview (id),
+    CONSTRAINT uk_account_interview UNIQUE (account_id, interview_id)
 );
 
 

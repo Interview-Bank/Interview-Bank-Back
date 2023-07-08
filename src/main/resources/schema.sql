@@ -68,7 +68,8 @@ CREATE TABLE `interview_like`
     `interview_id` BIGINT NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
-    CONSTRAINT FOREIGN KEY (`interview_id`) REFERENCES `interview` (`id`)
+    CONSTRAINT FOREIGN KEY (`interview_id`) REFERENCES `interview` (`id`),
+    CONSTRAINT `uk_account_interview` UNIQUE (`account_id`, `interview_id`)
 );
 
 CREATE TABLE `scrap`

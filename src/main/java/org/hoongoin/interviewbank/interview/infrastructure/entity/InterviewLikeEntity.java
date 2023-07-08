@@ -1,5 +1,6 @@
 package org.hoongoin.interviewbank.interview.infrastructure.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.common.entity.SoftDeletedBaseEntity;
@@ -23,7 +25,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "interview_like")
+@Table(name = "interview_like",
+	uniqueConstraints = {
+		@UniqueConstraint(name = "uk_account_interview",
+			columnNames = {"account_id", "interview_id"})
+	}
+)
 public class InterviewLikeEntity extends SoftDeletedBaseEntity {
 
 	@Id
@@ -31,19 +38,27 @@ public class InterviewLikeEntity extends SoftDeletedBaseEntity {
 	private long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "interview_id")
+	@JoinColumn(nullable = false, name = "interview_id")
 	private InterviewEntity interviewEntity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "account_id")
+	@JoinColumn(nullable = false, name = "account_id")
 	private AccountEntity accountEntity;
 
+	@Column(nullable = false)
+	private boolean like;
+
+	public void modifyLike(boolean like){
+		this.like = like;
+	}
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return "InterviewLikeEntity{" +
 			"id=" + id +
-			", interviewEntity='" + interviewEntity+ '\'' +
+			", interviewEntity=" + interviewEntity +
 			", accountEntity=" + accountEntity +
+			", like=" + like +
 			'}';
 	}
 }
