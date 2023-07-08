@@ -16,6 +16,7 @@ import org.hoongoin.interviewbank.account.controller.response.RegisterResponse;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.account.controller.response.UploadProfileImageResponse;
 import org.hoongoin.interviewbank.account.domain.AccountCommandService;
+import org.hoongoin.interviewbank.account.domain.AccountExternalService;
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.domain.PasswordResetTokenCommand;
 import org.hoongoin.interviewbank.account.domain.PasswordResetTokenQuery;
@@ -84,7 +85,7 @@ public class AccountService {
 		String hashedToken = passwordResetTokenProvider.createToken();
 		passwordResetTokenCommand.saveToken(account.getAccountId(), sendEmailRequest.getEmail(), hashedToken);
 
-		accountExternalService.sendMailTo(sendEmailRequest.getEmail(), hashedToken);
+		accountExternalService.sendMailPasswordResetMail(sendEmailRequest.getEmail(), hashedToken);
 	}
 
 	public boolean validateToken(String token) {

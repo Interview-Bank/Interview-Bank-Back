@@ -1,4 +1,4 @@
-package org.hoongoin.interviewbank.account.application;
+package org.hoongoin.interviewbank.account.domain;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
+import org.hoongoin.interviewbank.utils.MailUtil;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbInternalServerException;
 import org.hoongoin.interviewbank.exception.IbValidationException;
@@ -30,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AccountExternalService {
 
-	private final MailService mailService;
+	private final MailUtil mailUtil;
 	private final AmazonS3 amazonS3;
 
 	@Value("${aws.s3.bucket}")
@@ -38,8 +39,14 @@ public class AccountExternalService {
 	@Value("${aws.region.static}")
 	private String region;
 
-	public void sendMailTo(String email, String hashedToken) {
-		mailService.sendMailTo(email, hashedToken);
+	@Value("${react.base-url}")
+	private String reactBaseUrl;
+
+	public void sendMailPasswordResetMail(String email, String hashedToken) {
+		String subject = "[Interview Bank] 비밀번호 재설정 안내";
+		String text = "비밀번호 재설정을 원하신다면 다음 링크에 접속해주세요.\n" +
+			reactBaseUrl + "/reset-password/?token=" + hashedToken;
+		mailUtil.sendMailTo(email, subject, text);
 	}
 
 	public String uploadImageFile(MultipartFile multipartFile) {

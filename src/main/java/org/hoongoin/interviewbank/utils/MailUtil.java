@@ -1,9 +1,10 @@
-package org.hoongoin.interviewbank.account.application;
+package org.hoongoin.interviewbank.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -11,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service
-public class MailService {
+@Component
+public class MailUtil {
 
 	private final JavaMailSender javaMailSender;
 
@@ -20,12 +21,12 @@ public class MailService {
 	private String email;
 
 	@Async
-	public void sendMailTo(String toEmail, String hashedToken) {
+	public void sendMailTo(String toEmail, String subject, String text) {
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 		simpleMailMessage.setFrom(email);
 		simpleMailMessage.setTo(toEmail);
-		simpleMailMessage.setSubject("[Interview Bank] 비밀번호 재설정 안내");
-		simpleMailMessage.setText(hashedToken);
+		simpleMailMessage.setSubject(subject);
+		simpleMailMessage.setText(text);
 		javaMailSender.send(simpleMailMessage);
 	}
 }
