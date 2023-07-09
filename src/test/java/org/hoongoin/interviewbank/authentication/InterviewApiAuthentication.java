@@ -75,4 +75,18 @@ class InterviewApiAuthentication {
 		mockMvc.perform(get("/interview/10"))
 			.andExpect(status().isOk());
 	}
+
+	@IbWithMockUser
+	@Test
+	void likeInterview_Success() throws Exception {
+		mockMvc.perform(delete("/interview/10/like"))
+			.andExpect(status().isOk());
+	}
+
+	@WithAnonymousUser
+	@Test
+	void likeInterview_Fail_Unauthorized() throws Exception {
+		mockMvc.perform(delete("/interview/10/like"))
+			.andExpect(status().isUnauthorized());
+	}
 }
