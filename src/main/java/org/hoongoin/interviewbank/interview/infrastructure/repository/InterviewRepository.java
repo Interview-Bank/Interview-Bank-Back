@@ -3,7 +3,6 @@ package org.hoongoin.interviewbank.interview.infrastructure.repository;
 import static org.hoongoin.interviewbank.interview.infrastructure.entity.QInterviewEntity.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
@@ -15,13 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-import org.springframework.data.repository.query.Param;
 
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 public interface InterviewRepository extends JpaRepository<InterviewEntity, Long>,
@@ -64,7 +59,8 @@ public interface InterviewRepository extends JpaRepository<InterviewEntity, Long
 			predicate = predicate.and(interviewEntity.careerYear.eq(careerYear));
 		}
 
-		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "createdAt"));
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+			Sort.by(Sort.Direction.DESC, "createdAt"));
 
 		return findAll(predicate, pageable);
 	}
