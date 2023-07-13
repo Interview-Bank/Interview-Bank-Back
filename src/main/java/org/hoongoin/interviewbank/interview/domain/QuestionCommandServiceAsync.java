@@ -24,7 +24,7 @@ public class QuestionCommandServiceAsync {
 	private final GptRequestHandler gptRequestHandler;
 	private final QuestionRepository questionRepository;
 
-	@Async
+	@Async("gpt")
 	@Transactional
 	public void updateAllGptAnswer(List<QuestionEntity> questionEntities) {
 
