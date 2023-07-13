@@ -57,6 +57,21 @@ CREATE TABLE `question`
     CONSTRAINT FOREIGN KEY (`interview_id`) REFERENCES `interview` (`id`)
 );
 
+CREATE TABLE `interview_like`
+(
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `created_at` DATETIME(6),
+    `deleted_at` DATETIME(6),
+    `deleted_flag` BIT DEFAULT 0 NOT NULL,
+    `updated_at` DATETIME(6),
+    `account_id` BIGINT NOT NULL,
+    `interview_id` BIGINT NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
+    CONSTRAINT FOREIGN KEY (`interview_id`) REFERENCES `interview` (`id`),
+    CONSTRAINT `uk_account_interview` UNIQUE (`account_id`, `interview_id`)
+);
+
 CREATE TABLE `scrap`
 (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
