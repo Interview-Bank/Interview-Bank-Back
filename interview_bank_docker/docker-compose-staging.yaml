@@ -105,3 +105,21 @@ services:
       - db
     networks:
       backend:
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    networks:
+      backend:
+        aliases:
+          - loki.interviewbank.net
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ../logs:/var/log
+      - ../staging-yml/promtail-config.yaml:/etc/promtail/config.yaml
+    command: -config.file=/etc/promtail/config.yaml
+    networks:
+      backend:
