@@ -113,7 +113,7 @@ services:
     networks:
       backend:
         aliases:
-          - loki.interviewbank.net
+          - loki.interviewbank
 
   promtail:
     image: grafana/promtail:latest
