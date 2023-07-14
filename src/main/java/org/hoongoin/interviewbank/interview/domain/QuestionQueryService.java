@@ -19,8 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class QuestionQueryService {
-	private final InterviewRepository interviewRepository;
 
+	private final InterviewRepository interviewRepository;
 	private final QuestionRepository questionRepository;
 	private final InterviewMapper interviewMapper;
 

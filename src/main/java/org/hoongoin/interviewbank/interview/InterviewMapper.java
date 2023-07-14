@@ -6,10 +6,12 @@ import java.util.List;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.interview.application.entity.InterviewLike;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
+import org.hoongoin.interviewbank.interview.application.entity.JobCategoryWithNoHierarchy;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewResponse;
+import org.hoongoin.interviewbank.interview.controller.response.GetJobCategoryWithNoHierarchyResponse;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewLikeEntity;
@@ -115,4 +117,7 @@ public interface InterviewMapper {
 			.like(interviewLikeEntity.isLike())
 			.build();
 	}
+
+	GetJobCategoryWithNoHierarchyResponse jobCategoryWithNoHierarchyToGetJobCategoryWithNoHierarchyResponse(
+		JobCategoryWithNoHierarchy jobCategoryWithNoHierarchy);
 }
