@@ -119,7 +119,7 @@ services:
     image: grafana/promtail:latest
     volumes:
       - ../logs:/var/log
-      - ../staging-yml/promtail-config.yaml:/etc/promtail/config.yaml
+      - ../staging-yml/promtail.yaml:/etc/promtail/config.yaml
     command: -config.file=/etc/promtail/config.yaml
     networks:
       backend:
