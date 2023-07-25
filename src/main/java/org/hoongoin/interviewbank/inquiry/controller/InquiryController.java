@@ -1,5 +1,8 @@
 package org.hoongoin.interviewbank.inquiry.controller;
 
+import java.io.IOException;
+import java.util.Optional;
+
 import org.hoongoin.interviewbank.inquiry.application.InquiryService;
 import org.hoongoin.interviewbank.inquiry.controller.request.InquiryRequest;
 import org.springframework.http.MediaType;
@@ -22,9 +25,9 @@ public class InquiryController {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Object> createInquiry(
 		@RequestPart("inquiryRequest") InquiryRequest inquiryRequest,
-		@RequestPart(value = "file", required = false) MultipartFile file) {
+		@RequestPart(value = "file", required = false) Optional<MultipartFile> file) throws IOException {
 		//TODO: file upload to S3
-		inquiryService.createInquiry(inquiryRequest);
+		inquiryService.createInquiry(inquiryRequest, file);
 		return ResponseEntity.ok().body(null);
 	}
 }
