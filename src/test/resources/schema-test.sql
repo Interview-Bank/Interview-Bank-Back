@@ -114,6 +114,21 @@ CREATE TABLE scrap_answer
     CONSTRAINT FK_scrap_question_id FOREIGN KEY (scrap_question_id) REFERENCES scrap_question (id)
 );
 
+CREATE TABLE scrap_like
+(
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    created_at TIMESTAMP(6),
+    deleted_at TIMESTAMP(6),
+    deleted_flag BOOLEAN DEFAULT FALSE NOT NULL,
+    updated_at TIMESTAMP(6),
+    account_id BIGINT NOT NULL,
+    scrap_id BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES account (id),
+    CONSTRAINT FK_interview_id FOREIGN KEY (scrap_id) REFERENCES interview (id),
+    CONSTRAINT uk_account_scrap UNIQUE (account_id, scrap_id)
+);
+
 CREATE TABLE `inquiry` (
     id BIGINT NOT NULL AUTO_INCREMENT,
     title CHAR(128) NOT NULL,
