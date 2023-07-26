@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class DiscordInquiryHandler {
 
-	@Value("${discord.channelId}")
+	@Value("${discord.inquiryChannelId}")
 	private Long channelId;
 
 	private final DiscordCreator discordCreator;
@@ -38,18 +38,23 @@ public class DiscordInquiryHandler {
 			Path tempFile = Files.createTempFile("discord", null);
 			file.get().transferTo(tempFile.toFile());
 			messageCreateSpec = MessageCreateSpec.builder()
-				.content(inquiryRequest.getTitle() + inquiryRequest.getContent() + inquiryRequest.getEmail())
+				.content("제목: " + inquiryRequest.getTitle() +
+					"\n내용: " + inquiryRequest.getContent() +
+					"\n연락받을 이메일" + inquiryRequest.getEmail())
 				.addFile(Objects.requireNonNull(file.get().getOriginalFilename()), Files.newInputStream(tempFile))
 				.build();
 			Files.delete(tempFile);
 		} else {
 			messageCreateSpec = MessageCreateSpec.builder()
-				.content(inquiryRequest.getTitle() + inquiryRequest.getContent() + inquiryRequest.getEmail())
+				.content("제목: " + inquiryRequest.getTitle() +
+					"\n내용: " + inquiryRequest.getContent() +
+					"\n연락받을 이메일" + inquiryRequest.getEmail())
 				.build();
 		}
 
-		MessageChannel channel = (MessageChannel)discordCreator.getDiscordClient()
-			.getChannelById(Snowflake.of(channelId));
+		MessageChannel channel = discordCreator.getGatewayDiscordClient().getChannelById(Snowflake.of(channelId))
+			.cast(MessageChannel.class)
+			.block();
 
 		Mono<Message> sendMessage = channel.createMessage(messageCreateSpec);
 

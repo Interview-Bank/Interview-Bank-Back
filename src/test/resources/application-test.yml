@@ -74,6 +74,7 @@ spring:
 discord:
   token: test-token
   channelId: 1234
+  inquiryChannelId: 1234
 
 aws:
   credentials:
