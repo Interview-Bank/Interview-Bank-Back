@@ -25,7 +25,7 @@ public class InterviewLikeCommandService {
 	private final InterviewMapper interviewMapper;
 
 	public InterviewLike insertInterviewLike(InterviewLike interviewLike) {
-		InterviewEntity interviewEntity = interviewRepository.findById(interviewLike.getInterviewLikeId())
+		InterviewEntity interviewEntity = interviewRepository.findById(interviewLike.getInterviewId())
 			.orElseThrow(() -> {
 				log.info("InterviewEntity Not Found");
 				throw new IbEntityNotFoundException("InterviewEntity Not Found");

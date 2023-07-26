@@ -7,12 +7,14 @@ import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
+import org.hoongoin.interviewbank.scrap.application.entity.ScrapLike;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapAnswerResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapAnswerEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
+import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapLikeEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapQuestionEntity;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapAnswer;
@@ -106,4 +108,12 @@ public interface ScrapMapper {
 
 	CreateScrapResponse.ScrapResponse scrapToCreateScrapResponseOfScrapResponse(Scrap scrap);
 
+	default ScrapLike scrapLikeEntityToScrapLike(ScrapLikeEntity scrapLikeEntity){
+		return ScrapLike.builder()
+			.scrapLikeId(scrapLikeEntity.getId())
+			.scrapId(scrapLikeEntity.getScrapEntity().getId())
+			.accountId(scrapLikeEntity.getAccountEntity().getId())
+			.like(scrapLikeEntity.isLike())
+			.build();
+	}
 }
