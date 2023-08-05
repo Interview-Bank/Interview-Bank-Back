@@ -226,7 +226,7 @@ public class InterviewService {
 
 	private void validateQuestionsSize(int questionSize) {
 		if (questionSize > 1000 || questionSize < 1) {
-			log.info("TemporaryQuestion Size Validation Failed");
+			log.info("Question Size Validation Failed");
 			throw new IbValidationException("Question Size Validation Failed");
 		}
 	}
