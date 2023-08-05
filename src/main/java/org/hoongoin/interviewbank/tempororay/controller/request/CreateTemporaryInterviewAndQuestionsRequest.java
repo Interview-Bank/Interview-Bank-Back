@@ -18,5 +18,5 @@ public class CreateTemporaryInterviewAndQuestionsRequest {
 	private InterviewPeriod interviewPeriod;
 	private CareerYear careerYear;
 	private QuestionsRequest questionsRequest;
-	private Long interviewId;
+	private Long temporaryInterviewId;
 }

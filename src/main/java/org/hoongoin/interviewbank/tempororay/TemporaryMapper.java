@@ -22,7 +22,7 @@ public interface TemporaryMapper {
 			.jobCategoryId(createTemporaryInterviewAndQuestionRequest.getJobCategoryId())
 			.interviewPeriod(createTemporaryInterviewAndQuestionRequest.getInterviewPeriod())
 			.careerYear(createTemporaryInterviewAndQuestionRequest.getCareerYear())
-			.temporaryInterviewId(createTemporaryInterviewAndQuestionRequest.getInterviewId())
+			.temporaryInterviewId(createTemporaryInterviewAndQuestionRequest.getTemporaryInterviewId())
 			.build();
 	}
 

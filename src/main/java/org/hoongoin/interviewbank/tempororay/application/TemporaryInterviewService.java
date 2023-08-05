@@ -39,9 +39,9 @@ public class TemporaryInterviewService {
 	public CreateTemporaryInterviewAndQuestionResponse createTemporaryInterviewAndQuestion(
 		CreateTemporaryInterviewAndQuestionsRequest createTemporaryInterviewAndQuestionRequest,
 		long requestingAccountId) {
-		if (createTemporaryInterviewAndQuestionRequest.getInterviewId() != null) {
+		if (createTemporaryInterviewAndQuestionRequest.getTemporaryInterviewId() != null) {
 			temporaryInterviewCommandService.deleteTemporaryInterview(
-				createTemporaryInterviewAndQuestionRequest.getInterviewId());
+				createTemporaryInterviewAndQuestionRequest.getTemporaryInterviewId());
 		}
 
 		TemporaryInterview temporaryInterview = temporaryMapper.createTemporaryInterviewAndQuestionRequestToTemporaryInterview(
