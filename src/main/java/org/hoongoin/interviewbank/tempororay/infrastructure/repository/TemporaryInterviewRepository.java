@@ -4,4 +4,6 @@ import org.hoongoin.interviewbank.tempororay.infrastructure.entity.TemporaryInte
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TemporaryInterviewRepository extends JpaRepository<TemporaryInterviewEntity, Long> {
+
+	void deleteTemporaryInterviewEntityById(long id);
 }

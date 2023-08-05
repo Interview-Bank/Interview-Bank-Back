@@ -13,8 +13,18 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface TemporaryMapper {
-	TemporaryInterview createTemporaryInterviewAndQuestionRequestToTemporaryInterview(
-		CreateTemporaryInterviewAndQuestionsRequest createTemporaryInterviewAndQuestionRequest, long accountId);
+
+	default TemporaryInterview createTemporaryInterviewAndQuestionRequestToTemporaryInterview(
+		CreateTemporaryInterviewAndQuestionsRequest createTemporaryInterviewAndQuestionRequest, long accountId) {
+		return TemporaryInterview.builder()
+			.accountId(accountId)
+			.title(createTemporaryInterviewAndQuestionRequest.getTitle())
+			.jobCategoryId(createTemporaryInterviewAndQuestionRequest.getJobCategoryId())
+			.interviewPeriod(createTemporaryInterviewAndQuestionRequest.getInterviewPeriod())
+			.careerYear(createTemporaryInterviewAndQuestionRequest.getCareerYear())
+			.temporaryInterviewId(createTemporaryInterviewAndQuestionRequest.getInterviewId())
+			.build();
+	}
 
 	default List<TemporaryQuestion> createTemporaryInterviewAndQuestionsToTemporaryQuestions(
 		CreateTemporaryInterviewAndQuestionsRequest createTemporaryInterviewAndQuestionsRequest,
@@ -40,7 +50,7 @@ public interface TemporaryMapper {
 			.accountId(temporaryInterviewEntity.getAccountEntity().getId())
 			.createdAt(temporaryInterviewEntity.getCreatedAt())
 			.updatedAt(temporaryInterviewEntity.getUpdatedAt())
-			.jobCategoryId(temporaryInterviewEntity.getJobCategoryEntity().getId())
+			.jobCategoryId(temporaryInterviewEntity.getJobCategoryId())
 			.careerYear(temporaryInterviewEntity.getCareerYear())
 			.interviewPeriod(temporaryInterviewEntity.getInterviewPeriod())
 			.build();
@@ -73,5 +83,34 @@ public interface TemporaryMapper {
 			new FindTemporaryInterviewByIdResponse.TemporaryQuestion(temporaryQuestion.getTemporaryQuestionId(),
 				temporaryQuestion.getContent(), temporaryQuestion.getCreatedAt(), temporaryQuestion.getUpdatedAt())));
 		return temporaryQuestionsResponse;
+	}
+
+	default List<Long> temporaryQuestionsToTemporaryQuestionIds(List<TemporaryQuestion> temporaryQuestions) {
+		List<Long> temporaryQuestionIds = new ArrayList<>();
+		temporaryQuestions.forEach(
+			temporaryQuestion -> temporaryQuestionIds.add(temporaryQuestion.getTemporaryQuestionId()));
+		return temporaryQuestionIds;
+	}
+
+	default List<TemporaryQuestionEntity> temporaryQuestionsToTemporaryQuestionEntities(
+		List<TemporaryQuestion> temporaryQuestions,
+		TemporaryInterviewEntity temporaryInterviewEntity) {
+		List<TemporaryQuestionEntity> temporaryQuestionEntities = new ArrayList<>();
+
+		for (TemporaryQuestion temporaryQuestion : temporaryQuestions) {
+			temporaryQuestionEntities.add(TemporaryQuestionEntity.builder()
+				.content(temporaryQuestion.getContent())
+				.temporaryInterviewEntity(temporaryInterviewEntity)
+				.build());
+		}
+
+		return temporaryQuestionEntities;
+	}
+
+	default List<Long> temporaryQuestionEntitiesToIds(List<TemporaryQuestionEntity> temporaryQuestionEntities) {
+		List<Long> temporaryInterviewIds = new ArrayList<>();
+		temporaryQuestionEntities.forEach(
+			temporaryQuestionEntity -> temporaryInterviewIds.add(temporaryQuestionEntity.getId()));
+		return temporaryInterviewIds;
 	}
 }

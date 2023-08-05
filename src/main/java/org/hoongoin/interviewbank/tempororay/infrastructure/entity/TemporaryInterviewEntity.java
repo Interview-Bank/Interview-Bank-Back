@@ -14,10 +14,8 @@ import javax.persistence.Table;
 
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.common.entity.BaseEntity;
-import org.hoongoin.interviewbank.interview.application.dto.InterviewModifyDto;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
-import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -46,13 +44,14 @@ public class TemporaryInterviewEntity extends BaseEntity {
 	@JoinColumn(nullable = false, name = "account_id")
 	private AccountEntity accountEntity;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "job_category_id")
-	private JobCategoryEntity jobCategoryEntity;
+	@Column(name = "job_category_id")
+	private Long jobCategoryId;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "interview_period")
 	private InterviewPeriod interviewPeriod;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "career_year")
 	private CareerYear careerYear;
 }

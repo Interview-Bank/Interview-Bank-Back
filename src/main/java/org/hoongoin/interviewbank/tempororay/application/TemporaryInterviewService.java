@@ -2,13 +2,15 @@ package org.hoongoin.interviewbank.tempororay.application;
 
 import java.util.List;
 
+import org.hoongoin.interviewbank.exception.IbAccountNotMatchException;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
-import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryServiceImplementation;
+import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
 import org.hoongoin.interviewbank.tempororay.TemporaryMapper;
 import org.hoongoin.interviewbank.tempororay.application.entity.TemporaryInterview;
 import org.hoongoin.interviewbank.tempororay.application.entity.TemporaryQuestion;
 import org.hoongoin.interviewbank.tempororay.controller.request.CreateTemporaryInterviewAndQuestionsRequest;
+import org.hoongoin.interviewbank.tempororay.controller.response.DeleteTemporaryInterviewAndQuestionResponse;
 import org.hoongoin.interviewbank.tempororay.controller.response.FindTemporaryInterviewByIdResponse;
 import org.hoongoin.interviewbank.tempororay.controller.response.CreateTemporaryInterviewAndQuestionResponse;
 import org.hoongoin.interviewbank.tempororay.domain.TemporaryInterviewCommandService;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TemporaryInterviewService {
 
@@ -31,9 +34,8 @@ public class TemporaryInterviewService {
 	private final TemporaryQuestionCommandService temporaryQuestionCommandService;
 	private final TemporaryInterviewQueryService temporaryInterviewQueryService;
 	private final TemporaryQuestionQueryService temporaryQuestionQueryService;
-	private final JobCategoryQueryServiceImplementation jobCategoryQueryServiceImplementation;
+	private final JobCategoryQueryService jobCategoryQueryService;
 
-	@Transactional
 	public CreateTemporaryInterviewAndQuestionResponse createTemporaryInterviewAndQuestion(
 		CreateTemporaryInterviewAndQuestionsRequest createTemporaryInterviewAndQuestionRequest,
 		long requestingAccountId) {
@@ -57,6 +59,7 @@ public class TemporaryInterviewService {
 		return new CreateTemporaryInterviewAndQuestionResponse(createdTemporaryInterviewId, insertedTemporaryQuestions);
 	}
 
+	@Transactional(readOnly = true)
 	public FindTemporaryInterviewByIdResponse findTemporaryInterviewById(long temporaryInterviewId) {
 		TemporaryInterview temporaryInterview = temporaryInterviewQueryService.findTemporaryInterviewById(
 			temporaryInterviewId);
@@ -65,7 +68,7 @@ public class TemporaryInterviewService {
 			temporaryInterviewId);
 
 		if (temporaryInterview.getJobCategoryId() != null) {
-			JobCategory jobCategory = jobCategoryQueryServiceImplementation.findJobCategoryById(
+			JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(
 				temporaryInterview.getJobCategoryId());
 			return makeTemporaryInterviewByIdResponse(temporaryInterview, temporaryQuestions,
 				new JobCategoryResponse(jobCategory.getJobCategoryId(), jobCategory.getFirstLevelName(),
@@ -88,5 +91,30 @@ public class TemporaryInterviewService {
 			.careerYear(temporaryInterview.getCareerYear())
 			.jobCategoryResponse(jobCategoryResponse)
 			.build();
+	}
+
+	public DeleteTemporaryInterviewAndQuestionResponse deleteTemporaryInterviewAndQuestion(long temporaryInterviewId,
+		long accountId) {
+		TemporaryInterview temporaryInterview = temporaryInterviewQueryService.findTemporaryInterviewById(
+			temporaryInterviewId);
+
+		List<TemporaryQuestion> temporaryQuestions = temporaryQuestionQueryService.findTemporaryQuestionByTemporaryInterviewId(
+			temporaryInterviewId);
+
+		isMatchInterviewAndAccount(accountId, temporaryInterview);
+
+		temporaryInterviewCommandService.deleteTemporaryInterview(temporaryInterview.getTemporaryInterviewId());
+		temporaryQuestionCommandService.deleteTemporaryQuestionsByTemporaryInterviewId(
+			temporaryInterview.getTemporaryInterviewId());
+
+		return new DeleteTemporaryInterviewAndQuestionResponse(temporaryInterview.getTemporaryInterviewId(),
+			temporaryMapper.temporaryQuestionsToTemporaryQuestionIds(temporaryQuestions));
+	}
+
+	private void isMatchInterviewAndAccount(long accountId, TemporaryInterview temporaryInterview) {
+		if (temporaryInterview.getAccountId() != accountId) {
+			log.info("Interview Writer Account And Request Account Do Not Match");
+			throw new IbAccountNotMatchException("Bad Request");
+		}
 	}
 }

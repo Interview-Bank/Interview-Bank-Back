@@ -1,13 +1,14 @@
 package org.hoongoin.interviewbank.tempororay.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
+import org.hoongoin.interviewbank.tempororay.TemporaryMapper;
 import org.hoongoin.interviewbank.tempororay.application.entity.TemporaryQuestion;
 import org.hoongoin.interviewbank.tempororay.infrastructure.entity.TemporaryInterviewEntity;
 import org.hoongoin.interviewbank.tempororay.infrastructure.entity.TemporaryQuestionEntity;
 import org.hoongoin.interviewbank.tempororay.infrastructure.repository.TemporaryInterviewRepository;
+import org.hoongoin.interviewbank.tempororay.infrastructure.repository.TemporaryQuestionRepository;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 public class TemporaryQuestionCommandService {
 
 	private final TemporaryInterviewRepository temporaryInterviewRepository;
+	private final TemporaryQuestionRepository temporaryQuestionRepository;
+
+	private final TemporaryMapper temporaryMapper;
 
 	public List<Long> insertTemporaryQuestions(List<TemporaryQuestion> temporaryQuestions,
 		Long createdTemporaryInterviewId) {
@@ -28,20 +32,15 @@ public class TemporaryQuestionCommandService {
 			return new IbEntityNotFoundException("TemporaryInterview Not Found");
 		});
 
-		return saveAllTemporaryQuestions(temporaryQuestions, temporaryInterviewEntity);
+		List<TemporaryQuestionEntity> temporaryQuestionEntities = temporaryMapper.temporaryQuestionsToTemporaryQuestionEntities(
+			temporaryQuestions, temporaryInterviewEntity);
+
+		List<TemporaryQuestionEntity> savedTemporaryQuestionEntities = temporaryQuestionRepository.saveAll(
+			temporaryQuestionEntities);
+		return temporaryMapper.temporaryQuestionEntitiesToIds(savedTemporaryQuestionEntities);
 	}
 
-	private List<Long> saveAllTemporaryQuestions(List<TemporaryQuestion> temporaryQuestions,
-		TemporaryInterviewEntity temporaryInterviewEntity) {
-		List<Long> temporaryQuestionEntityIds = new ArrayList<>();
-
-		for (TemporaryQuestion temporaryQuestion : temporaryQuestions) {
-			temporaryQuestionEntityIds.add(TemporaryQuestionEntity.builder()
-				.content(temporaryQuestion.getContent())
-				.temporaryInterviewEntity(temporaryInterviewEntity)
-				.build().getId());
-		}
-
-		return temporaryQuestionEntityIds;
+	public void deleteTemporaryQuestionsByTemporaryInterviewId(long temporaryInterviewId) {
+		temporaryQuestionRepository.deleteTemporaryQuestionEntitiesByTemporaryInterviewId(temporaryInterviewId);
 	}
 }
