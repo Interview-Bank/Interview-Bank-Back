@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("temporary")
+@RequestMapping("interview")
 @RequiredArgsConstructor
 public class TemporaryInterviewController {
 
 	private final TemporaryInterviewService temporaryInterviewService;
 
-	@PostMapping("/interview")
+	@PostMapping("/temporary")
 	public ResponseEntity<CreateTemporaryInterviewAndQuestionResponse> createTemporaryInterviewAndQuestion(@RequestBody
 	CreateTemporaryInterviewAndQuestionsRequest request) {
 		CreateTemporaryInterviewAndQuestionResponse createTemporaryInterviewAndQuestionResponse = temporaryInterviewService.createTemporaryInterviewAndQuestion(
@@ -34,13 +34,13 @@ public class TemporaryInterviewController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(createTemporaryInterviewAndQuestionResponse);
 	}
 
-	@GetMapping("/interview/{id}")
+	@GetMapping("/temporary/{id}")
 	public ResponseEntity<FindTemporaryInterviewByIdResponse> findTemporaryInterviewById(
 		@PathVariable("id") long temporaryInterviewId) {
 		return ResponseEntity.ok(temporaryInterviewService.findTemporaryInterviewById(temporaryInterviewId));
 	}
 
-	@DeleteMapping("/interview/{id}")
+	@DeleteMapping("/temporary/{id}")
 	public ResponseEntity<DeleteTemporaryInterviewAndQuestionResponse> deleteTemporaryInterviewAndQuestion(
 		@PathVariable("id") long temporaryInterviewId) {
 		return ResponseEntity.ok(temporaryInterviewService.deleteTemporaryInterviewAndQuestion(temporaryInterviewId,
