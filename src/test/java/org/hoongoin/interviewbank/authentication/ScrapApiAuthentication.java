@@ -75,4 +75,11 @@ class ScrapApiAuthentication {
 		mockMvc.perform(get("/scraps/3"))
 			.andExpect(status().isOk());
 	}
+
+	@WithAnonymousUser
+	@Test
+	void readScrapAllOfInterview_Success() throws Exception {
+		mockMvc.perform(get("/scraps/interview/10"))
+			.andExpect(status().isOk());
+	}
 }
