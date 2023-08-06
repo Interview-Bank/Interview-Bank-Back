@@ -3,6 +3,7 @@ package org.hoongoin.interviewbank.interview.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.exception.IbSoftDeleteException;
@@ -63,6 +64,10 @@ public class InterviewQueryService {
 			PageRequest.of(page, size), requestingAccountId);
 
 		return getInterviews(interviewPage);
+	}
+
+	public Optional<InterviewEntity> findInterviewEntityByInterviewId(long interviewId){
+		return interviewRepository.findById(interviewId);
 	}
 
 	private PageDto<Interview> getInterviews(Page<InterviewEntity> interviewEntityPage) {

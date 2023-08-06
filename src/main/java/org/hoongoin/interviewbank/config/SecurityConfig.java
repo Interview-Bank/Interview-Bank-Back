@@ -22,6 +22,7 @@ public class SecurityConfig {
 			.antMatchers("/account/logout", "/account/me", "/account/reset-password").authenticated()
 			.antMatchers("/account/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/scraps/{scrap-id}").permitAll()
+			.antMatchers("/scraps/interview/{interview-id}").permitAll()
 			.antMatchers("/scraps/**").authenticated()
 			.antMatchers("/").permitAll()
 			.antMatchers(HttpMethod.POST, "/interview").authenticated()
