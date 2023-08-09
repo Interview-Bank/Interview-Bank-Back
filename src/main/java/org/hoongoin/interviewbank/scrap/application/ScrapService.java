@@ -2,11 +2,13 @@ package org.hoongoin.interviewbank.scrap.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.account.application.entity.Account;
 import org.hoongoin.interviewbank.exception.IbBadRequestException;
 import org.hoongoin.interviewbank.common.dto.PageDto;
+import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
@@ -14,11 +16,13 @@ import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
 import org.hoongoin.interviewbank.interview.application.entity.Question;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapWithScrapQuestionAndScrapAnswerList;
 import org.hoongoin.interviewbank.scrap.controller.request.CreateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.request.UpdateScrapRequest;
 import org.hoongoin.interviewbank.scrap.controller.response.CreateScrapResponse;
+import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapAllOfInterview;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapDetailResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.ReadScrapPageResponse;
 import org.hoongoin.interviewbank.scrap.controller.response.UpdateScrapResponse;
@@ -27,6 +31,7 @@ import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestion;
 import org.hoongoin.interviewbank.scrap.application.entity.ScrapQuestionWithScrapAnswers;
 import org.hoongoin.interviewbank.scrap.domain.ScrapAnswerCommandService;
 import org.hoongoin.interviewbank.scrap.domain.ScrapCommandService;
+import org.hoongoin.interviewbank.scrap.domain.ScrapLikeQueryService;
 import org.hoongoin.interviewbank.scrap.domain.ScrapQueryService;
 import org.hoongoin.interviewbank.scrap.domain.ScrapQuestionCommandService;
 import org.hoongoin.interviewbank.scrap.domain.ScrapQuestionQueryService;
@@ -51,6 +56,7 @@ public class ScrapService {
 	private final ScrapMapper scrapMapper;
 	private final ScrapAnswerCommandService scrapAnswerCommandService;
 	private final JobCategoryQueryService jobCategoryQueryService;
+	private final ScrapLikeQueryService scrapLikeQueryService;
 
 	@Transactional
 	public CreateScrapResponse createScrapByCreateRequest(CreateScrapRequest createScrapRequest,
@@ -207,5 +213,47 @@ public class ScrapService {
 					scrapQuestionWithScrapAnswers))
 		);
 		return new ReadScrapDetailResponse(scrapResponse, interviewResponse, scrapQuestionWithScrapAnswersResponses);
+	}
+
+	public ReadScrapAllOfInterview readScrapAllOfInterview(Long requestingAccountId, long interviewId, int page, int size) {
+		Optional<InterviewEntity> optionalInterviewEntity = interviewQueryService.findInterviewEntityByInterviewId(interviewId);
+		if(optionalInterviewEntity.isEmpty()){
+			log.info("Interview Entity Not Found");
+			throw new IbEntityNotFoundException("Interview");
+		}
+
+		PageDto<Scrap> scrapPageDto = scrapQueryService.findScrapAllByInterviewEntityAndIsPublicAndPageAndSize(
+			optionalInterviewEntity.get(), true, page, size);
+
+		List<ReadScrapAllOfInterview.Scrap> readScrapAllOfInterviewScraps = new ArrayList<>();
+
+		scrapPageDto.getContent().forEach(scrap ->
+			{
+				Account scrapWriterAccount = accountQueryService.findAccountByAccountId(scrap.getAccountId());
+				if(requestingAccountId !=null){
+					boolean scrapLike = scrapLikeQueryService.findScrapLikeByAccountIdAndScrapId(requestingAccountId, scrap.getInterviewId());
+					readScrapAllOfInterviewScraps.add(
+						ReadScrapAllOfInterview.Scrap.builder()
+							.scrapId(scrap.getScrapId())
+							.title(scrap.getTitle())
+							.nickname(scrapWriterAccount.getNickname())
+							.like(scrapLike)
+							.createdAt(scrap.getCreatedAt().toLocalDate())
+							.build());
+				}
+				else{
+					readScrapAllOfInterviewScraps.add(
+						ReadScrapAllOfInterview.Scrap.builder()
+							.scrapId(scrap.getScrapId())
+							.title(scrap.getTitle())
+							.nickname(scrapWriterAccount.getNickname())
+							.createdAt(scrap.getCreatedAt().toLocalDate())
+							.build());
+				}
+			}
+		);
+
+		return new ReadScrapAllOfInterview(scrapPageDto.getTotalPages(), scrapPageDto.getTotalElements(),
+			scrapPageDto.getCurrentPage(), scrapPageDto.getCurrentElements(), readScrapAllOfInterviewScraps);
 	}
 }

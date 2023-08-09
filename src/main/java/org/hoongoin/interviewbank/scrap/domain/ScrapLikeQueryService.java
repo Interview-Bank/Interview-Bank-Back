@@ -17,4 +17,12 @@ public class ScrapLikeQueryService {
 	public Optional<ScrapLikeEntity> findByAccountIdAndScrapId(long accountId, long interviewId) {
 		return scrapLikeRepository.findByAccountIdAndInterviewId(accountId, interviewId);
 	}
+
+	public boolean findScrapLikeByAccountIdAndScrapId(long accountId, long interviewId){
+		Optional<ScrapLikeEntity> optionalScrapLikeEntity = scrapLikeRepository.findByAccountIdAndInterviewId(accountId, interviewId);
+		if(optionalScrapLikeEntity.isEmpty() || !optionalScrapLikeEntity.get().isLike()) {
+			return false;
+		}
+		return true;
+	}
 }

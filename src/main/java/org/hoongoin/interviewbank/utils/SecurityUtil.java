@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class SecurityUtil {
 
 	public static long getRequestingAccountId() {
-		IbUserDetails userDetails = (IbUserDetails)SecurityContextHolder.getContext()
+		IbUserDetails userDetails = (IbUserDetails) SecurityContextHolder.getContext()
 			.getAuthentication()
 			.getPrincipal();
 		return userDetails.getAccountId();

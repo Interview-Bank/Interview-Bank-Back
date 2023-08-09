@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hoongoin.interviewbank.exception.IbEntityNotFoundException;
 import org.hoongoin.interviewbank.common.dto.PageDto;
+import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.infrastructure.entity.ScrapEntity;
 import org.hoongoin.interviewbank.scrap.infrastructure.repository.ScrapRepository;
@@ -37,6 +38,23 @@ public class ScrapQueryService {
 		int size) {
 		Page<ScrapEntity> scrapEntities = scrapRepository.findByAccountIdAndPageableOrderByCreatedAtDesc(
 			requestingAccountId, PageRequest.of(page, size));
+
+		PageDto<Scrap> scrapPageDto = new PageDto<>();
+		scrapPageDto.setTotalPages(scrapEntities.getTotalPages());
+		scrapPageDto.setTotalElements(scrapEntities.getTotalElements());
+		scrapPageDto.setCurrentPage(scrapEntities.getNumber());
+		scrapPageDto.setCurrentElements(scrapEntities.getNumberOfElements());
+
+		List<Scrap> scraps = new ArrayList<>();
+		scrapEntities.forEach(scrapEntity -> scraps.add(scrapMapper.scrapEntityToScrap(scrapEntity)));
+		scrapPageDto.setContent(scraps);
+		return scrapPageDto;
+	}
+
+	public PageDto<Scrap> findScrapAllByInterviewEntityAndIsPublicAndPageAndSize(InterviewEntity interviewEntity,
+		boolean isPublic, int page, int size) {
+		Page<ScrapEntity> scrapEntities = scrapRepository.findByInterviewEntityAndIsPublic(interviewEntity, isPublic,
+			PageRequest.of(page, size));
 
 		PageDto<Scrap> scrapPageDto = new PageDto<>();
 		scrapPageDto.setTotalPages(scrapEntities.getTotalPages());
