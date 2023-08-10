@@ -29,6 +29,7 @@ public class SecurityConfig {
 			.antMatchers(HttpMethod.PUT, "/interview/{interview_id}").authenticated()
 			.antMatchers(HttpMethod.DELETE, "/interview/{interview_id}").authenticated()
 			.antMatchers("/interview/{interview-id}/like").authenticated()
+			.antMatchers("/temporary/**").authenticated()
 			.and()
 			.formLogin().disable().csrf().disable().cors()
 			.and()

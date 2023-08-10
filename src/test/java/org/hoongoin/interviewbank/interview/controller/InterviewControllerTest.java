@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.hoongoin.interviewbank.account.AccountTestFactory;
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
@@ -53,10 +54,7 @@ class InterviewControllerTest {
 	private GptRequestHandler gptRequestHandler;
 
 	private static final String testTitle = "title";
-	private static final long testAccountId = 1L;
 	private static final String testNickname = "hunki";
-	private static final String testEmail = "gnsrl76@naver.com";
-	private static final String testPassword = "asdfasdf12!";
 
 	@Test
 	void createInterview_Success() {
@@ -176,7 +174,7 @@ class InterviewControllerTest {
 		ResponseEntity<FindInterviewPageResponse> interviewPage = interviewController.findInterviewPage(0, 5);
 
 		//then
-		assertThat(interviewPage.getBody().getInterviews()).hasSize(1);
+		assertThat(Objects.requireNonNull(interviewPage.getBody()).getInterviews()).hasSize(1);
 		interviewPage.getBody()
 			.getInterviews()
 			.forEach(interview -> assertThat(interview.getNickname()).isEqualTo(testNickname));
