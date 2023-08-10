@@ -29,6 +29,7 @@ import org.hoongoin.interviewbank.interview.domain.QuestionCommandService;
 import org.hoongoin.interviewbank.interview.domain.QuestionQueryService;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
 import org.hoongoin.interviewbank.interview.enums.InterviewPeriod;
+import org.hoongoin.interviewbank.tempororay.domain.TemporaryInterviewCommandService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,10 +48,15 @@ public class InterviewService {
 	private final QuestionQueryService questionQueryService;
 	private final AccountQueryService accountQueryService;
 	private final JobCategoryQueryService jobCategoryQueryService;
+	private final TemporaryInterviewCommandService temporaryInterviewCommandService;
 
 	@Transactional
 	public CreateInterviewAndQuestionsResponse createInterviewAndQuestionsByRequest(
 		CreateInterviewAndQuestionsRequest createInterviewAndQuestionsRequest, long accountId) {
+		if (createInterviewAndQuestionsRequest.getTemporaryInterviewId() != null) {
+			temporaryInterviewCommandService.deleteTemporaryInterview(
+				createInterviewAndQuestionsRequest.getTemporaryInterviewId());
+		}
 
 		validateQuestionsSize(createInterviewAndQuestionsRequest.getQuestionsRequest().getQuestions().size());
 
@@ -122,13 +128,13 @@ public class InterviewService {
 	public FindInterviewPageResponse searchInterview(String query, List<Long> jobCategories, Date startDate,
 		Date endDate, InterviewPeriod interviewPeriod, CareerYear careerYear, int page, int size) {
 		LocalDateTime startDateTime = startDate == null ? null : startDate.toInstant()
-				.atZone(ZoneId.systemDefault())
-				.toLocalDate()
-				.atStartOfDay();
+			.atZone(ZoneId.systemDefault())
+			.toLocalDate()
+			.atStartOfDay();
 		LocalDateTime endDateTime = endDate == null ? null : endDate.toInstant()
-				.atZone(ZoneId.systemDefault())
-				.toLocalDate()
-				.atTime(23, 59, 59);
+			.atZone(ZoneId.systemDefault())
+			.toLocalDate()
+			.atTime(23, 59, 59);
 		PageDto<Interview> interviews = interviewQueryService.searchInterview(query, jobCategories, startDateTime,
 			endDateTime, interviewPeriod, careerYear, page, size);
 
@@ -217,7 +223,8 @@ public class InterviewService {
 					findAccountByInterview(interview), jobCategoryResponse));
 		}
 		return new FindInterviewPageResponse(interviewPageDto.getTotalPages(), interviewPageDto.getTotalElements(),
-				interviewPageDto.getCurrentPage(), interviewPageDto.getCurrentElements(), findInterviewPageResponseInterview);
+			interviewPageDto.getCurrentPage(), interviewPageDto.getCurrentElements(),
+			findInterviewPageResponseInterview);
 	}
 
 	private Account findAccountByInterview(Interview interview) {

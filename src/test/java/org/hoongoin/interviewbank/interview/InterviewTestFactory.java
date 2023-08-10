@@ -64,6 +64,6 @@ public class InterviewTestFactory {
 	private static CreateInterviewAndQuestionsRequest getCreateInterviewAndQuestionsRequest(String title,
 		QuestionsRequest questionsRequest) {
 		return new CreateInterviewAndQuestionsRequest(
-			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, questionsRequest);
+			title, 1, InterviewPeriod.EXPECTED_INTERVIEW, CareerYear.FOUR_YEAR, null, questionsRequest);
 	}
 }
