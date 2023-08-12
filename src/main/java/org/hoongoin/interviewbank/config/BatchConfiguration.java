@@ -35,7 +35,8 @@ public class BatchConfiguration {
 		return new JpaCursorItemReaderBuilder<QuestionEntity>()
 			.name("questionEntityReader")
 			.entityManagerFactory(entityManagerFactory)
-			.queryString("select q from QuestionEntity q where q.gptAnswer is null or q.gptAnswer = ''")
+			.queryString("select q from QuestionEntity q where q.gptAnswer is null or q.gptAnswer = '' "
+				+ "or q.gptAnswer = 'GPT가 답변을 생성중입니다.'")
 			.build();
 	}
 
