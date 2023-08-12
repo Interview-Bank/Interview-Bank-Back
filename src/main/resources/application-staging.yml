@@ -67,6 +67,10 @@ spring:
           profile-uri: https://kapi.kakao.com/v2/user/me
           redirect-uri: https://fstaging.interviewbank.net/oauth2/kakao/redirect
 
+  batch:
+    job:
+      enabled: false
+
 management:
   endpoints:
     web:
