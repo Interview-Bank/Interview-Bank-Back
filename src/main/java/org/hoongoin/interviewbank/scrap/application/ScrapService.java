@@ -121,7 +121,7 @@ public class ScrapService {
 
 		Account writerAccount = accountQueryService.findAccountByAccountId(scrap.getAccountId());
 
-		Interview interview = interviewQueryService.findInterviewById(scrap.getInterviewId());
+		Interview interview = interviewQueryService.findInterviewByIdRegardlessOfSoftDelete(scrap.getInterviewId());
 
 		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers = scrapQuestionQueryService
 			.findAllScrapQuestionWithScrapAnswersByScrapId(scrapId);
@@ -215,9 +215,11 @@ public class ScrapService {
 		return new ReadScrapDetailResponse(scrapResponse, interviewResponse, scrapQuestionWithScrapAnswersResponses);
 	}
 
-	public ReadScrapAllOfInterview readScrapAllOfInterview(Long requestingAccountId, long interviewId, int page, int size) {
-		Optional<InterviewEntity> optionalInterviewEntity = interviewQueryService.findInterviewEntityByInterviewId(interviewId);
-		if(optionalInterviewEntity.isEmpty()){
+	public ReadScrapAllOfInterview readScrapAllOfInterview(Long requestingAccountId, long interviewId, int page,
+		int size) {
+		Optional<InterviewEntity> optionalInterviewEntity = interviewQueryService.findInterviewEntityByInterviewId(
+			interviewId);
+		if (optionalInterviewEntity.isEmpty()) {
 			log.info("Interview Entity Not Found");
 			throw new IbEntityNotFoundException("Interview");
 		}
@@ -230,8 +232,9 @@ public class ScrapService {
 		scrapPageDto.getContent().forEach(scrap ->
 			{
 				Account scrapWriterAccount = accountQueryService.findAccountByAccountId(scrap.getAccountId());
-				if(requestingAccountId !=null){
-					boolean scrapLike = scrapLikeQueryService.findScrapLikeByAccountIdAndScrapId(requestingAccountId, scrap.getInterviewId());
+				if (requestingAccountId != null) {
+					boolean scrapLike = scrapLikeQueryService.findScrapLikeByAccountIdAndScrapId(requestingAccountId,
+						scrap.getInterviewId());
 					readScrapAllOfInterviewScraps.add(
 						ReadScrapAllOfInterview.Scrap.builder()
 							.scrapId(scrap.getScrapId())
@@ -240,8 +243,7 @@ public class ScrapService {
 							.like(scrapLike)
 							.createdAt(scrap.getCreatedAt().toLocalDate())
 							.build());
-				}
-				else{
+				} else {
 					readScrapAllOfInterviewScraps.add(
 						ReadScrapAllOfInterview.Scrap.builder()
 							.scrapId(scrap.getScrapId())
