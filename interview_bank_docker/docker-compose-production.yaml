@@ -76,3 +76,21 @@ services:
       backend:
         aliases:
           - grafana.interviewbank
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    networks:
+      backend:
+        aliases:
+          - loki.interviewbank
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ../logs:/var/log
+      - ../production-yml/promtail.yml:/etc/promtail/config.aml
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      backend:
