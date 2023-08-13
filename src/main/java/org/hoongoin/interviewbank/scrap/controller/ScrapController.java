@@ -67,7 +67,6 @@ public class ScrapController {
 		return ResponseEntity.noContent().build();
 	}
 
-
 	@GetMapping("/interview/{interview-id}")
 	public ResponseEntity<ReadScrapAllOfInterview> readScrapAllOfInterview(
 		@PathVariable("interview-id") long interviewId,

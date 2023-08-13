@@ -106,7 +106,7 @@ class ScrapServiceTest {
 
 		given(scrapQueryService.findScrapByScrapId(scrapId)).willReturn(scrap);
 		given(accountQueryService.findAccountByAccountId(requestingAndScrapWriterAccount.getAccountId())).willReturn(requestingAndScrapWriterAccount);
-		given(interviewQueryService.findInterviewById(scrap.getInterviewId())).willReturn(interview);
+		given(interviewQueryService.findInterviewByIdRegardlessOfSoftDelete(scrap.getInterviewId())).willReturn(interview);
 		given(scrapQuestionQueryService.findAllScrapQuestionWithScrapAnswersByScrapId(scrapId)).willReturn(
 			scrapQuestionsWithScrapAnswers);
 

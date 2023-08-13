@@ -44,6 +44,16 @@ public class InterviewQueryService {
 		return interviewMapper.interviewEntityToInterview(interviewEntity, interviewEntity.getAccountEntity().getId());
 	}
 
+	public Interview findInterviewByIdRegardlessOfSoftDelete(long interviewId) {
+		InterviewEntity interviewEntity = interviewRepository.findById(interviewId)
+			.orElseThrow(() -> {
+				log.info("Interview Not Found");
+				return new IbEntityNotFoundException("Interview Not Found");
+			});
+
+		return interviewMapper.interviewEntityToInterview(interviewEntity, interviewEntity.getAccountEntity().getId());
+	}
+
 	public PageDto<Interview> findInterviewListByPageAndSize(int page, int size) {
 		Page<InterviewEntity> interviewEntityPage = interviewRepository.findByDeletedFlagOrderByCreatedAtDesc(
 				false, PageRequest.of(page, size));
