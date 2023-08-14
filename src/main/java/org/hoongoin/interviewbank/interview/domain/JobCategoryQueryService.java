@@ -49,4 +49,13 @@ public class JobCategoryQueryService {
 				return new IbEntityNotFoundException("Job Category Not Found");
 			});
 	}
+
+	public List<JobCategoryWithNoHierarchy> findAllSecondLevelJobCategories() {
+		List<JobCategoryEntity> jobCategoryEntities = jobCategoryRepository.findByParentJobCategoryNotNull();
+		List<JobCategoryWithNoHierarchy> jobCategoryWithNoHierarchies = new ArrayList<>();
+		jobCategoryEntities.forEach(jobCategoryEntity ->
+			jobCategoryWithNoHierarchies.add(new JobCategoryWithNoHierarchy(jobCategoryEntity.getId(), jobCategoryEntity.getName()))
+		);
+		return jobCategoryWithNoHierarchies;
+	}
 }

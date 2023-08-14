@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface JobCategoryRepository extends JpaRepository<JobCategoryEntity, Long> {
+
 	@Query("SELECT jc1 FROM JobCategoryEntity jc1 LEFT JOIN JobCategoryEntity jc2 "
 		+ "ON jc1.parentJobCategory.id = jc2.id "
 		+ "WHERE jc1.name = :name "
@@ -34,4 +35,6 @@ public interface JobCategoryRepository extends JpaRepository<JobCategoryEntity, 
 		"LEFT JOIN jc.parentJobCategory pjc " +
 		"WHERE jc.id = :job_category_id")
 	Optional<JobCategory> findFullJobCategoryById(@Param("job_category_id") long jobCategoryId);
+
+	List<JobCategoryEntity> findByParentJobCategoryNotNull();
 }

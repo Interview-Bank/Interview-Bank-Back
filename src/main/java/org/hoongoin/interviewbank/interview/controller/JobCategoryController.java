@@ -5,6 +5,7 @@ import java.util.List;
 import org.hoongoin.interviewbank.interview.JobCategoryService;
 import org.hoongoin.interviewbank.interview.controller.response.GetJobCategoryResponse;
 import org.hoongoin.interviewbank.interview.controller.response.GetJobCategoryWithNoHierarchyResponse;
+import org.hoongoin.interviewbank.interview.controller.response.GetSecondLevelJobCategoriesResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +28,10 @@ public class JobCategoryController {
 	@GetMapping("/no-hierarchy")
 	public ResponseEntity<List<GetJobCategoryWithNoHierarchyResponse>> getJobCategoryWithNoHierarchy(){
 		return ResponseEntity.ok(jobCategoryService.getJobCategoryWithNoHierarchy());
+	}
+
+	@GetMapping("/second-level")
+	public ResponseEntity<List<GetSecondLevelJobCategoriesResponse>> getSecondLevelJobCategories(){
+		return ResponseEntity.ok(jobCategoryService.getSecondLevelJobCategories());
 	}
 }

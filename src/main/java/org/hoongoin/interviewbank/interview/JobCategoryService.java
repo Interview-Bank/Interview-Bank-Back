@@ -8,6 +8,7 @@ import java.util.Map;
 import org.hoongoin.interviewbank.interview.application.entity.JobCategoryWithNoHierarchy;
 import org.hoongoin.interviewbank.interview.controller.response.GetJobCategoryResponse;
 import org.hoongoin.interviewbank.interview.controller.response.GetJobCategoryWithNoHierarchyResponse;
+import org.hoongoin.interviewbank.interview.controller.response.GetSecondLevelJobCategoriesResponse;
 import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.JobCategoryWithHierarchy;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,16 @@ public class JobCategoryService {
 		jobCategoryWithNoHierarchies.forEach(
 			jobCategoryWithNoHierarchy -> getJobCategoryWithNoHierarchyResponses.add(
 				interviewMapper.jobCategoryWithNoHierarchyToGetJobCategoryWithNoHierarchyResponse(jobCategoryWithNoHierarchy))
+		);
+		return getJobCategoryWithNoHierarchyResponses;
+	}
+
+	public List<GetSecondLevelJobCategoriesResponse> getSecondLevelJobCategories() {
+		List<JobCategoryWithNoHierarchy> jobCategoryWithNoHierarchies = jobCategoryQueryService.findAllSecondLevelJobCategories();
+		List<GetSecondLevelJobCategoriesResponse> getJobCategoryWithNoHierarchyResponses = new ArrayList<>();
+		jobCategoryWithNoHierarchies.forEach(
+			jobCategoryWithNoHierarchy -> getJobCategoryWithNoHierarchyResponses.add(
+				interviewMapper.jobCategoryWithNoHierarchyToGetSecondLevelJobCategoriesResponse(jobCategoryWithNoHierarchy))
 		);
 		return getJobCategoryWithNoHierarchyResponses;
 	}
