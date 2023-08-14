@@ -11,6 +11,7 @@ import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAn
 import org.hoongoin.interviewbank.interview.controller.request.UpdateInterviewRequest;
 import org.hoongoin.interviewbank.interview.controller.response.FindInterviewPageResponse;
 import org.hoongoin.interviewbank.interview.controller.response.GetJobCategoryWithNoHierarchyResponse;
+import org.hoongoin.interviewbank.interview.controller.response.GetSecondLevelJobCategoriesResponse;
 import org.hoongoin.interviewbank.interview.controller.response.JobCategoryResponse;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewEntity;
 import org.hoongoin.interviewbank.interview.infrastructure.entity.InterviewLikeEntity;
@@ -118,5 +119,8 @@ public interface InterviewMapper {
 	}
 
 	GetJobCategoryWithNoHierarchyResponse jobCategoryWithNoHierarchyToGetJobCategoryWithNoHierarchyResponse(
+		JobCategoryWithNoHierarchy jobCategoryWithNoHierarchy);
+
+	GetSecondLevelJobCategoriesResponse jobCategoryWithNoHierarchyToGetSecondLevelJobCategoriesResponse(
 		JobCategoryWithNoHierarchy jobCategoryWithNoHierarchy);
 }
