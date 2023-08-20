@@ -30,15 +30,14 @@ public interface InterviewRepository extends JpaRepository<InterviewEntity, Long
 		CareerYear careerYear, Pageable pageable) {
 
 		QInterviewEntity interviewEntity = QInterviewEntity.interviewEntity;
-		QJobCategoryEntity jobCategoryEntity = QJobCategoryEntity.jobCategoryEntity;
 
 		BooleanExpression predicate = interviewEntity.deletedFlag.eq(Boolean.FALSE);
 
-		if (query != null) {
+		if (query != null && !query.equals("")) {
 			predicate = predicate.and(interviewEntity.title.like("%" + query + "%"));
 		}
 
-		if (jobCategoryIds != null) {
+		if (jobCategoryIds != null && !jobCategoryIds.isEmpty()) {
 			predicate = predicate.and(interviewEntity.jobCategoryEntity.id.in(jobCategoryIds)
 				.or(interviewEntity.jobCategoryEntity.parentJobCategory.id.in(jobCategoryIds)));
 		}
