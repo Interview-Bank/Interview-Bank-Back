@@ -16,6 +16,7 @@ public class ReadScrapDetailResponse {
 	private ScrapResponse scrap;
 	private OriginalInterviewResponse originalInterview;
 	private List<ScrapQuestionWithScrapAnswersResponse> scrapQuestionWithScrapAnswersList;
+	private JobCategoryResponse jobCategoryResponse;
 
 	@Builder
 	@Getter
@@ -67,4 +68,15 @@ public class ReadScrapDetailResponse {
 			private String content;
 		}
 	}
+
+	@Getter
+	@Setter
+	@AllArgsConstructor
+	public static class JobCategoryResponse {
+
+		private Long jobCategoryId;
+		private String firstLevelName;
+		private String secondLevelName;
+	}
+
 }
