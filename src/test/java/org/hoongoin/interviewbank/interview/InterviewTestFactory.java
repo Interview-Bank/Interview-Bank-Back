@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 
 import org.hoongoin.interviewbank.account.infrastructure.entity.AccountEntity;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
+import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.controller.request.CreateInterviewAndQuestionsRequest;
 import org.hoongoin.interviewbank.interview.controller.request.QuestionsRequest;
 import org.hoongoin.interviewbank.interview.enums.CareerYear;
@@ -59,6 +60,10 @@ public class InterviewTestFactory {
 			.jobCategoryId(1L)
 			.title("title")
 			.build();
+	}
+
+	public static JobCategory createJobCategory() {
+		return new JobCategory(1, "first level", "second level");
 	}
 
 	private static CreateInterviewAndQuestionsRequest getCreateInterviewAndQuestionsRequest(String title,
