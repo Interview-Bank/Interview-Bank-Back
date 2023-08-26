@@ -123,10 +123,12 @@ public class ScrapService {
 
 		Interview interview = interviewQueryService.findInterviewByIdRegardlessOfSoftDelete(scrap.getInterviewId());
 
+		JobCategory jobCategory = jobCategoryQueryService.findJobCategoryById(interview.getJobCategoryId());
+
 		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers = scrapQuestionQueryService
 			.findAllScrapQuestionWithScrapAnswersByScrapId(scrapId);
 
-		return makeReadScrapResponse(scrap, writerAccount, interview, scrapQuestionsWithScrapAnswers);
+		return makeReadScrapResponse(scrap, writerAccount, interview, scrapQuestionsWithScrapAnswers, jobCategory);
 	}
 
 	@Transactional(readOnly = true)
@@ -194,7 +196,7 @@ public class ScrapService {
 	}
 
 	private ReadScrapDetailResponse makeReadScrapResponse(Scrap scrap, Account account, Interview interview,
-		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers) {
+		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers, JobCategory jobCategory) {
 		ReadScrapDetailResponse.ScrapResponse scrapResponse = ReadScrapDetailResponse.ScrapResponse.builder()
 			.scrapId(scrap.getScrapId())
 			.title(scrap.getTitle())
@@ -212,7 +214,11 @@ public class ScrapService {
 				scrapMapper.scrapQuestionWithScrapAnswersToScrapQuestionWithScrapAnswersResponse(
 					scrapQuestionWithScrapAnswers))
 		);
-		return new ReadScrapDetailResponse(scrapResponse, interviewResponse, scrapQuestionWithScrapAnswersResponses);
+
+		ReadScrapDetailResponse.JobCategoryResponse jobCategoryResponse = new ReadScrapDetailResponse.JobCategoryResponse(
+			jobCategory.getJobCategoryId(), jobCategory.getFirstLevelName(), jobCategory.getSecondLevelName());
+		return new ReadScrapDetailResponse(scrapResponse, interviewResponse, scrapQuestionWithScrapAnswersResponses,
+			jobCategoryResponse);
 	}
 
 	public ReadScrapAllOfInterview readScrapAllOfInterview(Long requestingAccountId, long interviewId, int page,

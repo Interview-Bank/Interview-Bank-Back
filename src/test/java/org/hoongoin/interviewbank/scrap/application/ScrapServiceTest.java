@@ -13,7 +13,9 @@ import org.hoongoin.interviewbank.account.domain.AccountQueryService;
 import org.hoongoin.interviewbank.exception.IbBadRequestException;
 import org.hoongoin.interviewbank.interview.InterviewTestFactory;
 import org.hoongoin.interviewbank.interview.application.entity.Interview;
+import org.hoongoin.interviewbank.interview.application.entity.JobCategory;
 import org.hoongoin.interviewbank.interview.domain.InterviewQueryService;
+import org.hoongoin.interviewbank.interview.domain.JobCategoryQueryService;
 import org.hoongoin.interviewbank.scrap.ScrapMapper;
 import org.hoongoin.interviewbank.scrap.ScrapTestFactory;
 import org.hoongoin.interviewbank.scrap.application.entity.Scrap;
@@ -46,6 +48,8 @@ class ScrapServiceTest {
 	private ScrapQuestionQueryService scrapQuestionQueryService;
 	@Mock
 	private AccountQueryService accountQueryService;
+	@Mock
+	private JobCategoryQueryService jobCategoryQueryService;
 	@Mock
 	private ScrapMapper scrapMapper;
 
@@ -101,12 +105,14 @@ class ScrapServiceTest {
 		Scrap scrap = ScrapTestFactory.createScrap();
 		Account requestingAndScrapWriterAccount = AccountTestFactory.createAccount();
 		Interview interview = InterviewTestFactory.createInterview(requestingAndScrapWriterAccount.getAccountId());
+		JobCategory jobCategory = InterviewTestFactory.createJobCategory();
 		List<ScrapQuestionWithScrapAnswers> scrapQuestionsWithScrapAnswers = List.of(
 			ScrapQuestionWithScrapAnswers.builder().build());
 
 		given(scrapQueryService.findScrapByScrapId(scrapId)).willReturn(scrap);
 		given(accountQueryService.findAccountByAccountId(requestingAndScrapWriterAccount.getAccountId())).willReturn(requestingAndScrapWriterAccount);
 		given(interviewQueryService.findInterviewByIdRegardlessOfSoftDelete(scrap.getInterviewId())).willReturn(interview);
+		given(jobCategoryQueryService.findJobCategoryById(interview.getJobCategoryId())).willReturn(jobCategory);
 		given(scrapQuestionQueryService.findAllScrapQuestionWithScrapAnswersByScrapId(scrapId)).willReturn(
 			scrapQuestionsWithScrapAnswers);
 
