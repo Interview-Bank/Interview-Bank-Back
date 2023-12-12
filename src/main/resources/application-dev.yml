@@ -71,6 +71,10 @@ spring:
     pattern:
       dateformat: yyyy-MM-dd HH:mm:ss.SSS K
 
+  batch:
+    job:
+      enabled: false
+
 gpt:
   uri: https://api.openai.com/v1/chat/completions
   model: gpt-3.5-turbo
